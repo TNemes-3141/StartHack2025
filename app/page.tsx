@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { ThemeSwitcher } from "./components/ThemeSwitcher";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -10,6 +11,7 @@ export default async function Home() {
         <p>Supabase client successfully initialized!</p> :
         <p>Supabase did not respond yet...</p>
       }
+      <ThemeSwitcher/>
     </div>
   );
 }
