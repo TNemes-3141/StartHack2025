@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import {Providers} from "./providers";
 import "./globals.css";
 
 import { primary_font } from "@/lib/fonts";
@@ -16,11 +17,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
         className={cn("antialiased", primary_font.className)}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
