@@ -15,6 +15,7 @@ export function ThemeSwitcher() {
 
     useEffect(() => {
         setMounted(true);
+        setEnabled(theme === 'light');
     }, [])
 
     if (!mounted) return null
