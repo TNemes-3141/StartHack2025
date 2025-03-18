@@ -1,25 +1,31 @@
-// app/providers.tsx
 "use client";
 
+import type { ThemeProviderProps } from "next-themes";
+
+import * as React from "react";
+import { HeroUIProvider } from "@heroui/system";
 import { useRouter } from "next/navigation";
-import { HeroUIProvider } from "@heroui/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 
-// Only if using TypeScript
-declare module "@react-types/shared" {
-    interface RouterConfig {
-        routerOptions: NonNullable<Parameters<ReturnType<typeof useRouter>["push"]>[1]>;
-    }
+export interface ProvidersProps {
+  children: React.ReactNode;
+  themeProps?: ThemeProviderProps;
 }
 
-export function Providers({ children }: { children: React.ReactNode }) {
-    const router = useRouter();
+declare module "@react-types/shared" {
+  interface RouterConfig {
+    routerOptions: NonNullable<
+      Parameters<ReturnType<typeof useRouter>["push"]>[1]
+    >;
+  }
+}
 
-    return (
+export function Providers({ children, themeProps }: ProvidersProps) {
+  const router = useRouter();
+
+  return (
     <HeroUIProvider navigate={router.push}>
-        <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
-            {children}
-        </NextThemesProvider>
+      <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
     </HeroUIProvider>
-    );
+  );
 }

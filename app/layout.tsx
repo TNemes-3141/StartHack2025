@@ -21,7 +21,9 @@ export default function RootLayout({
       <body
         className={cn("antialiased", primary_font.className)}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );
