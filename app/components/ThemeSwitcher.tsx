@@ -32,7 +32,7 @@ export function ThemeSwitcher() {
   return (
     <>
       <Switch
-        defaultSelected
+        isSelected={enabled}
         onValueChange={useSwitch}
         color="success"
         endContent={<MoonIcon />}
