@@ -12,6 +12,7 @@ import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/react";
 import { History } from "lucide-react"
 import { useRef, useState } from "react";
+import AudioRecorder from "./components/audio_recorder/audio_recorder";
 
 // chat can we get a pog chat?
 type ChatHistory = {
@@ -40,7 +41,7 @@ export default function Home() {
         </main>
       </aside>
       <div className="h-screen w-full flex flex-col">
-        <header className="px-5 h-14 w-full flex items-center gap-5 justify-between bg-secondary-light dark:bg-secondary-dark ">
+        <header className="px-5 h-14 w-full flex items-center gap-5 justify-between">
           <div className="flex gap-5 items-center">
             <History className="cursor-pointer" onClick={() => setShowHistory(!showHistory)}/>
             <Image src={logo} alt="sixlogo" width={100} />
@@ -71,9 +72,11 @@ export default function Home() {
             setHistory([...currentHistory]);
           }}>
             <Input label="Prompt Your Assistant" type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)}/>
+            <AudioRecorder/>
             <Button color="primary" type="submit" className="h-full">
               Submit
             </Button>
+
           </form>
         </main> 
       </div>
