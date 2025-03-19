@@ -39,7 +39,6 @@ export function ThemeSwitcher() {
         size="lg"
         startContent={<SunIcon />}
       >
-        {theme === "light" ? "Light mode" : "Dark mode"}
       </Switch>
     </>
   );
