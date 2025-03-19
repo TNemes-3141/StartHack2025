@@ -7,15 +7,24 @@ const config = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}"
   ],
+  darkMode: "class",
   theme: {
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)"],
         mono: ["var(--font-mono)"],
       },
+      colors: {
+        primary: {
+          DEFAULT: "#E52313"
+        }, // Change this to your preferred color
+        secondary: {
+          light: "#F4F4F5",
+          dark: "#27272A"
+        }
+      },
     },
   },
-  darkMode: "class",
   plugins: [heroui()],
 }
 
