@@ -1,7 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-    typescript: {
+  serverExternalPackages: ['@zilliz/milvus2-sdk-node'],
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.proto$/,
+      use: "raw-loader", // Ensures the protobuf files are properly loaded
+    });
+
+    return config;
+  },
+  typescript: {
     ignoreBuildErrors: true,
   },
   eslint: {

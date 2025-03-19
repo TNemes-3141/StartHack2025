@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { ThemeSwitcher } from "./components/ThemeSwitcher";
 import { SupabaseTestButton } from "./components/SupabaseTestButton";
+import MilvusStatus from "./components/MilvusStatus";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -14,6 +15,7 @@ export default async function Home() {
       }
       <ThemeSwitcher />
       <SupabaseTestButton />
+      <MilvusStatus />
     </div>
   );
 }

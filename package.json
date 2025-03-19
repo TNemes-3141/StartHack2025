@@ -25,6 +25,7 @@
     "@react-aria/visually-hidden": "3.8.20",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.49.1",
+    "@zilliz/milvus2-sdk-node": "^2.5.6",
     "clsx": "2.1.1",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.40.1",
