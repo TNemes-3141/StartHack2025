@@ -39,11 +39,9 @@ export default function Home() {
     // console.log("removed " + cardId)
   }
 
-
-
   return <>
     <div className="h-screen w-screen flex">
-      <aside className={cn(styles.history, "h-full bg-secondary-light dark:bg-secondary-dark", showHistory ? "w-[400px]" : "hidden")}>
+      <aside className={cn(styles.history, "h-full bg-secondary-light dark:bg-secondary-dark transition-[width] duration-500 ease-in-out transition-[transform,width]", showHistory ? "w-[400px] translate-x-0" : "w-[0] translate-x-[-400px]")}>
         <h2 className="p-5">Interaction Chat</h2>
         <main className="w-full flex flex-col p-5 justify-self-end">
           {

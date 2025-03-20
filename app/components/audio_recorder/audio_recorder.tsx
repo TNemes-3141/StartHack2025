@@ -95,7 +95,7 @@ const AudioRecorder: React.FC = () => {
     }
   };
 
-  return (
+  return <>
 
     <div>
       <Button onPress={toggleRecording} isIconOnly>
@@ -111,12 +111,12 @@ const AudioRecorder: React.FC = () => {
         </div>
       )}
     </div>
-
+{/* 
     <Button className="h-full aspect-square" onPress={toggleRecording} isIconOnly>
       {isRecording ? <MicOff /> : <Mic />}
-    </Button>
+    </Button> */}
 
-  );
+  </>
 };
 
 export default AudioRecorder;
