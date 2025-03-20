@@ -86,11 +86,9 @@ export default function Home() {
   }
   const {portfolioData, setPortfolioData} = userContext;
 
-
-
   const [messages, setMessages] = useState<string[]>([]);
-  const [jsonData, setJsonData] = useState<OrchestratorData | null>(null);
-  // [{
+  const [jsonData, setJsonData] = useState<OrchestratorData>([])
+  // const [jsonData, setJsonData] = useState<OrchestratorData | null>(  [{
   //   "type": "line",
   //   "title": "Apple Historical Performance",
   //   "data": [
@@ -174,19 +172,20 @@ export default function Home() {
   //           ]
   //       }
   //   }
-  //   ]
+  //   ]);
+
   const [loading, setLoading] = useState(false);
 
   const callOrchestrator = async (promptMessage: string) => {
       setMessages([]);
-      setJsonData(null);
       setLoading(true);
 
       const query = promptMessage;
       const portfolio = portfolioData;
       const conversationHistory = history.length > 0 ? history : null;
-
-      console.log(query, portfolio)
+      
+      console.log("History:")
+      console.log(JSON.stringify({ query, portfolio, conversationHistory }))
 
       try {
           const res = await fetch("/api/orchestrator", {
@@ -217,9 +216,10 @@ export default function Home() {
                 setMessages([...newMessages]);
               } else {
                 // Extract JSON data from the final chunk
-                const jsonData = JSON.parse(chunk.replace("FINAL_JSON:", "").trim());
+                const newJsonData = JSON.parse(chunk.replace("FINAL_JSON:", "").trim());
 
-                setJsonData(jsonData);
+                setJsonData([...jsonData, ...newJsonData]);
+                console.log(newJsonData);
                 // console.log("THIS IS IT:" + JSON.stringify(jsonData));
                 // classify(jsonData);
               }
@@ -302,6 +302,9 @@ export default function Home() {
                     title={chart.title}
                     tableHeader={chart.data.header}
                     tableData={chart.data.content}
+                    toggleCellSelect={() => console.log("something")}
+                    onSelect={addCard}
+                    onDeselect={removeCard}
                   /> :
                   chart.type === "kpi" ? 
                   <KpiCard 
