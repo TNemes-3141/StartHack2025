@@ -27,6 +27,7 @@ import { code_font } from "@/lib/fonts"; // Adjust the import path
 import { textToSpeech } from "./api/generate/actions";
 import { candle_data_list, line_data_list, pie_data_list } from "./components/charts/PlaceholderData";
 import { AxisChartDataList } from "./components/charts/ApexSeriesConverter";
+import KpiCard from "./components/KpiCard";
 
 
 
@@ -217,7 +218,7 @@ export default function Home() {
         <header className="px-5 h-14 w-full flex items-center gap-5 justify-between">
           <div className="flex gap-5 items-center">
             <Image src={logo} alt="sixlogo" width={100} />
-            <UserSelector className={"w-32"}></UserSelector>
+            <UserSelector className="w-64 h-10 min-h-10"></UserSelector>
           </div>
           <ThemeSwitcher />
         </header>
@@ -231,6 +232,7 @@ export default function Home() {
                     id={`chart-${index}`}
                     title={`Chart ${index + 1}`}
                     className="chartelement"
+                    pt_0={true}
                     content={
                     chart.type === "CandleChart" ? <CandleChart dataList={chart.data} id={"" + index} onDataChange={updateDataList}/> :
                     chart.type === "LineChart" ? <LineChart dataList={chart.data} id={"" + index} onDataChange={updateDataList}/> :
@@ -242,11 +244,13 @@ export default function Home() {
                   />
                 ))}
 
-                <CardContainer id="1" title="card 1" content={<CandleChart dataList={candle_data_list} id="1" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
-                <CardContainer id="4" title="card 4" content={<LineChart dataList={line_data_list} id="4" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
+                <CardContainer id="1" title="card 1" pt_0={true} content={<CandleChart dataList={candle_data_list} id="1" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
+                <NewsCard id="2" title="News Card" content="There are some news out there for you, but you have to find them yourself" source="https://start-hack-2025-omega.vercel.app/" onSelect={addCard} onDeselect={removeCard}/>
+                <KpiCard id = "3" title="Some subscript" content="3" onSelect={addCard} onDeselect={removeCard} />
+                <CardContainer id="4" title="card 4" pt_0={true} content={<LineChart dataList={line_data_list} id="4" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
 
                 <TableCard id="5" title="Banco Santander Rg" tableHeader={header} tableData={data} onSelect={addCard} onDeselect={removeCard} colSpan="2" rowSpan="1" toggleCellSelect={()=>{console.log("selected")}}></TableCard>
-                <CardContainer id="6" title="The Pie is a lie" content={<PieChart dataList={pie_data_list} id="6"/>} onSelect={addCard} onDeselect={removeCard}/>
+                <CardContainer id="6" title="The Pie is a lie" pt_0={true} content={<PieChart dataList={pie_data_list} id="6"/>} onSelect={addCard} onDeselect={removeCard}/>
               </ScrollShadow>
             </div>
             

@@ -19,7 +19,7 @@ const PieChart = ({
       background: 'transparent',
       toolbar: { show: false }
     },
-    colors: ["#FF2715", "#E52313", "#DA2112", "#CA1F11", "#B51C0F", "#A81A0E"],
+    colors: ["#450a0a", "#991b1b", "#dc2626", "#f87171", "#fca5a5", "#fee2e2"],
     stroke: {
       show: false, // Enables outline
       width: 3, // Thickness of the outline
