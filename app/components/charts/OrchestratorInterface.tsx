@@ -1,7 +1,7 @@
 import {AxisChartDataList, NonAxisChartDataList} from './ApexSeriesConverter';
 
 
-type OrchestratorData = {
+export type OrchestratorData = {
     type: "line" | "candle" | "news" | "kpi" | "pie" | "table",
     title: string,
     data: LineData | CandleData | PieData | KpiData | NewsData | TableData
