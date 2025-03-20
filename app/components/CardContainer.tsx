@@ -42,14 +42,16 @@ const CardContainer = ({
     }
   };
 
+  const spanningStyles = colSpan && rowSpan && {
+    gridColumn: `span ${colSpan} / span ${colSpan}`,
+    gridRow: `span ${rowSpan} / span ${rowSpan}`
+  }
+
   return (
     <div
-      className={cn("cardContainer h-full max-h-full", className)}
+      className={cn("cardContainer w-full h-full", className)}
       onClick={onCardClick}
-      style={{
-        gridColumn: `span ${colSpan} / span ${colSpan}`,
-        gridRow: `span ${rowSpan} / span ${rowSpan}`
-      }}
+      style={spanningStyles || {}}
     >
       <Card className={cn(
         "h-full border-none",
