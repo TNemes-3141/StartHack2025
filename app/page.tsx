@@ -86,11 +86,9 @@ export default function Home() {
   }
   const {portfolioData, setPortfolioData} = userContext;
 
-
-
   const [messages, setMessages] = useState<string[]>([]);
-  const [jsonData, setJsonData] = useState<OrchestratorData | null>(null);
-  // [{
+  const [jsonData, setJsonData] = useState<OrchestratorData | null>(null)
+  // const [jsonData, setJsonData] = useState<OrchestratorData | null>(  [{
   //   "type": "line",
   //   "title": "Apple Historical Performance",
   //   "data": [
@@ -174,7 +172,8 @@ export default function Home() {
   //           ]
   //       }
   //   }
-  //   ]
+  //   ]);
+
   const [loading, setLoading] = useState(false);
 
   const callOrchestrator = async (promptMessage: string) => {
@@ -220,6 +219,7 @@ export default function Home() {
                 const jsonData = JSON.parse(chunk.replace("FINAL_JSON:", "").trim());
 
                 setJsonData(jsonData);
+                console.log(jsonData);
                 // console.log("THIS IS IT:" + JSON.stringify(jsonData));
                 // classify(jsonData);
               }
@@ -302,6 +302,9 @@ export default function Home() {
                     title={chart.title}
                     tableHeader={chart.data.header}
                     tableData={chart.data.content}
+                    toggleCellSelect={() => console.log("something")}
+                    onSelect={addCard}
+                    onDeselect={removeCard}
                   /> :
                   chart.type === "kpi" ? 
                   <KpiCard 
