@@ -226,6 +226,7 @@ export default function Home() {
                 key={index}
                 id={`chart-${index}`}
                 title={`Chart ${index + 1}`}
+                pt_0={true}
                 content={
                 chart.type === "CandleChart" ? <CandleChart dataList={chart.data} id={"" + index} onDataChange={updateDataList}/> :
                 chart.type === "LineChart" ? <LineChart dataList={chart.data} id={"" + index} onDataChange={updateDataList}/> :
@@ -237,13 +238,12 @@ export default function Home() {
               />
               ))}
 
-              <CardContainer id="1" title="card 1" content={<CandleChart dataList={candle_data_list} id="1" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
+              <CardContainer id="1" title="card 1" pt_0={true} content={<CandleChart dataList={candle_data_list} id="1" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
               <CardContainer id="2" title="card 2" content="This is card 2" onSelect={addCard} onDeselect={removeCard}/>
               <CardContainer id="3" title="card 3" content="This is card 3" onSelect={addCard} onDeselect={removeCard}/>
-              <CardContainer id="4" title="card 4" content={<LineChart dataList={line_data_list} id="4" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
-
+              <CardContainer id="4" title="card 4" pt_0={true} content={<LineChart dataList={line_data_list} id="4" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
               <TableCard id="5" title="Banco Santander Rg" tableHeader={header} tableData={data} onSelect={addCard} onDeselect={removeCard} colSpan="2" rowSpan="2" toggleCellSelect={()=>{console.log("selected")}}></TableCard>
-              <CardContainer id="6" title="The Pie is a lie" content={<PieChart dataList={pie_data_list} id="6"/>} onSelect={addCard} onDeselect={removeCard}/>
+              <CardContainer id="6" title="The Pie is a lie" pt_0={true} content={<PieChart dataList={pie_data_list} id="6"/>} onSelect={addCard} onDeselect={removeCard}/>
             </div>
             
                
