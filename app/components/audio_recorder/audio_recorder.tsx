@@ -2,17 +2,17 @@
 import { transcribe } from "@/app/api/generate/actions";
 import { Button } from "@heroui/button";
 import { Mic, MicOff } from "lucide-react";
-import { responseCookiesToRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import React, { useState, useRef } from "react";
 
-const AudioRecorder: React.FC = () => {
+const AudioRecorder = (props: {
+  onWhisperResponse: (response: string) => void
+}) => {
   const [isRecording, setIsRecording] = useState(false); // Track recording state
-  const [audioUrl, setAudioUrl] = useState<string | null>(null); // Audio file URL
   const mediaRecorderRef = useRef<MediaRecorder | null>(null); // Store MediaRecorder instance
   const audioChunksRef = useRef<Blob[]>([]); // Store audio chunks
 
 
-  const sendAudioToServer = async () => {
+  const sendAudioToServer = async (audioUrl: string) => {
     console.log("sending audio rn." + audioUrl);
     if (audioUrl) {
 
@@ -21,7 +21,6 @@ const AudioRecorder: React.FC = () => {
       const audioBlob = await fetch(audioUrl).then((res) => res.blob());
       const response = await transcribe({blob: audioBlob});
       console.log(response)
-      downloadAudio();
 
       // const formData = new FormData();
       // formData.append("audio", audioBlob, "recording.wav");
@@ -49,7 +48,6 @@ const AudioRecorder: React.FC = () => {
       // Stop recording
       mediaRecorderRef.current?.stop();
 
-      sendAudioToServer();
     } else {
       // Request microphone permission
       try {
@@ -71,7 +69,7 @@ const AudioRecorder: React.FC = () => {
             type: "audio/wav",
           });
           const audioUrl = URL.createObjectURL(audioBlob);
-          setAudioUrl(audioUrl);
+          sendAudioToServer(audioUrl);
 
           audioChunksRef.current = []; // Clear the chunks for next recording
         };
@@ -87,30 +85,11 @@ const AudioRecorder: React.FC = () => {
     setIsRecording(!isRecording);
   };
 
-  // Download the audio file when clicked
-  const downloadAudio = () => {
-    if (audioUrl) {
-      const link = document.createElement("a");
-      link.href = audioUrl;
-      link.download = "recording.wav"; // Specify the file name
-      link.click();
-    }
-  };
-
   return <>
     <div>
-      <Button onPress={toggleRecording} isIconOnly>
+      <Button onPress={toggleRecording} isIconOnly className="h-full" >
         {isRecording ? <MicOff /> : <Mic />}
       </Button>
-
-      {audioUrl && (
-        <div>
-          <audio controls src={audioUrl} />
-          <button onClick={downloadAudio} className="bg-green-500 text-white px-4 py-2 rounded mt-2">
-            Download Recording
-          </button>
-        </div>
-      )}
     </div>
   </>
 };
