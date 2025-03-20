@@ -218,8 +218,6 @@ export default function Home() {
                 // Extract JSON data from the final chunk
                 const jsonData = JSON.parse(chunk.replace("FINAL_JSON:", "").trim());
                 setJsonData(jsonData);
-                // console.log("THIS IS IT:" + JSON.stringify(jsonData));
-                classify(jsonData);
               }
             }
 
