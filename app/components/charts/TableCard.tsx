@@ -71,6 +71,7 @@ const TableCard = ({
 
   const onCellClick = (e: MouseEvent<HTMLDivElement>, content: string, idx: number, idy: number) => {
     e.stopPropagation();
+    console.log("stuff");
     if (onDeselect && toggleCellSelect) {
       if (e.ctrlKey || e.metaKey) {
         console.log("selected a specific cell");
