@@ -17,6 +17,7 @@ import {ScrollShadow} from "@heroui/react";
 import CandleChart from "./components/charts/CandleChart";
 import LineChart from "./components/charts/LineChart";
 import PieChart from "./components/charts/PieChart"
+import { candle_series } from "./components/charts/PlaceholderData";
 
 // chat can we get a pog chat?
 type ChatHistory = {
@@ -93,7 +94,7 @@ export default function Home() {
         </header>
         <main className="flex flex-col h-full w-full justify-end">
           <div className="relative grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-full p-5 pb-[170px]">
-            <CardContainer id="1" title="card 1" content={<CandleChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
+            <CardContainer id="1" title="card 1" content={<CandleChart series={candle_series}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
             <CardContainer id="2" title="card 2" content="This is card 2" onSelect={addCard} onDeselect={removeCard}/>
             <CardContainer id="3" title="card 3" content="This is card 3" onSelect={addCard} onDeselect={removeCard}/>
             <CardContainer id="4" title="card 4" content={<LineChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
