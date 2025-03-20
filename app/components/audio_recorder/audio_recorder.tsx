@@ -1,4 +1,3 @@
-
 'use client'
 import { transcribe } from "@/app/api/generate/actions";
 import { Button } from "@heroui/button";
@@ -11,11 +10,41 @@ const AudioRecorder: React.FC = () => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null); // Store MediaRecorder instance
   const audioChunksRef = useRef<Blob[]>([]); // Store audio chunks
 
+
+  const sendAudioToServer = async () => {
+    console.log("sending audio rn.");
+    if (audioUrl) {
+
+      console.log("there exists an audioURL");
+
+      // const audioBlob = await fetch(audioUrl).then((res) => res.blob());
+      // const formData = new FormData();
+      // formData.append("audio", audioBlob, "recording.wav");
+
+      // try {
+      //   const response = await fetch("/api/upload-audio", {
+      //     method: "POST",
+      //     body: formData,
+      //   });
+
+      //   if (response.ok) {
+      //     console.log("Audio file uploaded successfully.");
+      //   } else {
+      //     console.error("Failed to upload audio.");
+      //   }
+      // } catch (error) {
+      //   console.error("Error uploading audio:", error);
+      // }
+    }
+  };
+
   // Start or stop recording based on current state
   const toggleRecording = async () => {
     if (isRecording) {
       // Stop recording
       mediaRecorderRef.current?.stop();
+
+      sendAudioToServer();
     } else {
       // Request microphone permission
       try {
@@ -66,6 +95,7 @@ const AudioRecorder: React.FC = () => {
   };
 
   return (
+
     <div>
       <Button onPress={toggleRecording} isIconOnly>
         {isRecording ? <MicOff /> : <Mic />}
@@ -80,6 +110,11 @@ const AudioRecorder: React.FC = () => {
         </div>
       )}
     </div>
+
+    <Button className="h-full aspect-square" onPress={toggleRecording} isIconOnly>
+      {isRecording ? <MicOff /> : <Mic />}
+    </Button>
+
   );
 };
 
