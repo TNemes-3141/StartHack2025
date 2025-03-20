@@ -78,9 +78,6 @@ export default function Home() {
     setHistory([...currentHistory]);
 
   }
-  const data = [
-    ["Banco Santander Rg", "817651", "SAN", "ES0113900J37", "1 - 'Share, unit, particip. cert. in companies and cooperatives' (1)", "15152492322", "7576246161", "'Other payment frequency' (9)", "Banco Santander Rg", "6.5", "6.561", "6.595", "6.488", "31123749"],
-  ]
 
   const userContext = usePortfolioDataContext();
   if (!userContext) {
@@ -91,91 +88,92 @@ export default function Home() {
 
 
   const [messages, setMessages] = useState<string[]>([]);
-  const [jsonData, setJsonData] = useState<OrchestratorData | null>([{
-    "type": "line",
-    "title": "Apple Historical Performance",
-    "data": [
-      {"x": "2025-02-05T00:00:00.000", "y": 213.53},
-      {"x": "2025-02-06T00:00:00.000", "y": 233.22},
-      {"x": "2025-02-07T00:00:00.000", "y": 227.63},
-      {"x": "2025-02-10T00:00:00.000", "y": 227.65},
-      {"x": "2025-02-11T00:00:00.000", "y": 232.62},
-      {"x": "2025-02-12T00:00:00.000", "y": 236.87},
-      {"x": "2025-02-13T00:00:00.000", "y": 241.53},
-      {"x": "2025-02-14T00:00:00.000", "y": 244.6},
-      {"x": "2025-02-18T00:00:00.000", "y": 244.47},
-      {"x": "2025-02-19T00:00:00.000", "y": 244.87},
-      {"x": "2025-02-20T00:00:00.000", "y": 245.83},
-      {"x": "2025-02-21T00:00:00.000", "y": 245.55},
-      {"x": "2025-02-24T00:00:00.000", "y": 247.1},
-      {"x": "2025-02-25T00:00:00.000", "y": 247.04},
-      {"x": "2025-02-26T00:00:00.000", "y": 240.36},
-      {"x": "2025-02-27T00:00:00.000", "y": 237.3},
-      {"x": "2025-02-28T00:00:00.000", "y": 241.84},
-      {"x": "2025-03-03T00:00:00.000", "y": 238.03},
-      {"x": "2025-03-04T00:00:00.000", "y": 235.93},
-      {"x": "2025-03-05T00:00:00.000", "y": 235.74},
-      {"x": "2025-03-06T00:00:00.000", "y": 235.33},
-      {"x": "2025-03-07T00:00:00.000", "y": 239.07},
-      {"x": "2025-03-10T00:00:00.000", "y": 227.48},
-      {"x": "2025-03-11T00:00:00.000", "y": 220.84},
-      {"x": "2025-03-12T00:00:00.000", "y": 216.98},
-      {"x": "2025-03-13T00:00:00.000", "y": 209.68},
-      {"x": "2025-03-14T00:00:00.000", "y": 213.49},
-      {"x": "2025-03-17T00:00:00.000", "y": 214},
-      {"x": "2025-03-18T00:00:00.000", "y": 212.69},
-      {"x": "2025-03-19T00:00:00.000", "y": 215.24}
-    ]
-    },
-    {
-        "type": "pie",
-        "title": "Portfolio Asset Distribution",
-        "data": [60, 40]
-    },
-    {
-        "type": "news",
-        "title": "Investment Insights on Apple",
-        "data": {
-            "content": "Why Intel Stock Is Sinking Today",
-            "source": "https://www.fool.com/investing/2025/03/19/why-intel-stock-is-sinking-today/"
-        }
-    },
-    {
-        "type": "kpi",
-        "title": "Apple's Annualized Return",
-        "data": {
-            "number": 30.33,
-            "footer": "Annualized return as of February 5, 2025"
-        }
-    },
-    {
-        "type": "table",
-        "title": "Banco Santander",
-        "data": {
-            "header": ["", "Valor Number", "Ticker symbol", "ISIN", "Instrument type", "Outstanding Securities", "Outstanding Capital"],
-            "content": [
-              {
-                "": "Banco Santander",
-                "Valor Number": "Valor Number Data",
-                "Ticker symbol": "Ticker Symbol Data",
-                "ISIN": "ISINIJKFLDJFKLDA:",
-                "Instrument type": "Instrument type",
-                "Outstanding Securities": "OS",
-                "Outstanding Capital": "OC",
-              },
-              {
-                "": "Rui Zhang Bank",
-                "Valor Number": "Sehr glaubwürdig",
-                "Ticker symbol": "überhaupt kein Rugpull",
-                "ISIN": "IAIAIAIAIAIAI",
-                "Instrument type": "Mein Minecraft Baum ist riesig",
-                "Outstanding Securities": "Fortnite",
-                "Outstanding Capital": "OC",
-              }
-            ]
-        }
-    }
-    ]);
+  const [jsonData, setJsonData] = useState<OrchestratorData | null>(null);
+  // [{
+  //   "type": "line",
+  //   "title": "Apple Historical Performance",
+  //   "data": [
+  //     {"x": "2025-02-05T00:00:00.000", "y": 213.53},
+  //     {"x": "2025-02-06T00:00:00.000", "y": 233.22},
+  //     {"x": "2025-02-07T00:00:00.000", "y": 227.63},
+  //     {"x": "2025-02-10T00:00:00.000", "y": 227.65},
+  //     {"x": "2025-02-11T00:00:00.000", "y": 232.62},
+  //     {"x": "2025-02-12T00:00:00.000", "y": 236.87},
+  //     {"x": "2025-02-13T00:00:00.000", "y": 241.53},
+  //     {"x": "2025-02-14T00:00:00.000", "y": 244.6},
+  //     {"x": "2025-02-18T00:00:00.000", "y": 244.47},
+  //     {"x": "2025-02-19T00:00:00.000", "y": 244.87},
+  //     {"x": "2025-02-20T00:00:00.000", "y": 245.83},
+  //     {"x": "2025-02-21T00:00:00.000", "y": 245.55},
+  //     {"x": "2025-02-24T00:00:00.000", "y": 247.1},
+  //     {"x": "2025-02-25T00:00:00.000", "y": 247.04},
+  //     {"x": "2025-02-26T00:00:00.000", "y": 240.36},
+  //     {"x": "2025-02-27T00:00:00.000", "y": 237.3},
+  //     {"x": "2025-02-28T00:00:00.000", "y": 241.84},
+  //     {"x": "2025-03-03T00:00:00.000", "y": 238.03},
+  //     {"x": "2025-03-04T00:00:00.000", "y": 235.93},
+  //     {"x": "2025-03-05T00:00:00.000", "y": 235.74},
+  //     {"x": "2025-03-06T00:00:00.000", "y": 235.33},
+  //     {"x": "2025-03-07T00:00:00.000", "y": 239.07},
+  //     {"x": "2025-03-10T00:00:00.000", "y": 227.48},
+  //     {"x": "2025-03-11T00:00:00.000", "y": 220.84},
+  //     {"x": "2025-03-12T00:00:00.000", "y": 216.98},
+  //     {"x": "2025-03-13T00:00:00.000", "y": 209.68},
+  //     {"x": "2025-03-14T00:00:00.000", "y": 213.49},
+  //     {"x": "2025-03-17T00:00:00.000", "y": 214},
+  //     {"x": "2025-03-18T00:00:00.000", "y": 212.69},
+  //     {"x": "2025-03-19T00:00:00.000", "y": 215.24}
+  //   ]
+  //   },
+  //   {
+  //       "type": "pie",
+  //       "title": "Portfolio Asset Distribution",
+  //       "data": [60, 40]
+  //   },
+  //   {
+  //       "type": "news",
+  //       "title": "Investment Insights on Apple",
+  //       "data": {
+  //           "content": "Why Intel Stock Is Sinking Today",
+  //           "source": "https://www.fool.com/investing/2025/03/19/why-intel-stock-is-sinking-today/"
+  //       }
+  //   },
+  //   {
+  //       "type": "kpi",
+  //       "title": "Apple's Annualized Return",
+  //       "data": {
+  //           "number": 30.33,
+  //           "footer": "Annualized return as of February 5, 2025"
+  //       }
+  //   },
+  //   {
+  //       "type": "table",
+  //       "title": "Banco Santander",
+  //       "data": {
+  //           "header": ["", "Valor Number", "Ticker symbol", "ISIN", "Instrument type", "Outstanding Securities", "Outstanding Capital"],
+  //           "content": [
+  //             {
+  //               "": "Banco Santander",
+  //               "Valor Number": "Valor Number Data",
+  //               "Ticker symbol": "Ticker Symbol Data",
+  //               "ISIN": "ISINIJKFLDJFKLDA:",
+  //               "Instrument type": "Instrument type",
+  //               "Outstanding Securities": "OS",
+  //               "Outstanding Capital": "OC",
+  //             },
+  //             {
+  //               "": "Rui Zhang Bank",
+  //               "Valor Number": "Sehr glaubwürdig",
+  //               "Ticker symbol": "überhaupt kein Rugpull",
+  //               "ISIN": "IAIAIAIAIAIAI",
+  //               "Instrument type": "Mein Minecraft Baum ist riesig",
+  //               "Outstanding Securities": "Fortnite",
+  //               "Outstanding Capital": "OC",
+  //             }
+  //           ]
+  //       }
+  //   }
+  //   ]
   const [loading, setLoading] = useState(false);
 
   const callOrchestrator = async (promptMessage: string) => {
@@ -222,6 +220,7 @@ export default function Home() {
           const jsonMatch = fullText.match(/FINAL_JSON:(\{.*\})/);
           if (jsonMatch) {
               const jsonData = JSON.parse(jsonMatch[1]);
+              console.log(jsonData);
               setJsonData(jsonData);
           }
 
@@ -239,23 +238,6 @@ export default function Home() {
           const audio = new Audio(url);
           audio.play();
       }
-
-  // const [charts, setCharts] = useState([]);
-
-  // function classify(jsonData: OrchestratorData) {
-  //   newCharts
-  //   jsonData.forEach((rawData, i) => {
-  //     switch(rawData.type) {
-  //       case "line":
-          
-  //       case "candle":
-  //       case "news":
-  //       case "kpi":
-  //       case "pie":
-  //       case "table":
-  //     }
-  //   })
-  // }
 
   const updateDataList = (id: string, data: AxisChartDataList | string ) => {
     setDataList([...dataList.filter(ele => ele.id != id), {id, data}])
