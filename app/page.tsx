@@ -197,42 +197,36 @@ export default function Home() {
           <ThemeSwitcher />
         </header>
         <main className="flex flex-col h-full w-full justify-end">
-          <div className="relative grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-full p-5 pb-[170px]">
-            {charts.map((chart: any, index: number) => (
+            <div className="relative grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-full p-5 pb-[170px] overflow-hidden">
+            <div className="absolute inset-0 overflow-y-auto no-scrollbar p-5 pb-[170px] grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              {charts.map((chart: any, index: number) => (
               <CardContainer
                 key={index}
                 id={`chart-${index}`}
                 title={`Chart ${index + 1}`}
                 content={
-                  chart.type === "CandleChart" ? <CandleChart series={chart.data} /> :
-                  chart.type === "LineChart" ? <LineChart series={chart.data} /> :
-                  chart.type === "PieChart" ? <PieChart series={chart.data} /> : <div>No chart available</div>
+                chart.type === "CandleChart" ? <CandleChart series={chart.data} /> :
+                chart.type === "LineChart" ? <LineChart series={chart.data} /> :
+                chart.type === "PieChart" ? <PieChart series={chart.data} /> : <div>No chart available</div>
                 }
                 onSelect={addCard}
                 onDeselect={removeCard}
                 colSpan={chart.colSpan || 1}
               />
-            ))}
+              ))}
 
-            <CardContainer id="1" title="card 1" content={<CandleChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
-            <CardContainer id="2" title="card 2" content="This is card 2" onSelect={addCard} onDeselect={removeCard}/>
-            <CardContainer id="3" title="card 3" content="This is card 3" onSelect={addCard} onDeselect={removeCard}/>
-            <CardContainer id="4" title="card 4" content={<LineChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
+              <CardContainer id="1" title="card 1" content={<CandleChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
+              <CardContainer id="2" title="card 2" content="This is card 2" onSelect={addCard} onDeselect={removeCard}/>
+              <CardContainer id="3" title="card 3" content="This is card 3" onSelect={addCard} onDeselect={removeCard}/>
+              <CardContainer id="4" title="card 4" content={<LineChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
 
-            {/* <CardContainer id="1" title="card 1" content={<CandleChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/> */}
-            <TableCard id="1" title="Banco Santander Rg" tableHeader={header} tableData={data} onSelect={addCard} onDeselect={removeCard} colSpan="2" rowSpan="2" toggleCellSelect={()=>{console.log("selected")}}></TableCard>
-            {/* <CardContainer id="2" title="card 2" onSelect={addCard} onDeselect={removeCard} colSpan="2" rowSpan="2"/> */}
-            <CardContainer id="3" title="The Pie is a lie" content={<PieChart />} onSelect={addCard} onDeselect={removeCard}/>
-            <NewsCard id="2" 
-              title="Local Hacker Wishes Yuki Was His Waifu" 
-              content="Imagine being such a weeb. Unbelievable... Somebody should execute this person. Who could he be? This is literally the sister of the main character. Who told him he could be like this? Who hurt him? Find out more below."
-              source="https://zhangrui.ch"
-              onSelect={addCard}
-              onDeselect={removeCard}
-            />
-            {/* <CardContainer id="4" title="card 4" content={<LineChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/> */}
+              <TableCard id="1" title="Banco Santander Rg" tableHeader={header} tableData={data} onSelect={addCard} onDeselect={removeCard} colSpan="2" rowSpan="2" toggleCellSelect={()=>{console.log("selected")}}></TableCard>
+              <CardContainer id="3" title="The Pie is a lie" content={<PieChart />} onSelect={addCard} onDeselect={removeCard}/>
+            </div>
+            
+               
 
-            <div className="absolute bottom-0 left-0 w-full px-5">
+            <div className="absolute bottom-0 left-0 w-full px-5 z-[1000]">
               <Card className="w-full h-[150px] self-center bg-secondary-light dark:bg-secondary-dark">
                 <CardBody>
                   <h2>AI Assistant: </h2>
@@ -247,7 +241,7 @@ export default function Home() {
             sendPrompt(inputValue);
 
           }}>
-            <Button isIconOnly className="h-full" onPress={() => {
+            <Button isIconOnly className="h-full z-[1000]" onPress={() => {
                 console.log("toggling history: ");
                 console.log(showHistory);
                 setShowHistory(!showHistory);
@@ -263,7 +257,7 @@ export default function Home() {
                 {messages.length > 0 ? <p>{messages[messages.length-1]}</p> : <></>}
               </div>
                :
-              <Button color="primary" type="submit" className="h-full">
+              <Button color="primary" type="submit" className="h-full z-[1000]">
                 Submit
               </Button>
             }
