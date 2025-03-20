@@ -46,7 +46,7 @@ export default function Home() {
   const [selectedCards, setSelectedCards] = useState<string[]>([]) // id's of the selected cards
   const [showHistory, setShowHistory] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
-  const [history, setHistory] = useState<ChatHistory>([]);
+  const [history, setHistory] = useState<ChatHistory>([]); // {sender: 'assistant', message: "blabl"}
   const [dataList, setDataList] = useState<({id: string, data: AxisChartDataList | string})[]>([])
 
 
@@ -219,9 +219,8 @@ export default function Home() {
                 const jsonData = JSON.parse(chunk.replace("FINAL_JSON:", "").trim());
 
                 setJsonData(jsonData);
-                console.log(jsonData);
                 // console.log("THIS IS IT:" + JSON.stringify(jsonData));
-                // classify(jsonData);
+                classify(jsonData);
               }
             }
 
@@ -251,11 +250,6 @@ export default function Home() {
   const updateDataList = (id: string, data: AxisChartDataList | string ) => {
     setDataList([...dataList.filter(ele => ele.id != id), {id, data}])
   }
-
-
-  useEffect(() => {
-    console.log(dataList)
-  }, [dataList])
 
 
   return <>
@@ -296,8 +290,8 @@ export default function Home() {
           <ThemeSwitcher />
         </header>
         <main className="flex flex-col h-full w-full justify-end">
-          <div className="relative grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-full p-5 overflow-hidden">
-            <div className="w-full h-full absolute inset-0">
+          <div className={cn("relative grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-full p-5 overflow-hidden", (history.length < 1) && "hidden h-0")}>
+            <div className={cn("w-full h-full absolute inset-0")}>
               <ScrollShadow className="w-full h-full grid grid-flow-dense p-5 pb-[170px] gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" hideScrollBar size={20}>
                 {jsonData && jsonData.map((chart: any, index) => (
                   chart.type === "table" ? 
@@ -338,7 +332,7 @@ export default function Home() {
                     }
                   />
                 ))}
-{/* 
+                {/*
                 <CardContainer id="1" title="card 1" content={<CandleChart dataList={candle_data_list} id="1" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
                 <CardContainer id="4" title="card 4" content={<LineChart dataList={line_data_list} id="4" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
 
@@ -346,9 +340,8 @@ export default function Home() {
                 <CardContainer id="6" title="The Pie is a lie" content={<PieChart dataList={pie_data_list} id="6"/>} onSelect={addCard} onDeselect={removeCard}/> */}
               </ScrollShadow>
             </div>
-            
-               
 
+            { (history.length > 0) &&
             <div className="absolute bottom-0 right-0 w-fit max-w-[500px] px-5 z-[1]">
               <Card className="w-full h-fit max-h-[150px] self-center bg-secondary-light dark:bg-secondary-dark p-3 flex gap-2 flex-row items-start">
                 <div className="flex w-fit h-fit"><BotMessageSquare />:</div>
@@ -357,53 +350,75 @@ export default function Home() {
                 </CardBody>
               </Card>
             </div>
-          </div>
-          <form className="w-full self-center p-5 flex gap-3" onSubmit={(e) => {
-
-            e.preventDefault();
-            
-            if (!inputValue) return;
-            sendPrompt(inputValue);
-
-            setSelectedCards([]);
-            // document.querySelectorAll(".cardContainer").forEach((element) => {
-            //   element.animate(
-            //     [
-            //       { opacity: 1, transform: "scale(1)" },  // Start: fully visible, normal size
-            //       { opacity: 0, transform: "scale(0.95)" } // End: faded out, smaller
-            //     ],
-            //     {
-            //       duration: 500, // Animation duration in milliseconds
-            //       easing: "ease-in-out", // Smooth easing
-            //       fill: "forwards" // Keeps the final state (faded out & small)
-            //     }
-            //   );
-            // })
-
-
-          }}>
-            <Button isIconOnly className="h-full z-[1000]" onPress={() => {
-                console.log("toggling history: ");
-                console.log(showHistory);
-                setShowHistory(!showHistory);
-              }}>
-              <History className="cursor-pointer"/>
-            </Button>
-            
-            <Input label="Prompt Your Assistant" type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)}/>
-            {
-              loading ? 
-              <div className="flex gap-5">
-                <Spinner/>
-                {messages.length > 0 ? <p>{messages[messages.length-1]}</p> : <></>}
-              </div>
-               :
-              <Button color="primary" type="submit" className="h-full z-[1000]">
-                Submit
-              </Button>
             }
-            <AudioRecorder onWhisperResponse={(res) => sendPrompt(res)}/>
-          </form>
+
+            
+          </div>
+          <div className={cn("w-full self-center p-5 flex gap-3", (history.length < 1) && "h-full")}>
+            <form className={cn("w-full self-center p-5 flex gap-3 h-fit justify-center", (history.length < 1 && "flex-col items-center"))} onSubmit={(e) => {
+
+              e.preventDefault();
+              
+              if (!inputValue) return;
+              sendPrompt(inputValue);
+
+              setSelectedCards([]);
+              // document.querySelectorAll(".cardContainer").forEach((element) => {
+              //   element.animate(
+              //     [
+              //       { opacity: 1, transform: "scale(1)" },  // Start: fully visible, normal size
+              //       { opacity: 0, transform: "scale(0.95)" } // End: faded out, smaller
+              //     ],
+              //     {
+              //       duration: 500, // Animation duration in milliseconds
+              //       easing: "ease-in-out", // Smooth easing
+              //       fill: "forwards" // Keeps the final state (faded out & small)
+              //     }
+              //   );
+              // })
+
+
+            }}>
+              { (history.length < 1) &&
+              <div className="w-fit max-w-[500px] px-5 z-[1] flex flex-col items-center gap-5 mb-12">
+                <div className="flex w-fit h-fit text-9xl"><BotMessageSquare size={128}/></div>
+                <Card className="w-full h-fit max-h-[150px] self-center bg-secondary-light dark:bg-secondary-dark p-3 flex gap-2 flex-row items-start">
+                  
+                  <CardBody className="w-fit p-0">
+                    Hi! I'm SIX. Interact with the dashboard to start.
+                  </CardBody>
+                </Card>
+              </div>
+              }
+              
+              <div className={cn("flex gap-3 w-full", (history.length < 1) && "w-fit")}>
+
+                
+
+                <Button isIconOnly className={cn("h-14 w-14 z-[1000]", (history.length < 1) && "hidden")} onPress={() => {
+                    console.log("toggling history: ");
+                    console.log(showHistory);
+                    setShowHistory(!showHistory);
+                  }}>
+                  <History className="cursor-pointer"/>
+                </Button>
+                <Input label="Prompt Your Assistant" type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} className={cn("w-full max-w-full", (history.length < 1) && "w-[450px] max-w-screen")}/>
+                {
+                  loading ? 
+                  <div className="flex gap-5">
+                    <Spinner/>
+                    {messages.length > 0 ? <p>{messages[messages.length-1]}</p> : <></>}
+                  </div>
+                  :
+                  <Button color="primary" type="submit" className="h-14 z-[1000]">
+                    Submit
+                  </Button>
+                }
+              </div>
+              
+              <AudioRecorder onWhisperResponse={(res) => sendPrompt(res)} className={cn((history.length < 1) && "h-20 w-20 rounded-full overflow-hidden mt-12")}/>
+            </form>
+          </div>
         </main> 
       </div>
     </div>
