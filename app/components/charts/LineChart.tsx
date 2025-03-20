@@ -46,6 +46,7 @@ const LineChart = ({
     title: {
       text: "",
     },
+    colors: ["#FF0000"],
     theme: {mode: (theme as 'light' | 'dark' | undefined)},
     xaxis: {
       type: 'datetime',

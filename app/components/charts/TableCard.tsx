@@ -127,7 +127,7 @@ const TableCard = ({
           <h2>{title}</h2>
         </CardHeader>
         {
-          tableHeader && tableData && <CardBody className="h-fit">
+          tableHeader && tableData && <CardBody className="h-fit pt-0">
             <ScrollShadow hideScrollBar orientation="horizontal">
               <Table className="w-fit">
                 <TableHeader>

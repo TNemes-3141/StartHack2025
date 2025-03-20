@@ -1,13 +1,18 @@
-import { getToolsFromLlm } from "./getToolsFromLlm";
+import { getDataFromQuery } from "./getDataFromQuery";
 import { getSummary, getCompanyDataSearch, getOhlcv, getSearchWithCriteria } from "./tools";
+import { getPortfolioDistribution } from "./getPortfolioDistribution";
+import { getNewsArticle } from "./getNewsArticle";
+import { ContextData, getInsights } from "./getInsights";
+import { getComponents } from "./getComponents";
 
 export async function POST(request: Request) {
     try {
         // Parse request body
         const { query, portfolio } = await request.json();
 
-        // if (!query || !portfolio) {
-        if (!query) {
+        const apiKey = process.env.OPENAI_API_KEY!;
+
+        if (!query && !portfolio) {
             return new Response(JSON.stringify({ error: "Missing query or portfolio data" }), {
                 status: 400,
                 headers: { "Content-Type": "application/json" },
@@ -19,57 +24,86 @@ export async function POST(request: Request) {
         const stream = new ReadableStream({
             async start(controller) {
                 try {
-                    // Step 1: Send user query and portfolio to SIX LLM to decide queries
-                    await sendMessage(controller, encoder, "Analyzing problem solving strategy...");
-                    const toolList = await getToolsFromLlm(query, portfolio);
+                    // Step 1: Send user query and portfolio to QUERY for data
+                    await sendMessage(controller, encoder, "Gathering data for problem solving...");
 
-                    console.log(toolList);
+                    const dataResults = await getDataFromQuery(portfolio, query) ?? [];
+                    console.log("We are receiving " + dataResults.length + " results");
+                    console.log(dataResults);
 
-                    // Step 2: Fetch data from relevant APIs
-                    let dataResults: string[] = [];
+                    const toolList = dataResults.map((objStr) => JSON.parse(objStr));
+                    console.log(toolList.length)
 
-                    if (toolList) {
+                    let restructuredData: string[] = [];
+
+                    if (toolList.length > 0) {
                         for (const tool of toolList) {
-                            await sendMessage(controller, encoder, `Processing ${tool.name}...`);
-    
+                            console.log(`Processing ${tool.tool}...`);
+
                             let result: string | undefined = undefined;
-    
-                            switch (tool.name) {
-                                case "Show_Summary":
-                                    result = await getSummary(tool.arguments);
+
+                            switch (tool.tool) {
+                                case "Summary":
+                                    result = getSummary(tool.data);
                                     break;
-                                case "Company_Data_Search":
-                                    result = await getCompanyDataSearch(tool.arguments);
+                                case "PkData":
+                                    result = getCompanyDataSearch(tool.data);
                                     break;
-                                case "Search_With_Criteria":
-                                    result = await getSearchWithCriteria(tool.arguments);
+                                case "SearchWithCriteria":
+                                    result = getSearchWithCriteria(tool.data);
+                                    console.log("Fresh data: " + result)
                                     break;
-                                case "Historical_Price_Data":
-                                    result = await getOhlcv(tool.arguments);
+                                case "OHLC":
+                                    result = getOhlcv(tool.data);
                                     break;
+                                default:
+                                    console.warn(`Unknown tool: ${tool.tool}`);
                             }
-    
+
                             if (result) {
-                                dataResults.push(result);
+                                restructuredData.push(result);
                             }
                         }
                     }
 
-                    // Simulate final processed JSON data
-                    const finalData = {
-                        analysis: "Portfolio analysis complete",
-                        recommendations: [
-                            { ticker: "AAPL", action: "Hold", confidence: 0.85 },
-                            { ticker: "TSLA", action: "Sell", confidence: 0.65 },
-                            { ticker: "GOOGL", action: "Buy", confidence: 0.90 },
-                        ],
-                        summary: dataResults,
+                    let portfolioDistribution: string | undefined = undefined 
+                    // Step 2: Get portfolio distribution if applicable
+                    if (portfolio) {
+                        await sendMessage(controller, encoder, "Analyzing client portfolio...");
+
+                        const dist = await getPortfolioDistribution(portfolio) ?? "";
+                        if (dist) {
+                            portfolioDistribution = dist[0];
+                        }
+                    }
+
+                    // Step 3: Get news coverage from Milvus
+                    await sendMessage(controller, encoder, "Collecting relevant news articles...");
+                    const news = await getNewsArticle(query, apiKey) ?? "";
+
+                    // Step 4: Generate insights
+                    const finalData: ContextData = {
+                        sixData: restructuredData,
+                        portfolioDistribution: portfolioDistribution ?? "",
+                        news: [news],
                     };
+                    await sendMessage(controller, encoder, "Building insights...");
+                    const insights = await getInsights(finalData, portfolio, query);
+                    console.log(insights);
 
-                    // Send final JSON payload as the last message
-                    await sendMessage(controller, encoder, `FINAL_JSON:${JSON.stringify(finalData)}`, 500);
+                    // Step 5: Generate JSON
+                    if (!insights || insights.length == 0) {
+                        await sendMessage(controller, encoder, `FINAL_JSON:{}`, 500);
+                        controller.close(); // Close the stream when finished
+                    }
+                    else {
+                        const componentJson = await getComponents(finalData, insights[0]);
+                        console.log("Components: " + componentJson);
 
-                    controller.close(); // Close the stream when finished
+                        // Send final JSON payload as the last message
+                        await sendMessage(controller, encoder, componentJson ? `FINAL_JSON:${componentJson}` : "FINAL_JSON:{}", 500);
+                        controller.close(); // Close the stream when finished
+                    }
                 } catch (error) {
                     controller.enqueue(encoder.encode(`Error: ${error}\n`));
                     controller.close();
