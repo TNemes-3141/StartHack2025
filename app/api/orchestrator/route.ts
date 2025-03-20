@@ -12,7 +12,7 @@ export async function POST(request: Request) {
 
         const apiKey = process.env.OPENAI_API_KEY!;
 
-        if (!query || !portfolio) {
+        if (!query && !portfolio) {
             return new Response(JSON.stringify({ error: "Missing query or portfolio data" }), {
                 status: 400,
                 headers: { "Content-Type": "application/json" },
@@ -97,7 +97,7 @@ export async function POST(request: Request) {
                         controller.close(); // Close the stream when finished
                     }
                     else {
-                        const componentJson = await getComponents(finalData, insights[0]);
+                        const componentJson = await getComponents(finalData, insights[0], apiKey);
                         console.log("Components: " + componentJson);
 
                         // Send final JSON payload as the last message
