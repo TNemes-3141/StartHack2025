@@ -17,6 +17,9 @@ import {ScrollShadow} from "@heroui/react";
 import CandleChart from "./components/charts/CandleChart";
 import LineChart from "./components/charts/LineChart";
 import PieChart from "./components/charts/PieChart"
+import TableChart from "./components/charts/TableCard";
+import TableCard from "./components/charts/TableCard";
+import NewsCard from "./components/charts/NewsCard";
 
 // chat can we get a pog chat?
 type ChatHistory = {
@@ -53,7 +56,12 @@ export default function Home() {
     setInputValue("");
     setHistory([...currentHistory]);
 
+
   }
+  const header = ["", "Valor Number", "Ticker symbol", "ISIN", "Instrument type", "Outstanding Securities", "Outstanding Capital", "Dividend policy", "Name", "Open", "Close", "High", "Low", "Vol"]
+  const data = [
+    ["Banco Santander Rg", "817651", "SAN", "ES0113900J37", "1 - 'Share, unit, particip. cert. in companies and cooperatives' (1)", "15152492322", "7576246161", "'Other payment frequency' (9)", "Banco Santander Rg", "6.5", "6.561", "6.595", "6.488", "31123749"],
+  ]
 
 
   return <>
@@ -93,10 +101,18 @@ export default function Home() {
         </header>
         <main className="flex flex-col h-full w-full justify-end">
           <div className="relative grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-full p-5 pb-[170px]">
-            <CardContainer id="1" title="card 1" content={<CandleChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
-            <CardContainer id="2" title="card 2" content="This is card 2" onSelect={addCard} onDeselect={removeCard}/>
-            <CardContainer id="3" title="card 3" content="This is card 3" onSelect={addCard} onDeselect={removeCard}/>
-            <CardContainer id="4" title="card 4" content={<LineChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
+            {/* <CardContainer id="1" title="card 1" content={<CandleChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/> */}
+            <TableCard id="1" title="Banco Santander Rg" tableHeader={header} tableData={data} onSelect={addCard} onDeselect={removeCard} colSpan="2" rowSpan="2" toggleCellSelect={()=>{console.log("selected")}}></TableCard>
+            {/* <CardContainer id="2" title="card 2" onSelect={addCard} onDeselect={removeCard} colSpan="2" rowSpan="2"/> */}
+            {/* <CardContainer id="3" title="card 3" content="This is card 3" onSelect={addCard} onDeselect={removeCard}/> */}
+            <NewsCard id="2" 
+              title="Local Hacker Wishes Yuki Was His Waifu" 
+              content="Imagine being such a weeb. Unbelievable... Somebody should execute this person. Who could he be? This is literally the sister of the main character. Who told him he could be like this? Who hurt him? Find out more below!"
+              source="https://zhangrui.ch"
+              onSelect={addCard}
+              onDeselect={removeCard}
+            />
+            {/* <CardContainer id="4" title="card 4" content={<LineChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/> */}
             <div className="absolute bottom-0 left-0 w-full px-5">
               <Card className="w-full h-[150px] self-center bg-secondary-light dark:bg-secondary-dark">
                 <CardBody>
