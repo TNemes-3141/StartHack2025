@@ -5,7 +5,8 @@ import { Mic, MicOff } from "lucide-react";
 import React, { useState, useRef } from "react";
 
 const AudioRecorder = (props: {
-  onWhisperResponse: (response: string) => void
+  onWhisperResponse: (response: string) => void,
+  className?: string,
 }) => {
   const [isRecording, setIsRecording] = useState(false); // Track recording state
   const mediaRecorderRef = useRef<MediaRecorder | null>(null); // Store MediaRecorder instance
@@ -68,8 +69,8 @@ const AudioRecorder = (props: {
   };
 
   return <>
-    <div>
-      <Button onPress={toggleRecording} isIconOnly className="h-full" >
+    <div className={props.className}>
+      <Button onPress={toggleRecording} isIconOnly className="h-full w-full" >
         {isRecording ? <MicOff /> : <Mic />}
       </Button>
     </div>
