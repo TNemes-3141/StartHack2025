@@ -6,7 +6,7 @@ interface UserContextProps {
     setUser: (user: UserData | null) => void;
 }
 
-const UserContext = createContext(null);
+const UserContext = createContext<UserContextProps | null>(null);
 
 export function UserProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<UserData | null>(null);
