@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 
 import { ThemeSwitcher } from "./components/ThemeSwitcher";
 import {Input} from "@heroui/input";
-import { secondary_font } from "@/lib/fonts";
 import styles from "./page.module.css"
 import logo from "@/public/SIX_Group_logo.svg"
 import Image from "next/image";
@@ -14,6 +13,9 @@ import { History } from "lucide-react"
 import CardContainer from "./components/CardContainer";
 import { useRef, useState } from "react";
 import AudioRecorder from "./components/audio_recorder/audio_recorder";
+import CandleChart from "./components/charts/CandleChart";
+import LineChart from "./components/charts/LineChart";
+import PieChart from "./components/charts/PieChart"
 
 // chat can we get a pog chat?
 type ChatHistory = {
@@ -68,13 +70,11 @@ export default function Home() {
           <ThemeSwitcher />
         </header>
         <main className="flex flex-col h-full w-full justify-end">
-          <div className="grid gap-5 grid-cols-3 w-full h-full p-5">
-            <CardContainer id="1" title="card 1" content="This is card 1" onSelect={addCard} onDeselect={removeCard}/>
+          <div className="grid gap-5 grid-cols-3 auto-rows-min w-full h-full p-5">
+            <CardContainer id="1" title="card 1" content={<CandleChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
             <CardContainer id="2" title="card 2" content="This is card 2" onSelect={addCard} onDeselect={removeCard}/>
             <CardContainer id="3" title="card 3" content="This is card 3" onSelect={addCard} onDeselect={removeCard}/>
-            <CardContainer id="4" title="card 4" content="This is card 4" onSelect={addCard} onDeselect={removeCard}/>
-            <CardContainer id="5" title="card 5" content="This is card 5" onSelect={addCard} onDeselect={removeCard}/>
-            <CardContainer id="6" title="card 6" content="This is card 6" onSelect={addCard} onDeselect={removeCard}/>
+            <CardContainer id="4" title="card 4" content={<LineChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
 
           </div>
           <Card className="w-[95%] h-[150px] self-center bg-secondary-light dark:bg-secondary-dark">
