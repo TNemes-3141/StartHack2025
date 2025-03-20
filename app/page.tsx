@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from "@/lib/utils";
+import { cn, generatePDF } from "@/lib/utils";
 
 import { ThemeSwitcher } from "./components/ThemeSwitcher";
 import {Input} from "@heroui/input";
@@ -32,7 +32,7 @@ import KpiCard from "./components/KpiCard";
 
 
 // chat can we get a pog chat?
-type ChatHistory = {
+export type ChatHistory = {
   sender: "assistant" | "user",
   message: string
 }[]
@@ -256,7 +256,7 @@ export default function Home() {
   return <>
     <div className="h-screen w-screen flex">
       <aside className={
-        cn(styles.history, "h-full flex flex-col bg-secondary-light dark:bg-secondary-dark", 
+        cn(styles.history, "h-full flex flex-col justify-stretch bg-secondary-light dark:bg-secondary-dark", 
           "duration-500 ease-in-out transition-[transform,width]",
           "z-[999] absolute top-0 left-0 shadow-2xl lg:static",
           code_font.className,
@@ -281,6 +281,9 @@ export default function Home() {
             </div>
           </main>
         </ScrollShadow>
+        <Button className="m-5" onPress={() => generatePDF(history)}>
+          Export Interaction Log
+        </Button>
       </aside>
       <div className="h-screen w-full flex flex-col">
         <header className="px-5 h-14 w-full flex items-center gap-5 justify-between">
