@@ -1,6 +1,6 @@
-export async function getDataFromQuery(portfolio: any | undefined, userQuery: string): Promise<string[] | undefined> {
+export async function getDataFromQuery(portfolio: any | undefined, history: any | undefined, userQuery: string): Promise<string[] | undefined> {
     try {
-        const query = generateToolsLlmPrompt(portfolio, userQuery);
+        const query = generateToolsLlmPrompt(portfolio, history, userQuery);
         console.log("System prompt: " + query);
 
         const response = await fetch(`https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/query?query=${query}`, {
@@ -28,7 +28,7 @@ export async function getDataFromQuery(portfolio: any | undefined, userQuery: st
     }
 }
 
-function generateToolsLlmPrompt(portfolio: any | undefined, userQuery: string): string {
+function generateToolsLlmPrompt(portfolio: any | undefined, history: any | undefined, userQuery: string): string {
     return `
         You will be acting as a part of a pipeline meant to provide wealth managers, portfolio managers and financial analysts with valuable insights in their decision making regarding their queries. It enables a completely novel human-AI interaction where users can work with information with minimal text input. At the end of the pipeline, components like charts, text paragraphs and KPIs will be generated that are relevant to the user's query.
 
@@ -36,7 +36,9 @@ function generateToolsLlmPrompt(portfolio: any | undefined, userQuery: string): 
 
         In this stage, you will write three queries to your tools (Summary, Search with criteria, Company data search, Historical price data). Do NOT use Winners_Losers, as its API is unavailable. Output the queries that should be made to these tools in their respectively correct formats. The results of the queries should be directly relevant to solve the user's question.
 
-        ${portfolio && `If the user refers to a portfolio, it means the portfolio of a client he manages. This is the portfolio you should base your understanding of the user's question on: ${JSON.stringify(portfolio)}`}
+        ${portfolio ? `If the user refers to a portfolio, it means the portfolio of a client he manages. This is the portfolio you should base your understanding of the user's question on: ${JSON.stringify(portfolio)}` : ""}
+
+        ${history ? `Here is the conversation history that you should take into account: ${JSON.stringify(history)}` : ""}
 
         Here is the user's question: ${userQuery}
 

@@ -184,6 +184,7 @@ export default function Home() {
 
       const query = promptMessage;
       const portfolio = portfolioData;
+      const conversationHistory = history.length > 0 ? history : null;
 
       console.log(query, portfolio)
 
@@ -191,7 +192,7 @@ export default function Home() {
           const res = await fetch("/api/orchestrator", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ query, portfolio }),
+              body: JSON.stringify({ query, portfolio, conversationHistory }),
           });
 
           // Read the response as a stream
