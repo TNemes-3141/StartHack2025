@@ -8,7 +8,7 @@ import styles from "./page.module.css"
 import logo from "@/public/SIX_Group_logo.svg"
 import Image from "next/image";
 import { Button } from "@heroui/button";
-import { Card, CardBody, Spinner } from "@heroui/react";
+import { Card, CardBody, Code, Spinner } from "@heroui/react";
 import { History, X } from "lucide-react"
 import CardContainer from "./components/CardContainer";
 import { useRef, useState } from "react";
@@ -22,6 +22,8 @@ import UserSelector from "./components/user_selector/user_selector";
 import TableChart from "./components/charts/TableCard";
 import TableCard from "./components/charts/TableCard";
 import NewsCard from "./components/charts/NewsCard";
+import { code_font } from "@/lib/fonts"; // Adjust the import path
+
 
 // chat can we get a pog chat?
 type ChatHistory = {
@@ -163,10 +165,11 @@ export default function Home() {
         cn(styles.history, "h-full flex flex-col bg-secondary-light dark:bg-secondary-dark", 
           "duration-500 ease-in-out transition-[transform,width]",
           "z-[999] absolute top-0 left-0 shadow-2xl lg:static",
+          code_font.className,
           showHistory ? "w-[80%] lg:w-[30%] translate-x-0" : "w-[0] translate-x-[-400px]")
       }>
         <div className="flex p-5 justify-between items-center">
-          <h2>Interaction Chat</h2>
+          <h2>Interaction Log</h2>
           <Button isIconOnly onPress={() => setShowHistory(!showHistory)}>
             <X />
           </Button>
@@ -176,9 +179,9 @@ export default function Home() {
             <div className="w-full flex flex-col p-5 justify-self-end">
               {
                 history.map((message, idx) => {
-                  return <Card className={cn("my-2 p-2 w-fit w-max-[200px] bg-main-light dark:bg-main-dark", message.sender == "user" ? "self-end" : "self-start")} key={idx}>
-                    {message.message}
-                  </Card>
+                  return <div className={cn("p-1 w-fit w-max-[200px]")} key={idx}>
+                    {message.sender + " wrote: " +message.message}
+                  </div>
                 })
               }
             </div>

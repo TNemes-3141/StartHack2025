@@ -16,6 +16,11 @@ export const secondary_font = localFont({
     display: 'swap',
 });
 
+export const code_font = localFont({
+    src: "../public/JetBrainsMono-Variable.ttf",
+    display: 'swap',
+});
+
 /*Geist_Mono({
     variable: "--font-geist-mono",
     subsets: ["latin"],

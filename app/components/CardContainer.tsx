@@ -55,7 +55,7 @@ const CardContainer = ({
         isSelected && "outline-red-600 outline-2 outline-offset-0",
       )}>
         <CardHeader>
-          <p>{title}</p>
+          <h2>{title}</h2>
         </CardHeader>
         <CardBody className={cn((content) && "h-fit") } >{content ? content : ""}</CardBody>
       </Card>
