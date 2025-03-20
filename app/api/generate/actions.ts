@@ -58,3 +58,17 @@ export async function transcribe(request: TransciptionRequest) {
     return "Failed to generate response:" + error;
   }
 }
+
+export async function textToSpeech(text: string): Promise<Blob> {
+  const response = await openai.audio.speech.create({
+    model: "tts-1",
+    voice: "ash",
+    input: text,
+  });
+
+  // Read the response as an ArrayBuffer
+  const arrayBuffer = await response.arrayBuffer();
+
+  // Convert ArrayBuffer to Blob
+  return new Blob([arrayBuffer], { type: "audio/mpeg" });
+}
