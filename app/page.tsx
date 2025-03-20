@@ -134,7 +134,7 @@ export default function Home() {
 
   const [charts, setCharts] = useState([]);
 
-  function classfiy(jsonData: JSON) {
+  function classify(jsonData: JSON) {
 
     // jsonData.list.foreach((rawData, i) => {
     //   switch(rawData.type) {
