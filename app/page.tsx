@@ -202,7 +202,7 @@ export default function Home() {
           let newMessages: string[] = [];
           let fullText = "";
 
-          while (true) {
+            while (true) {
               const { value, done } = await reader.read();
               if (done) break;
 
@@ -212,10 +212,16 @@ export default function Home() {
 
               // Update UI with new message (excluding the final JSON)
               if (!chunk.startsWith("FINAL_JSON:")) {
-                  newMessages = [...newMessages, chunk.trim()];
-                  setMessages([...newMessages]);
+                newMessages = [...newMessages, chunk.trim()];
+                setMessages([...newMessages]);
+              } else {
+                // Extract JSON data from the final chunk
+                const jsonData = JSON.parse(chunk.replace("FINAL_JSON:", "").trim());
+                setJsonData(jsonData);
+                // console.log("THIS IS IT:" + JSON.stringify(jsonData));
+                classify(jsonData);
               }
-          }
+            }
 
           // Extract JSON data from the last message
           const jsonMatch = fullText.match(/FINAL_JSON:(\{.*\})/);
