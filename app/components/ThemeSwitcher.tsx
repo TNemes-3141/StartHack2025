@@ -34,7 +34,7 @@ export function ThemeSwitcher() {
       <Switch
         isSelected={enabled}
         onValueChange={useSwitch}
-        color="success"
+        color="primary"
         endContent={<MoonIcon />}
         size="lg"
         startContent={<SunIcon />}

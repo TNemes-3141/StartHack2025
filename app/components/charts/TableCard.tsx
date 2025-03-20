@@ -26,7 +26,9 @@ const TableCard = ({
   id: string;
   title?: string;
   tableHeader?: string[],
-  tableData?:string[][],
+  tableData?: {
+    [key: string]: string
+  }[],
   onSelect?: (cardID: string) => void;
   onDeselect?: (cardID: string) => void;
   toggleCellSelect?: (cellContent: string) => void;
@@ -89,7 +91,23 @@ const TableCard = ({
       } 
     }
   };
-  
+
+  let formatedData: string[][] = [];
+  if (tableData && tableHeader) {
+    for (let i=0; i<tableData.length; i++) {
+      const row = tableData[i];
+      formatedData.push(Object.values(row))
+
+      for (const key of Object.keys(row)) {
+        const idx = tableHeader.indexOf(key);
+        if (idx != -1) {
+          formatedData[i][idx] = row[key];
+        }
+      }
+
+    }
+  }
+
 
 
   return (
@@ -121,7 +139,7 @@ const TableCard = ({
                 </TableHeader>
                 <TableBody>
                   {
-                    tableData.map((row, idx) => {
+                    formatedData.map((row, idx) => {
                       return <TableRow key={idx}>
                         {
                           row.map((cell, idy) => {

@@ -27,14 +27,14 @@ const NewsCard = ({
     id={id}
     title={title}
     content={
-      <>
+      <div className="h-full">
         <p>
           {content}
         </p>
         {
-          source && <a href={source}>source</a>
+          source && <a href={source} className="text-blue-500 underline text-xs flex justify-end">source</a>
         }
-      </>
+      </div>
     }
     onSelect={onSelect}
     onDeselect={onDeselect}
