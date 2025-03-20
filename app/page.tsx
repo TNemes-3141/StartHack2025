@@ -8,8 +8,8 @@ import styles from "./page.module.css"
 import logo from "@/public/SIX_Group_logo.svg"
 import Image from "next/image";
 import { Button } from "@heroui/button";
-import { Card, CardBody, Code, Spinner } from "@heroui/react";
-import { History, X } from "lucide-react"
+import { Card, CardBody, CardHeader, Code, Spinner } from "@heroui/react";
+import { BotMessageSquare, History, X } from "lucide-react"
 import CardContainer from "./components/CardContainer";
 import { useEffect, useState } from "react";
 import AudioRecorder from "./components/audio_recorder/audio_recorder";
@@ -222,9 +222,9 @@ export default function Home() {
           <ThemeSwitcher />
         </header>
         <main className="flex flex-col h-full w-full justify-end">
-          <div className="relative grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-full p-5 pb-[170px] overflow-hidden">
-            <div className="w-full h-full absolute inset-0 p-5 pb-[170px]">
-              <ScrollShadow className="w-full h-full grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" hideScrollBar size={20}>
+          <div className="relative grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-full p-5 overflow-hidden">
+            <div className="w-full h-full absolute inset-0">
+              <ScrollShadow className="w-full h-full grid p-5 pb-[170px] gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" hideScrollBar size={20}>
                 {charts.map((chart: any, index: number) => (
                   <CardContainer
                     key={index}
@@ -252,10 +252,11 @@ export default function Home() {
             
                
 
-            <div className="absolute bottom-0 left-0 w-full px-5 z-[1000]">
-              <Card className="w-full h-[150px] self-center bg-secondary-light dark:bg-secondary-dark">
-                <CardBody>
-                  <h2>AI Assistant: </h2>
+            <div className="absolute bottom-0 right-0 w-fit max-w-[500px] px-5 z-[1]">
+              <Card className="w-full h-fit max-h-[150px] self-center bg-secondary-light dark:bg-secondary-dark p-3 flex gap-2 flex-row items-start">
+                <div className="flex w-fit h-fit"><BotMessageSquare />:</div>
+                <CardBody className="w-fit p-0">
+                  Hi! I'm SIX. Interact with the dashboard to start.
                 </CardBody>
               </Card>
             </div>
