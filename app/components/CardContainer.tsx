@@ -44,8 +44,12 @@ const CardContainer = ({
 
   return (
     <div
-      className={cn("cardContainer h-full max-h-full", "row-span-" + rowSpan, "col-span-" + colSpan, className)}
+      className={cn("cardContainer h-full max-h-full", className)}
       onClick={onCardClick}
+      style={{
+        gridColumn: `span ${colSpan} / span ${colSpan}`,
+        gridRow: `span ${rowSpan} / span ${rowSpan}`
+      }}
     >
       <Card className={cn(
         "h-full border-none",
