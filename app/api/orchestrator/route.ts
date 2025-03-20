@@ -22,6 +22,8 @@ export async function POST(request: Request) {
                     await sendMessage(controller, encoder, "Analyzing problem solving strategy...");
                     const toolList = await getToolsFromLlm(query, portfolio);
 
+                    console.log(toolList);
+
                     // Step 2: Fetch data from relevant APIs
                     let dataResults: string[] = [];
 

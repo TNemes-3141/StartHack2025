@@ -5,7 +5,7 @@ interface ToolCall {
 }
 
 
-export async function getToolsFromLlm(portfolio: any | undefined, userQuery: string): Promise<ToolCall[] | undefined> {
+export async function getToolsFromLlm(userQuery: string, portfolio: any | undefined): Promise<ToolCall[] | undefined> {
     try {
         const query = generateToolsLlmPrompt(portfolio, userQuery);
 
@@ -13,6 +13,7 @@ export async function getToolsFromLlm(portfolio: any | undefined, userQuery: str
             method: "POST",
         });
         const rawData = await response.json();
+        console.log(rawData)
         const toolCalls = rawData?.additional_kwargs?.tool_calls || [];
 
         return toolCalls.map((call: any) => ({
@@ -32,12 +33,12 @@ function generateToolsLlmPrompt(portfolio: any | undefined, userQuery: string): 
 
         You should adhere to the provided specifications completely.
 
-        In this stage, you will write three queries to your tools (Summary, Search with criteria, Company data search, Historical price data). Do NOT use Winners_Losers, as its API is unavailable. Output the queries that should be made to these tools in their respectively correct formats. The results of the queries should be directly relevant to solve the user's question.
+        In this stage, you will write three queries to your tools (Summary, Search with criteria, Company data search, Historical price data). Do NOT use Winners_Losers, as its API is unavailable. Call these tools in their respectively correct formats. The results of the queries should be directly relevant to solve the user's question.
 
         ${portfolio && `If the user refers to a portfolio, it means the portfolio of a client he manages. This is the portfolio you should base your understanding of the user's question on: ${portfolio}`}
 
         Here is the user's question: ${userQuery}
 
-        What information would you retreive from your tools to help the user solve his case? Think of companies whose data could be relevant. Restrict yourself to exactly three queries! Think first before you respond. 
+        What information would you retreive from your tools to help the user solve his case? Think of companies whose data could be relevant. Restrict yourself to exactly three queries! Do not return a natural language output. Think first before you respond. 
     `.trim();
 }
