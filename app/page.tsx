@@ -24,6 +24,7 @@ import TableCard from "./components/charts/TableCard";
 import NewsCard from "./components/charts/NewsCard";
 import { code_font } from "@/lib/fonts"; // Adjust the import path
 
+import { textToSpeech } from "./api/generate/actions";
 
 // chat can we get a pog chat?
 type ChatHistory = {
@@ -67,7 +68,6 @@ export default function Home() {
     });
     setInputValue("");
     setHistory([...currentHistory]);
-
 
   }
   const header = ["", "Valor Number", "Ticker symbol", "ISIN", "Instrument type", "Outstanding Securities", "Outstanding Capital", "Dividend policy", "Name", "Open", "Close", "High", "Low", "Vol"]
@@ -143,6 +143,13 @@ export default function Home() {
           setLoading(false);
       }
   }
+
+  async function speakResponse(text: string) {
+          const blob: Blob = await textToSpeech(text);
+          const url = URL.createObjectURL(blob);
+          const audio = new Audio(url);
+          audio.play();
+      }
 
   const [charts, setCharts] = useState([]);
 
