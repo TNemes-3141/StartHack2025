@@ -1,18 +1,18 @@
 import {Select, SelectItem} from "@heroui/react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { getUserById, listAllUsers, UserData } from "@/app/actions";
-import { useUserContext } from "@/context/user";
+import { fetchUserPortfolios, getUserById, listAllUsers, UserData } from "@/app/actions";
+import { usePortfolioDataContext } from "@/context/portfolioData";
 
 function UserSelector() {
 
     const [userList, setUserList]: any = useState([]);
     const [selectedId, setSelectedId] = useState(-1);
-    const userContext = useUserContext();
-    if (!userContext) {
+    const portfolioDataContext = usePortfolioDataContext();
+    if (!portfolioDataContext) {
         return null;
     }
-    const {user, setUser} = userContext;
+    const {portfolioData, setPortfolioData} = portfolioDataContext;
     
     useEffect(() => {
         const fetchUsers = async () => {
@@ -30,13 +30,17 @@ function UserSelector() {
 
     const handleSelectionChange = (e:any) => {
         setSelectedId(e.target.value);
-        getUserById(e.target.value).then((data) => {
-            if (data == undefined) {
-                console.error("undefined")
-                return;
+        fetchUserPortfolios(e.target.value).then((portfolios) => {
+            if (portfolios == undefined) {
+                console.error("porfolio is undefined");
+                return
             }
-            setUser(data);
-        }).catch(e => {console.error(e)});
+            
+            console.log(portfolios);
+            setPortfolioData(portfolios);
+        }).catch((error) => {
+            console.error(error);
+        });
       };
 
     return (

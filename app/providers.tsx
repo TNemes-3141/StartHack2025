@@ -6,7 +6,7 @@ import * as React from "react";
 import { HeroUIProvider } from "@heroui/system";
 import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { UserProvider } from "@/context/user";
+import { PortfolioDataProvider } from "@/context/portfolioData";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -26,9 +26,9 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 
   return (
     <HeroUIProvider navigate={router.push}>
-      <UserProvider>
+      <PortfolioDataProvider>
         <NextThemesProvider {...themeProps} attribute="class">{children}</NextThemesProvider>
-      </UserProvider>
+      </PortfolioDataProvider>
     </HeroUIProvider>
   );
 }
