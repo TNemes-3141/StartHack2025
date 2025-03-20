@@ -106,7 +106,7 @@ const TableCard = ({
         isSelected && "outline-red-600 outline-2 outline-offset-0",
       )}>
         <CardHeader>
-          <p className="text-2xl">{title}</p>
+          <h2>{title}</h2>
         </CardHeader>
         {
           tableHeader && tableData && <CardBody className="h-fit pt-0">
