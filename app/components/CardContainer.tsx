@@ -8,7 +8,6 @@ const CardContainer = ({
   content,
   onSelect,
   onDeselect,
-
   rowSpan = "1",
   colSpan = "1",
   className,
