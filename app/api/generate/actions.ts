@@ -40,15 +40,17 @@ export async function transcribe(request: TransciptionRequest) {
 
   try {
     const buffer = Buffer.from(await blob.arrayBuffer());
-    const stream = new Readable();
-    stream.push(buffer);
-    stream.push(null);
-
+    
+    // Create a File object that OpenAI's API can accept
+    // The OpenAI SDK expects a File object, not a FormData object
+    const file = new File([buffer], "audio.wav", { type: "audio/wav" });
+    
+    // Send to OpenAI API with proper parameters
     const transcription = await openai.audio.transcriptions.create({
-      file: stream,
+      file: file,
       model: "whisper-1",
     });
-
+    
     return transcription.text;
   } catch (error) {
     console.error(error);
