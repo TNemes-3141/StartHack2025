@@ -14,6 +14,7 @@ const AudioRecorder: React.FC = () => {
     if (audioUrl) {
 
       console.log("there exists an audioURL");
+      downloadAudio();
 
       // const audioBlob = await fetch(audioUrl).then((res) => res.blob());
       // const formData = new FormData();
