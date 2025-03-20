@@ -1,6 +1,6 @@
 
 export type AxisChartData = {
-  x: Date,
+  x: Date | string,
   y: number | number[],
 }
 
