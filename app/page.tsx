@@ -52,7 +52,9 @@ export default function Home() {
   // todo: add functionality to add selected cards and so on.
   const sendPrompt = (promptMessage: string) => {
 
-    callOrchestrator()
+    console.log(promptMessage)
+
+    callOrchestrator(promptMessage);
     const currentHistory = history;
     currentHistory.push({
       message: promptMessage,
@@ -75,12 +77,12 @@ export default function Home() {
   const [jsonData, setJsonData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
-  const callOrchestrator = async () => {
+  const callOrchestrator = async (promptMessage: string) => {
       setMessages([]);
       setJsonData(null);
       setLoading(true);
 
-      const query = inputValue;
+      const query = promptMessage;
       const portfolio = portfolioData;
 
       console.log(query, portfolio)
