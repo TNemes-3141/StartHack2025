@@ -48,6 +48,7 @@ export async function transcribe(request: TransciptionRequest) {
     // Send to OpenAI API with proper parameters
     const transcription = await openai.audio.transcriptions.create({
       file: file,
+      language: "en",
       model: "whisper-1",
     });
     
