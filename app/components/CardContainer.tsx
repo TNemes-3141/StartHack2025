@@ -1,55 +1,57 @@
-import { Card, CardHeader, CardBody } from '@heroui/react';
-import { Checkbox } from '@heroui/react';
+"use client"
+
+import { Card, CardHeader, CardBody } from "@heroui/react";
+import { Checkbox } from "@heroui/react";
 import { cn } from "@/lib/utils";
-import React, { ChangeEvent, useState } from 'react';
-
-
-
+import React, { ChangeEvent, MouseEvent, useState } from "react";
 
 const CardContainer = ({
   id,
   title,
   content,
-
   onSelect,
   onDeselect,
   className,
-}: { 
-  id: string,
-  title?: string, 
-  content?: string | React.ReactElement, 
-
-  onSelect?: (cardID: string) => void,
-  onDeselect?: (cardID: string) => void,
-  className?: string,
+}: {
+  id: string;
+  title?: string;
+  content?: string | React.ReactElement;
+  onSelect?: (cardID: string) => void;
+  onDeselect?: (cardID: string) => void;
+  className?: string;
 }) => {
-  const [state, setState] = useState(false)
+  const [isSelected, setIsSelected] = useState(false);
 
-  const onChange = (e: ChangeEvent) => {
-    if (e.type === "change") {
-      if (onSelect !== undefined && !state) {
-        onSelect(id);
-      } else if (onDeselect !== undefined && state) {
-        onDeselect(id);
-      }
-      setState(!state)
+  // Toggles selection state
+  const toggleSelection = () => {
+    if (!isSelected && onSelect) {
+      onSelect(id);
+    } else if (isSelected && onDeselect) {
+      onDeselect(id);
     }
-  }
+    setIsSelected(!isSelected);
+  };
 
+  // Handle shift-click anywhere on the card
+  const onCardClick = (e: MouseEvent<HTMLDivElement>) => {
+    if (e.ctrlKey || e.metaKey) {
+      toggleSelection();
+    }
+  };
 
   return (
-    <div className={cn(
-      "cardContainer h-full",
-      className,
-    )}>
-      <Card className='h-full'>
+    <div
+      className={cn("cardContainer h-full max-h-full", className)}
+      onClick={onCardClick}
+    >
+      <Card className={cn(
+        "h-full border-none",
+        isSelected && "outline-red-600 outline-2 outline-offset-0",
+      )}>
         <CardHeader>
-          <Checkbox onChange={(e) => onChange(e)}/>
           <p>{title}</p>
         </CardHeader>
-        <CardBody>
-          {content ? content : ""}
-        </CardBody>
+        <CardBody>{content ? content : ""}</CardBody>
       </Card>
     </div>
   );
