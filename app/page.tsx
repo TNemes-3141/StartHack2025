@@ -29,9 +29,6 @@ import { candle_data_list, line_data_list, pie_data_list } from "./components/ch
 import { AxisChartDataList } from "./components/charts/ApexSeriesConverter";
 
 
-
-
-
 // chat can we get a pog chat?
 type ChatHistory = {
   sender: "assistant" | "user",
@@ -49,6 +46,8 @@ export default function Home() {
   const [inputValue, setInputValue] = useState<string>("");
   const [history, setHistory] = useState<ChatHistory>([]);
   const [dataList, setDataList] = useState<({id: string, data: AxisChartDataList | string})[]>([])
+
+
 
   const addCard = (cardId: string) => {
     if (!selectedCards.includes(cardId)) {
