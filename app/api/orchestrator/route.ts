@@ -6,7 +6,8 @@ export async function POST(request: Request) {
         // Parse request body
         const { query, portfolio } = await request.json();
 
-        if (!query || !portfolio) {
+        // if (!query || !portfolio) {
+        if (!query) {
             return new Response(JSON.stringify({ error: "Missing query or portfolio data" }), {
                 status: 400,
                 headers: { "Content-Type": "application/json" },
