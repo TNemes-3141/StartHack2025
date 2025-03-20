@@ -302,6 +302,16 @@ export default function Home() {
                     tableData={chart.data.content}
                     colSpan="2"
                     rowSpan="1"
+                  /> :
+                  chart.type === "kpi" ? 
+                  <KpiCard 
+                    id={`chart-${index}`}
+                    title={chart.title}
+                    content={chart.data.number}
+                    onSelect={addCard}
+                    onDeselect={removeCard}
+                    rowSpan = "1"
+                    colSpan = "1"
                   />
                   : <CardContainer
                     key={index}
@@ -311,7 +321,6 @@ export default function Home() {
                     pt_0={true}
                     content={
                       chart.type === "news" ? <><p> {chart.data.content} </p> { chart.data.source && <a href={chart.data.source}>source</a> } </> :
-                      chart.type === "kpi" ? <></> :
                       chart.type === "candle" ? <CandleChart dataList={chart.data} id={"" + index} onDataChange={updateDataList}/> :
                       chart.type === "line" ? <LineChart dataList={chart.data} id={"" + index} onDataChange={updateDataList} /> :
                       chart.type === "pie" ? <PieChart dataList={chart.data} id={"" + index}/> : <div>No chart available</div>
