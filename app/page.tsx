@@ -28,6 +28,7 @@ import { textToSpeech } from "./api/generate/actions";
 import { candle_data_list, line_data_list, pie_data_list } from "./components/charts/PlaceholderData";
 import { AxisChartDataList } from "./components/charts/ApexSeriesConverter";
 import { OrchestratorData } from "./components/charts/OrchestratorInterface";
+import KpiCard from "./components/KpiCard";
 
 
 // chat can we get a pog chat?
@@ -282,7 +283,7 @@ export default function Home() {
         <header className="px-5 h-14 w-full flex items-center gap-5 justify-between">
           <div className="flex gap-5 items-center">
             <Image src={logo} alt="sixlogo" width={100} />
-            <UserSelector className={"w-32"}></UserSelector>
+            <UserSelector className="w-64 h-10 min-h-10"></UserSelector>
           </div>
           <ThemeSwitcher />
         </header>
@@ -307,6 +308,7 @@ export default function Home() {
                     id={`chart-${index}`}
                     title={chart.title}
                     className="chartelement"
+                    pt_0={true}
                     content={
                       chart.type === "news" ? <><p> {chart.data.content} </p> { chart.data.source && <a href={chart.data.source}>source</a> } </> :
                       chart.type === "kpi" ? <></> :
