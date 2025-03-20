@@ -2,6 +2,7 @@
 import { transcribe } from "@/app/api/generate/actions";
 import { Button } from "@heroui/button";
 import { Mic, MicOff } from "lucide-react";
+import { responseCookiesToRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import React, { useState, useRef } from "react";
 
 const AudioRecorder: React.FC = () => {
@@ -12,13 +13,15 @@ const AudioRecorder: React.FC = () => {
 
 
   const sendAudioToServer = async () => {
-    console.log("sending audio rn.");
+    console.log("sending audio rn." + audioUrl);
     if (audioUrl) {
 
       console.log("there exists an audioURL");
-      downloadAudio();
+      
+      const audioBlob = await fetch(audioUrl).then((res) => res.blob());
+      const response = await transcribe({blob: audioBlob});
+      console.log(response)
 
-      // const audioBlob = await fetch(audioUrl).then((res) => res.blob());
       // const formData = new FormData();
       // formData.append("audio", audioBlob, "recording.wav");
 
@@ -69,8 +72,6 @@ const AudioRecorder: React.FC = () => {
           const audioUrl = URL.createObjectURL(audioBlob);
           setAudioUrl(audioUrl);
 
-          console.log("there exists an audioURL");
-
           audioChunksRef.current = []; // Clear the chunks for next recording
         };
 
@@ -96,7 +97,6 @@ const AudioRecorder: React.FC = () => {
   };
 
   return <>
-
     <div>
       <Button onPress={toggleRecording} isIconOnly>
         {isRecording ? <MicOff /> : <Mic />}
@@ -111,11 +111,6 @@ const AudioRecorder: React.FC = () => {
         </div>
       )}
     </div>
-{/* 
-    <Button className="h-full aspect-square" onPress={toggleRecording} isIconOnly>
-      {isRecording ? <MicOff /> : <Mic />}
-    </Button> */}
-
   </>
 };
 
