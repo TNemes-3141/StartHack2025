@@ -1,4 +1,6 @@
 import {heroui} from "@heroui/theme"
+import plugin from 'tailwindcss'
+
 
 /** @type {import('tailwindcss').Config} */
 const config = {
@@ -29,7 +31,26 @@ const config = {
       },
     },
   },
-  plugins: [heroui()],
+  plugins: [
+    heroui(),
+    plugin(function ({ addUtilities }) {
+      addUtilities({
+        '.scrollbar-hide': {
+          /* IE and Edge */
+          '-ms-overflow-style': 'none',
+
+          /* Firefox */
+          'scrollbar-width': 'none',
+
+          /* Safari and Chrome */
+          '&::-webkit-scrollbar': {
+            display: 'none'
+          }
+        }
+      }
+      )
+    })
+  ],
 }
 
 module.exports = config;
