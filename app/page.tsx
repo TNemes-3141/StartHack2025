@@ -11,7 +11,7 @@ import { Button } from "@heroui/button";
 import { Card, CardBody, Spinner } from "@heroui/react";
 import { History, X } from "lucide-react"
 import CardContainer from "./components/CardContainer";
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import AudioRecorder from "./components/audio_recorder/audio_recorder";
 import {ScrollShadow} from "@heroui/react";
 import CandleChart from "./components/charts/CandleChart";
@@ -23,6 +23,12 @@ import TableChart from "./components/charts/TableCard";
 import TableCard from "./components/charts/TableCard";
 import NewsCard from "./components/charts/NewsCard";
 import { textToSpeech } from "./api/generate/actions";
+import { candle_data_list, line_data_list } from "./components/charts/PlaceholderData";
+import { AxisChartDataList } from "./components/charts/ApexSeriesConverter";
+
+
+
+
 
 // chat can we get a pog chat?
 type ChatHistory = {
@@ -40,6 +46,7 @@ export default function Home() {
   const [showHistory, setShowHistory] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
   const [history, setHistory] = useState<ChatHistory>([]);
+  const [dataList, setDataList] = useState<({id: string, data: AxisChartDataList | string})[]>([])
 
   const addCard = (cardId: string) => {
     if (!selectedCards.includes(cardId)) {
@@ -47,6 +54,7 @@ export default function Home() {
       // console.log("added " + cardId)
     }
   }
+
 
   const removeCard = (cardId: string) => {
     setSelectedCards(selectedCards.filter(ele => ele !== cardId))
@@ -164,6 +172,16 @@ export default function Home() {
 
   }
 
+  const updateDataList = (id: string, data: AxisChartDataList | string ) => {
+    setDataList([...dataList.filter(ele => ele.id != id), {id, data}])
+  }
+
+
+  useEffect(() => {
+    console.log(dataList)
+  }, [dataList])
+
+
   return <>
     <div className="h-screen w-screen flex">
       <aside className={
@@ -209,9 +227,9 @@ export default function Home() {
                 id={`chart-${index}`}
                 title={`Chart ${index + 1}`}
                 content={
-                chart.type === "CandleChart" ? <CandleChart series={chart.data} /> :
-                chart.type === "LineChart" ? <LineChart series={chart.data} /> :
-                chart.type === "PieChart" ? <PieChart series={chart.data} /> : <div>No chart available</div>
+                chart.type === "CandleChart" ? <CandleChart dataList={chart.data} id={"" + index} onDataChange={updateDataList}/> :
+                chart.type === "LineChart" ? <LineChart dataList={chart.data} id={"" + index} onDataChange={updateDataList}/> :
+                chart.type === "PieChart" ? <PieChart dataList={chart.data} id={"" + index}/> : <div>No chart available</div>
                 }
                 onSelect={addCard}
                 onDeselect={removeCard}
@@ -219,13 +237,13 @@ export default function Home() {
               />
               ))}
 
-              <CardContainer id="1" title="card 1" content={<CandleChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
+              <CardContainer id="1" title="card 1" content={<CandleChart dataList={candle_data_list} id="1" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
               <CardContainer id="2" title="card 2" content="This is card 2" onSelect={addCard} onDeselect={removeCard}/>
               <CardContainer id="3" title="card 3" content="This is card 3" onSelect={addCard} onDeselect={removeCard}/>
-              <CardContainer id="4" title="card 4" content={<LineChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
+              <CardContainer id="4" title="card 4" content={<LineChart dataList={line_data_list} id="4" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
 
               <TableCard id="1" title="Banco Santander Rg" tableHeader={header} tableData={data} onSelect={addCard} onDeselect={removeCard} colSpan="2" rowSpan="2" toggleCellSelect={()=>{console.log("selected")}}></TableCard>
-              <CardContainer id="3" title="The Pie is a lie" content={<PieChart />} onSelect={addCard} onDeselect={removeCard}/>
+              <CardContainer id="3" title="The Pie is a lie" content={<PieChart dataList={}/>} onSelect={addCard} onDeselect={removeCard}/>
             </div>
             
                
