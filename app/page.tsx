@@ -189,7 +189,7 @@ export default function Home() {
       console.log(JSON.stringify({ query, portfolio, conversationHistory }))
 
       try {
-          const res = await fetch("/api/orchestrator", {
+          const res = await fetch("/api/orchestrator/canvas", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ query, portfolio, conversationHistory }),
