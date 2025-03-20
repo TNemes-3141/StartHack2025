@@ -8,11 +8,14 @@ import { getComponents } from "./getComponents";
 export async function POST(request: Request) {
     try {
         // Parse request body
-        const { query, portfolio, history } = await request.json();
+        const { query, portfolio, conversationHistory } = await request.json();
 
         const apiKey = process.env.OPENAI_API_KEY!;
 
-        if (!query && !portfolio && !history) {
+        console.log("History:")
+        console.log(conversationHistory)
+
+        if (!query && !portfolio && !conversationHistory) {
             return new Response(JSON.stringify({ error: "Missing data" }), {
                 status: 400,
                 headers: { "Content-Type": "application/json" },
@@ -27,7 +30,7 @@ export async function POST(request: Request) {
                     // Step 1: Send user query and portfolio to QUERY for data
                     await sendMessage(controller, encoder, "Gathering data for problem solving...");
 
-                    const dataResults = await getDataFromQuery(portfolio, history, query) ?? [];
+                    const dataResults = await getDataFromQuery(portfolio, conversationHistory, query) ?? [];
                     console.log("We are receiving " + dataResults.length + " results");
                     console.log(dataResults);
 

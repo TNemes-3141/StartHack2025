@@ -183,8 +183,9 @@ export default function Home() {
       const query = promptMessage;
       const portfolio = portfolioData;
       const conversationHistory = history.length > 0 ? history : null;
-
-      console.log(query, portfolio)
+      
+      console.log("History:")
+      console.log(JSON.stringify({ query, portfolio, conversationHistory }))
 
       try {
           const res = await fetch("/api/orchestrator", {
