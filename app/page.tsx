@@ -386,7 +386,7 @@ export default function Home() {
                 <Card className="w-full h-fit max-h-[150px] self-center bg-secondary-light dark:bg-secondary-dark p-3 flex gap-2 flex-row items-start">
                   
                   <CardBody className="w-fit p-0">
-                    Hi! I'm SIX. Interact with the dashboard to start.
+                    Hi! I'm SIX. Enter your first question to start.
                   </CardBody>
                 </Card>
               </div>

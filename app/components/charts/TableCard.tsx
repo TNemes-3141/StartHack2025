@@ -129,7 +129,7 @@ const TableCard = ({
         {
           tableHeader && tableData && <CardBody className="h-fit pt-0">
             <ScrollShadow hideScrollBar orientation="horizontal">
-              <Table className="w-fit">
+              <Table className="w-fit [&>div]:shadow-none [&>div]:pt-0">
                 <TableHeader>
                   {
                     tableHeader.map((heading, idx) => {
