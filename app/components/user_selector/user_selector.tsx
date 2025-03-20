@@ -3,8 +3,9 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { fetchUserPortfolios, getUserById, listAllUsers, UserData } from "@/app/actions";
 import { usePortfolioDataContext } from "@/context/portfolioData";
+import { cn } from "@/lib/utils";
 
-function UserSelector() {
+function UserSelector( {className}: {className?: string}) {
 
     const [userList, setUserList]: any = useState([]);
     const [selectedId, setSelectedId] = useState(-1);
@@ -44,13 +45,13 @@ function UserSelector() {
       };
 
     return (
-        <div>
-            <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-                <Select onChange={handleSelectionChange} className="max-w-xs" label="Select a user">
-                    {userList.map((user: UserData) => (
-                    <SelectItem key={user.id}>{user.username}</SelectItem>
-                    ))}
-                </Select>
+        <div className={cn(className)}>
+            <div className="flex flex-wrap gap-4 w-32">
+            <Select onChange={handleSelectionChange} className="w-full max-w-xs" label="Select a user">
+                {userList.map((user: UserData) => (
+                <SelectItem key={user.id}>{user.username}</SelectItem>
+                ))}
+            </Select>
             </div>
         </div>
     );
