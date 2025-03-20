@@ -23,7 +23,7 @@ const PieChart = ({
     stroke: {
       show: false, // Enables outline
       width: 3, // Thickness of the outline
-      colors: ["#ffffff"] // Outline color (can be an array for different slices)
+      colors: ["transparent"] // Outline color (can be an array for different slices)
     },
   }
 

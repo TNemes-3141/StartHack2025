@@ -8,8 +8,8 @@ import styles from "./page.module.css"
 import logo from "@/public/SIX_Group_logo.svg"
 import Image from "next/image";
 import { Button } from "@heroui/button";
-import { Card, CardBody, Spinner } from "@heroui/react";
-import { History, X } from "lucide-react"
+import { Card, CardBody, CardHeader, Code, Spinner } from "@heroui/react";
+import { BotMessageSquare, History, X } from "lucide-react"
 import CardContainer from "./components/CardContainer";
 import { useEffect, useState } from "react";
 import AudioRecorder from "./components/audio_recorder/audio_recorder";
@@ -22,6 +22,8 @@ import UserSelector from "./components/user_selector/user_selector";
 import TableChart from "./components/charts/TableCard";
 import TableCard from "./components/charts/TableCard";
 import NewsCard from "./components/charts/NewsCard";
+import { code_font } from "@/lib/fonts"; // Adjust the import path
+
 import { textToSpeech } from "./api/generate/actions";
 import { candle_data_list, line_data_list, pie_data_list } from "./components/charts/PlaceholderData";
 import { AxisChartDataList } from "./components/charts/ApexSeriesConverter";
@@ -187,10 +189,11 @@ export default function Home() {
         cn(styles.history, "h-full flex flex-col bg-secondary-light dark:bg-secondary-dark", 
           "duration-500 ease-in-out transition-[transform,width]",
           "z-[999] absolute top-0 left-0 shadow-2xl lg:static",
+          code_font.className,
           showHistory ? "w-[80%] lg:w-[30%] translate-x-0" : "w-[0] translate-x-[-400px]")
       }>
         <div className="flex p-5 justify-between items-center">
-          <h2>Interaction Chat</h2>
+          <h2>Interaction Log</h2>
           <Button isIconOnly onPress={() => setShowHistory(!showHistory)}>
             <X />
           </Button>
@@ -199,11 +202,11 @@ export default function Home() {
           <main className="w-full overflow-y-auto no-scrollbar">
             <div className="w-full flex flex-col p-5 justify-self-end">
               {
-                history.map((message, idx) => {
-                  return <Card className={cn("my-2 p-2 w-fit w-max-[200px] bg-main-light dark:bg-main-dark", message.sender == "user" ? "self-end" : "self-start")} key={idx}>
-                    {message.message}
-                  </Card>
-                })
+                history.length != 0 ? history.map((message, idx) => {
+                  return <div className={cn("p-1 w-fit w-max-[200px]")} key={idx}>
+                    {message.sender + " wrote: " +message.message}
+                  </div>
+                }) : <p className="opacity-50">Begin your journey by interacting with the dashboard right.</p>
               }
             </div>
           </main>
@@ -218,39 +221,41 @@ export default function Home() {
           <ThemeSwitcher />
         </header>
         <main className="flex flex-col h-full w-full justify-end">
-            <div className="relative grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-full p-5 pb-[170px] overflow-hidden">
-            <div className="absolute inset-0 overflow-y-auto no-scrollbar p-5 pb-[170px] grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-              {charts.map((chart: any, index: number) => (
-              <CardContainer
-                key={index}
-                id={`chart-${index}`}
-                title={`Chart ${index + 1}`}
-                content={
-                chart.type === "CandleChart" ? <CandleChart dataList={chart.data} id={"" + index} onDataChange={updateDataList}/> :
-                chart.type === "LineChart" ? <LineChart dataList={chart.data} id={"" + index} onDataChange={updateDataList}/> :
-                chart.type === "PieChart" ? <PieChart dataList={chart.data} id={"" + index}/> : <div>No chart available</div>
-                }
-                onSelect={addCard}
-                onDeselect={removeCard}
-                colSpan={chart.colSpan || 1}
-              />
-              ))}
+          <div className="relative grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-full p-5 overflow-hidden">
+            <div className="w-full h-full absolute inset-0">
+              <ScrollShadow className="w-full h-full grid p-5 pb-[170px] gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" hideScrollBar size={20}>
+                {charts.map((chart: any, index: number) => (
+                  <CardContainer
+                    key={index}
+                    id={`chart-${index}`}
+                    title={`Chart ${index + 1}`}
+                    className="chartelement"
+                    content={
+                    chart.type === "CandleChart" ? <CandleChart dataList={chart.data} id={"" + index} onDataChange={updateDataList}/> :
+                    chart.type === "LineChart" ? <LineChart dataList={chart.data} id={"" + index} onDataChange={updateDataList}/> :
+                    chart.type === "PieChart" ? <PieChart dataList={chart.data} id={"" + index}/> : <div>No chart available</div>
+                    }
+                    onSelect={addCard}
+                    onDeselect={removeCard}
+                    colSpan={chart.colSpan || 1}
+                  />
+                ))}
 
-              <CardContainer id="1" title="card 1" content={<CandleChart dataList={candle_data_list} id="1" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
-              <CardContainer id="2" title="card 2" content="This is card 2" onSelect={addCard} onDeselect={removeCard}/>
-              <CardContainer id="3" title="card 3" content="This is card 3" onSelect={addCard} onDeselect={removeCard}/>
-              <CardContainer id="4" title="card 4" content={<LineChart dataList={line_data_list} id="4" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
+                <CardContainer id="1" title="card 1" content={<CandleChart dataList={candle_data_list} id="1" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
+                <CardContainer id="4" title="card 4" content={<LineChart dataList={line_data_list} id="4" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
 
-              <TableCard id="5" title="Banco Santander Rg" tableHeader={header} tableData={data} onSelect={addCard} onDeselect={removeCard} colSpan="2" rowSpan="2" toggleCellSelect={()=>{console.log("selected")}}></TableCard>
-              <CardContainer id="6" title="The Pie is a lie" content={<PieChart dataList={pie_data_list} id="6"/>} onSelect={addCard} onDeselect={removeCard}/>
+                <TableCard id="5" title="Banco Santander Rg" tableHeader={header} tableData={data} onSelect={addCard} onDeselect={removeCard} colSpan="2" rowSpan="1" toggleCellSelect={()=>{console.log("selected")}}></TableCard>
+                <CardContainer id="6" title="The Pie is a lie" content={<PieChart dataList={pie_data_list} id="6"/>} onSelect={addCard} onDeselect={removeCard}/>
+              </ScrollShadow>
             </div>
             
                
 
-            <div className="absolute bottom-0 left-0 w-full px-5 z-[1000]">
-              <Card className="w-full h-[150px] self-center bg-secondary-light dark:bg-secondary-dark">
-                <CardBody>
-                  <h2>AI Assistant: </h2>
+            <div className="absolute bottom-0 right-0 w-fit max-w-[500px] px-5 z-[1]">
+              <Card className="w-full h-fit max-h-[150px] self-center bg-secondary-light dark:bg-secondary-dark p-3 flex gap-2 flex-row items-start">
+                <div className="flex w-fit h-fit"><BotMessageSquare />:</div>
+                <CardBody className="w-fit p-0">
+                  Hi! I'm SIX. Interact with the dashboard to start.
                 </CardBody>
               </Card>
             </div>
@@ -258,8 +263,25 @@ export default function Home() {
           <form className="w-full self-center p-5 flex gap-3" onSubmit={(e) => {
 
             e.preventDefault();
+            
             if (!inputValue) return;
             sendPrompt(inputValue);
+
+            setSelectedCards([]);
+            // document.querySelectorAll(".cardContainer").forEach((element) => {
+            //   element.animate(
+            //     [
+            //       { opacity: 1, transform: "scale(1)" },  // Start: fully visible, normal size
+            //       { opacity: 0, transform: "scale(0.95)" } // End: faded out, smaller
+            //     ],
+            //     {
+            //       duration: 500, // Animation duration in milliseconds
+            //       easing: "ease-in-out", // Smooth easing
+            //       fill: "forwards" // Keeps the final state (faded out & small)
+            //     }
+            //   );
+            // })
+
 
           }}>
             <Button isIconOnly className="h-full z-[1000]" onPress={() => {

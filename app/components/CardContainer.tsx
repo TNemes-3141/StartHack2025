@@ -10,6 +10,7 @@ const CardContainer = ({
   onDeselect,
   rowSpan = "1",
   colSpan = "1",
+  pt_0 = false,
   className,
 }: {
   id: string;
@@ -17,9 +18,9 @@ const CardContainer = ({
   content?: string | React.ReactElement;
   onSelect?: (cardID: string) => void;
   onDeselect?: (cardID: string) => void;
-
   rowSpan?: string,
   colSpan?: string,
+  pt_0?: boolean
   className?: string;
 }) => {
   const [isSelected, setIsSelected] = useState(false);
@@ -55,9 +56,9 @@ const CardContainer = ({
         isSelected && "outline-red-600 outline-2 outline-offset-0",
       )}>
         <CardHeader>
-            <p>{title}</p>
+          <h2>{title}</h2>
         </CardHeader>
-        <CardBody className={cn((content) && "h-fit") } >{content ? content : ""}</CardBody>
+        <CardBody className={cn((content) && "h-fit", pt_0 && "pt-0") } >{content ? content : ""}</CardBody>
       </Card>
     </div>
   );
