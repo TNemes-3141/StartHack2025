@@ -14,11 +14,16 @@ const PieChart = () => {
       background: 'transparent',
       toolbar: { show: false }
     },
-
+    colors: ["#FF2715", "#E52313", "#DA2112", "#CA1F11", "#B51C0F", "#A81A0E"],
+    stroke: {
+      show: false, // Enables outline
+      width: 3, // Thickness of the outline
+      colors: ["#ffffff"] // Outline color (can be an array for different slices)
+    },
   }
 
   return <div>
-    <ReactApexChart options={options} series={series} type="line" height={250} />
+    <ReactApexChart options={options} series={series} type="donut" height={250} />
   </div>
 }
 
