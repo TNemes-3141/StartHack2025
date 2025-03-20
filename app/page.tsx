@@ -220,7 +220,7 @@ export default function Home() {
 
                 setJsonData(jsonData);
                 // console.log("THIS IS IT:" + JSON.stringify(jsonData));
-                classify(jsonData);
+                // classify(jsonData);
               }
             }
 
