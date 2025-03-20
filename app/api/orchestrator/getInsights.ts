@@ -41,6 +41,7 @@ function generateInsightsLlmPrompt(context: ContextData, portfolio: any | undefi
         - If a portfolio is given, always include a pie chart that shows how their assets are distributed across different domains (available in the context data)
         - Do not make candle charts out of a single OHLC datapoint! Only if you have a series of OHLC points across different dates.
         - If you have multiple news articles given, only select one relevant headline at most!
+        - ONLY use the labels of the context data chunks to refer to them, like [SIX_Data 1], [News 2] or [Portfolio_Dist].
 
         Context data:
         ${formatContextData(context)}
@@ -48,7 +49,7 @@ function generateInsightsLlmPrompt(context: ContextData, portfolio: any | undefi
         Here is the user's question: ${userQuery}
         ${portfolio ? `If the user refers to a portfolio, it means this portfolio of a client he manages: ${JSON.stringify(portfolio)}` : "There is no portfolio for this query."}
 
-        Do NOT repeat the data, only refer to the label [Label] of the context data and describe in natural language what data goes into the insight card and how. Do NOT hallucinate, only generate insights from the context data you are given. Give every insight you generate a summarizing title. Example:
+        Do NOT repeat the data, only refer to the label (e.g. [SIX_DATA 1]) of the context data and describe in natural language what data goes into the insight card and how. Do NOT hallucinate, only generate insights from the context data you are given. Give every insight you generate a summarizing title. Example:
         <example>
         [SIX_Data 1] Title: "Apple price change". Show in candle chart.
         [SIX_Data 2] Title: "Apple revenue". Show revenue field as KPI (number: revenue, footer: "Revenue in 2023")

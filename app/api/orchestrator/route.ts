@@ -8,12 +8,12 @@ import { getComponents } from "./getComponents";
 export async function POST(request: Request) {
     try {
         // Parse request body
-        const { query, portfolio } = await request.json();
+        const { query, portfolio, history } = await request.json();
 
         const apiKey = process.env.OPENAI_API_KEY!;
 
-        if (!query && !portfolio) {
-            return new Response(JSON.stringify({ error: "Missing query or portfolio data" }), {
+        if (!query && !portfolio && !history) {
+            return new Response(JSON.stringify({ error: "Missing data" }), {
                 status: 400,
                 headers: { "Content-Type": "application/json" },
             });
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
                     // Step 1: Send user query and portfolio to QUERY for data
                     await sendMessage(controller, encoder, "Gathering data for problem solving...");
 
-                    const dataResults = await getDataFromQuery(portfolio, query) ?? [];
+                    const dataResults = await getDataFromQuery(portfolio, history, query) ?? [];
                     console.log("We are receiving " + dataResults.length + " results");
                     console.log(dataResults);
 
@@ -93,7 +93,7 @@ export async function POST(request: Request) {
 
                     // Step 5: Generate JSON
                     if (!insights || insights.length == 0) {
-                        await sendMessage(controller, encoder, `FINAL_JSON:{}`, 500);
+                        await sendMessage(controller, encoder, `FINAL_JSON:[]`, 500);
                         controller.close(); // Close the stream when finished
                     }
                     else {
@@ -101,7 +101,7 @@ export async function POST(request: Request) {
                         console.log("Components: " + componentJson);
 
                         // Send final JSON payload as the last message
-                        await sendMessage(controller, encoder, componentJson ? `FINAL_JSON:${componentJson}` : "FINAL_JSON:{}", 500);
+                        await sendMessage(controller, encoder, componentJson ? `FINAL_JSON:${componentJson}` : "FINAL_JSON:[]", 500);
                         controller.close(); // Close the stream when finished
                     }
                 } catch (error) {
