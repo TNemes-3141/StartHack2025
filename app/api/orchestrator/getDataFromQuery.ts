@@ -1,6 +1,7 @@
 export async function getDataFromQuery(portfolio: any | undefined, userQuery: string): Promise<string[] | undefined> {
     try {
         const query = generateToolsLlmPrompt(portfolio, userQuery);
+        console.log("System prompt: " + query);
 
         const response = await fetch(`https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/query?query=${query}`, {
             method: "POST",
@@ -39,6 +40,6 @@ function generateToolsLlmPrompt(portfolio: any | undefined, userQuery: string): 
 
         Here is the user's question: ${userQuery}
 
-        What information would you retreive from your tools to help the user solve his case? Think of companies whose data could be relevant. Make exactly three function calls! Think first before you respond. 
+        What information would you retrieve from your tools to help the user solve his case? Think of companies whose data could be relevant. Make exactly three function calls! Think first before you respond. 
     `.trim();
 }

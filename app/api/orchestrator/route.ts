@@ -97,7 +97,7 @@ export async function POST(request: Request) {
                         controller.close(); // Close the stream when finished
                     }
                     else {
-                        const componentJson = await getComponents(finalData, insights[0]);
+                        const componentJson = await getComponents(finalData, insights[0], apiKey);
                         console.log("Components: " + componentJson);
 
                         // Send final JSON payload as the last message

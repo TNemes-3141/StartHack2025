@@ -39,6 +39,7 @@ function generateInsightsLlmPrompt(context: ContextData, portfolio: any | undefi
 
         Generally, you are free to choose which insights you generate. However, you should follow these rules:
         - If a portfolio is given, always include a pie chart that shows how their assets are distributed across different domains (available in the context data)
+        - Do not make candle charts out of a single OHLC datapoint! Only if you have a series of OHLC points across different dates.
         - If you have multiple news articles given, only select one relevant headline at most!
 
         Context data:
