@@ -21,6 +21,7 @@ const AudioRecorder: React.FC = () => {
       const audioBlob = await fetch(audioUrl).then((res) => res.blob());
       const response = await transcribe({blob: audioBlob});
       console.log(response)
+      downloadAudio();
 
       // const formData = new FormData();
       // formData.append("audio", audioBlob, "recording.wav");
