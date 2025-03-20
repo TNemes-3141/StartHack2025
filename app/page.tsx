@@ -217,7 +217,10 @@ export default function Home() {
               } else {
                 // Extract JSON data from the final chunk
                 const jsonData = JSON.parse(chunk.replace("FINAL_JSON:", "").trim());
+
                 setJsonData(jsonData);
+                // console.log("THIS IS IT:" + JSON.stringify(jsonData));
+                // classify(jsonData);
               }
             }
 
@@ -289,9 +292,8 @@ export default function Home() {
         <main className="flex flex-col h-full w-full justify-end">
           <div className={cn("relative grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-full p-5 overflow-hidden", (history.length < 1) && "hidden h-0")}>
             <div className={cn("w-full h-full absolute inset-0")}>
-              <ScrollShadow className="w-full h-full grid p-5 pb-[170px] gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" hideScrollBar size={20}>
+              <ScrollShadow className="w-full h-full grid grid-flow-dense p-5 pb-[170px] gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" hideScrollBar size={20}>
                 {jsonData && jsonData.map((chart: any, index) => (
-
                   chart.type === "table" ? 
                   <TableCard 
                     key={index}
@@ -299,18 +301,17 @@ export default function Home() {
                     title={chart.title}
                     tableHeader={chart.data.header}
                     tableData={chart.data.content}
-                    colSpan="2"
-                    rowSpan="1"
                   /> :
                   chart.type === "kpi" ? 
                   <KpiCard 
+                    key={index}
                     id={`chart-${index}`}
                     title={chart.title}
                     content={chart.data.number}
                     onSelect={addCard}
                     onDeselect={removeCard}
-                    rowSpan = "1"
-                    colSpan = "1"
+                    // rowSpan = "1"
+                    // colSpan = {chart.data.toString().length >= 6 ? "2" : "1"}
                   />
                   : <CardContainer
                     key={index}
@@ -327,11 +328,7 @@ export default function Home() {
                     onSelect={addCard}
                     onDeselect={removeCard}
                     colSpan={
-                      chart.type === "news" ? "1" :
-                      chart.type === "kpi" ? "1" :
-                      chart.type === "candle" ? "2" :
-                      chart.type === "line" ? "2" :
-                      chart.type === "pie" ? "1" : "1"
+                      (chart.type === "candle" || chart.type === "line") ? "2" : undefined
                     }
                   />
                 ))}
