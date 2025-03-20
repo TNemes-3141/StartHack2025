@@ -178,11 +178,11 @@ export default function Home() {
           <main className="w-full overflow-y-auto no-scrollbar">
             <div className="w-full flex flex-col p-5 justify-self-end">
               {
-                history.map((message, idx) => {
+                history.length != 0 ? history.map((message, idx) => {
                   return <div className={cn("p-1 w-fit w-max-[200px]")} key={idx}>
                     {message.sender + " wrote: " +message.message}
                   </div>
-                })
+                }) : <p className="opacity-50">Begin your journey by interacting with the dashboard right.</p>
               }
             </div>
           </main>
@@ -197,31 +197,32 @@ export default function Home() {
           <ThemeSwitcher />
         </header>
         <main className="flex flex-col h-full w-full justify-end">
-            <div className="relative grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-full p-5 pb-[170px] overflow-hidden">
-            <div className="absolute inset-0 overflow-y-auto no-scrollbar p-5 pb-[170px] grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-              {charts.map((chart: any, index: number) => (
-              <CardContainer
-                key={index}
-                id={`chart-${index}`}
-                title={`Chart ${index + 1}`}
-                content={
-                chart.type === "CandleChart" ? <CandleChart series={chart.data} /> :
-                chart.type === "LineChart" ? <LineChart series={chart.data} /> :
-                chart.type === "PieChart" ? <PieChart series={chart.data} /> : <div>No chart available</div>
-                }
-                onSelect={addCard}
-                onDeselect={removeCard}
-                colSpan={chart.colSpan || 1}
-              />
-              ))}
+          <div className="relative grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-full p-5 pb-[170px] overflow-hidden">
+            <div className="w-full h-full absolute inset-0 p-5 pb-[170px]">
+              <ScrollShadow className="w-full h-full grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" hideScrollBar size={20}>
+                {charts.map((chart: any, index: number) => (
+                  <CardContainer
+                    key={index}
+                    id={`chart-${index}`}
+                    title={`Chart ${index + 1}`}
+                    className="chartelement"
+                    content={
+                    chart.type === "CandleChart" ? <CandleChart series={chart.data} /> :
+                    chart.type === "LineChart" ? <LineChart series={chart.data} /> :
+                    chart.type === "PieChart" ? <PieChart series={chart.data} /> : <div>No chart available</div>
+                    }
+                    onSelect={addCard}
+                    onDeselect={removeCard}
+                    colSpan={chart.colSpan || 1}
+                  />
+                ))}
 
-              <CardContainer id="1" title="card 1" content={<CandleChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
-              <CardContainer id="2" title="card 2" content="This is card 2" onSelect={addCard} onDeselect={removeCard}/>
-              <CardContainer id="3" title="card 3" content="This is card 3" onSelect={addCard} onDeselect={removeCard}/>
-              <CardContainer id="4" title="card 4" content={<LineChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
+                <CardContainer id="1" title="card 1" content={<CandleChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
+                <CardContainer id="4" title="card 4" content={<LineChart/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
 
-              <TableCard id="1" title="Banco Santander Rg" tableHeader={header} tableData={data} onSelect={addCard} onDeselect={removeCard} colSpan="2" rowSpan="2" toggleCellSelect={()=>{console.log("selected")}}></TableCard>
-              <CardContainer id="3" title="The Pie is a lie" content={<PieChart />} onSelect={addCard} onDeselect={removeCard}/>
+                <TableCard id="1" title="Banco Santander Rg" tableHeader={header} tableData={data} onSelect={addCard} onDeselect={removeCard} colSpan="2" rowSpan="1" toggleCellSelect={()=>{console.log("selected")}}></TableCard>
+                <CardContainer id="3" title="The Pie is a lie" content={<PieChart />} onSelect={addCard} onDeselect={removeCard}/>
+              </ScrollShadow>
             </div>
             
                
@@ -237,8 +238,25 @@ export default function Home() {
           <form className="w-full self-center p-5 flex gap-3" onSubmit={(e) => {
 
             e.preventDefault();
+            
             if (!inputValue) return;
             sendPrompt(inputValue);
+
+            setSelectedCards([]);
+            // document.querySelectorAll(".cardContainer").forEach((element) => {
+            //   element.animate(
+            //     [
+            //       { opacity: 1, transform: "scale(1)" },  // Start: fully visible, normal size
+            //       { opacity: 0, transform: "scale(0.95)" } // End: faded out, smaller
+            //     ],
+            //     {
+            //       duration: 500, // Animation duration in milliseconds
+            //       easing: "ease-in-out", // Smooth easing
+            //       fill: "forwards" // Keeps the final state (faded out & small)
+            //     }
+            //   );
+            // })
+
 
           }}>
             <Button isIconOnly className="h-full z-[1000]" onPress={() => {

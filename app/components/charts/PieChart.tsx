@@ -22,7 +22,7 @@ const PieChart = () => {
     },
   }
 
-  return <div>
+  return <div className="w-full h-full">
     <ReactApexChart options={options} series={series} type="donut" height={250} />
   </div>
 }

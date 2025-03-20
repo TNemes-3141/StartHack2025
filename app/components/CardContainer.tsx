@@ -17,7 +17,6 @@ const CardContainer = ({
   content?: string | React.ReactElement;
   onSelect?: (cardID: string) => void;
   onDeselect?: (cardID: string) => void;
-
   rowSpan?: string,
   colSpan?: string,
   className?: string;
