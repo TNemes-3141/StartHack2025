@@ -27,7 +27,6 @@ export default function Home() {
   const [inputValue, setInputValue] = useState<string>("");
   const [history, setHistory] = useState<ChatHistory>([]);
 
-
   const addCard = (cardId: string) => {
     if (!selectedCards.includes(cardId)) {
       setSelectedCards([... selectedCards, cardId])
@@ -39,9 +38,6 @@ export default function Home() {
     setSelectedCards(selectedCards.filter(ele => ele !== cardId))
     // console.log("removed " + cardId)
   }
-
-
-
 
 
 

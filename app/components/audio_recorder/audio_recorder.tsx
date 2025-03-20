@@ -1,4 +1,5 @@
 'use client'
+import { transcribe } from "@/app/api/generate/actions";
 import { Button } from "@heroui/button";
 import { Mic, MicOff } from "lucide-react";
 import React, { useState, useRef } from "react";
@@ -8,6 +9,7 @@ const AudioRecorder: React.FC = () => {
   const [audioUrl, setAudioUrl] = useState<string | null>(null); // Audio file URL
   const mediaRecorderRef = useRef<MediaRecorder | null>(null); // Store MediaRecorder instance
   const audioChunksRef = useRef<Blob[]>([]); // Store audio chunks
+
 
   const sendAudioToServer = async () => {
     console.log("sending audio rn.");
@@ -41,6 +43,7 @@ const AudioRecorder: React.FC = () => {
     if (isRecording) {
       // Stop recording
       mediaRecorderRef.current?.stop();
+
       sendAudioToServer();
     } else {
       // Request microphone permission
@@ -64,6 +67,9 @@ const AudioRecorder: React.FC = () => {
           });
           const audioUrl = URL.createObjectURL(audioBlob);
           setAudioUrl(audioUrl);
+
+          console.log("there exists an audioURL");
+
           audioChunksRef.current = []; // Clear the chunks for next recording
         };
 
@@ -78,9 +84,6 @@ const AudioRecorder: React.FC = () => {
     setIsRecording(!isRecording);
   };
 
-
-
-
   // Download the audio file when clicked
   const downloadAudio = () => {
     if (audioUrl) {
@@ -92,9 +95,26 @@ const AudioRecorder: React.FC = () => {
   };
 
   return (
+
+    <div>
+      <Button onPress={toggleRecording} isIconOnly>
+        {isRecording ? <MicOff /> : <Mic />}
+      </Button>
+
+      {audioUrl && (
+        <div>
+          <audio controls src={audioUrl} />
+          <button onClick={downloadAudio} className="bg-green-500 text-white px-4 py-2 rounded mt-2">
+            Download Recording
+          </button>
+        </div>
+      )}
+    </div>
+
     <Button className="h-full aspect-square" onPress={toggleRecording} isIconOnly>
       {isRecording ? <MicOff /> : <Mic />}
     </Button>
+
   );
 };
 
