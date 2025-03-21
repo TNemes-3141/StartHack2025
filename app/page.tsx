@@ -425,6 +425,17 @@ export default function Home() {
                     // rowSpan = "1"
                     // colSpan = {chart.data.toString().length >= 6 ? "2" : "1"}
                   />
+                  : chart.type === "news" ? 
+                  <NewsCard 
+                    key={index}
+                    id={`chart-${index}`}
+                    title={chart.title}
+                    className={`chartelement opacity-0 ${randomClass}`}
+                    content={chart.data.content}
+                    source={chart.data.source}
+                    onSelect={addCard}
+                    onDeselect={removeCard}
+                  />
                   : <CardContainer  
                     key={index}
                     id={`chart-${index}`}
@@ -432,7 +443,6 @@ export default function Home() {
                     className={`chartelement opacity-0 ${randomClass}`}
                     pt_0={true}
                     content={
-                      chart.type === "news" ? <><p> {chart.data.content} </p> { chart.data.source && <a href={chart.data.source}>source</a> } </> :
                       chart.type === "candle" ? <CandleChart dataList={chart.data} id={"" + index} onDataChange={updateDataList}/> :
                       chart.type === "line" ? <LineChart dataList={chart.data} id={"" + index} onDataChange={updateDataList} /> :
                       chart.type === "pie" ? <PieChart dataList={chart.data} id={"" + index}/> : <div>No chart available</div>
@@ -514,11 +524,12 @@ export default function Home() {
                   }}>
                   <History className="cursor-pointer"/>
                 </Button>
-                <div className="flex bg-default-100 items-center rounded-medium w-fit max-w-[90%]">
+                <div className="flex bg-default-100 items-center rounded-medium w-full max-w-[90%]">
                   <Input label="Prompt Your Assistant" type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} className={cn("w-full max-w-full bg-transparent", (history.length < 1) && "w-[450px] max-w-screen")}/>
-                  {(selectedCards.length > 0) && <div className="h-[80%] flex justify-center items-center text-default-500 font-semibold mr-1 border-solid border-1 border-red-600 rounded-full p-3">
-                    <Badge className="absolute top-0 right-0" content={selectedCards.length} shape="circle">
-                      Selected Cards <SquareMousePointer className="ml-2" color="red" />
+                  {(selectedCards.length > 0 || selectedTableCells.length > 0) && 
+                  <div className="h-[80%] flex justify-center items-center text-default-500 font-semibold mr-4 border-solid border-1 border-red-600 rounded-full px-6">
+                    <Badge className="absolute top-[-4px] right-[-8px] p-3" content={selectedCards.length + selectedTableCells.length} shape="circle">
+                      Items selected <SquareMousePointer className="ml-2" color="red" />
                     </Badge>
                   </div>}
                 </div>
@@ -527,7 +538,7 @@ export default function Home() {
                   loading ? 
                   <div className="flex gap-5">
                     <Spinner/>
-                    {messages.length > 0 ? <p>{messages[messages.length-1]}</p> : <></>}
+                    {messages.length > 0 ? <p className="h-full flex items-center">{messages[messages.length-1]}</p> : <></>}
                   </div>
                   :
                   <Button color="primary" type="submit" className="h-14 z-[1000]">
