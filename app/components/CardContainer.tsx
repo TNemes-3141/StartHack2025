@@ -51,18 +51,17 @@ const CardContainer = ({
 
   return (
     <div
-      className={cn("cardContainer w-full h-[325px] overflow-y-hidden", className)}
+      className={cn("cardContainer w-full h-[330px] rounded-large", className)}
       onClick={onCardClick}
       style={spanningStyles || {}}
     >
       <Card className={cn(
-        "h-full border-none",
-        isSelected && "outline-red-600 outline-2 outline-offset-0",
+        "h-full border-none", isSelected && "outline-red-600 outline-2 outline-offset-0"
       )}>
         <CardHeader>
           <h2>{title}</h2>
         </CardHeader>
-        <CardBody className={cn("overflow-y-hidden", (content) && "h-fit", pt_0 && "pt-0") } >{content ? content : ""}</CardBody>
+        <CardBody className={cn("", (content) && "h-fit", pt_0 && "pt-0") } >{content ? content : ""}</CardBody>
         {footer && <CardFooter className="h-fit flex justify-end">{footer}</CardFooter>}
       </Card>
     </div>
