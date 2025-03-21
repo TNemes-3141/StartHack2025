@@ -357,11 +357,11 @@ export default function Home() {
             </div>
 
             {(history.length > 0) &&
-              <div className="absolute bottom-0 right-0 w-fit max-w-[500px] px-5 z-[1]">
+              <div className="absolute bottom-0 right-0 w-full px-5 z-[1]">
                 <Card className="w-full h-fit max-h-[150px] self-center bg-secondary-light dark:bg-secondary-dark p-3 flex gap-2 flex-row items-start">
                   <div onClick={() => { setSixMsg("") }} className="flex w-fit h-fit"><BotMessageSquare />:</div>
-                  <ScrollShadow className="w-fit max-h-[100px] p-0">
-                    <CardBody className="w-fit p-0">
+                  <ScrollShadow className="w-full max-h-[100px] p-0">
+                    <CardBody className="w-full p-0">
                       {sixMsg}
                     </CardBody>
                   </ScrollShadow>
