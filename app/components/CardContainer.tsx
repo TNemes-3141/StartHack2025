@@ -17,7 +17,7 @@ const CardContainer = ({
   id: string;
   title?: string;
   content?: string | React.ReactElement;
-  footer?: string | React.ReactElement;
+  footer?: string | React.ReactElement
   onSelect?: (cardID: string) => void;
   onDeselect?: (cardID: string) => void;
   rowSpan?: string,
@@ -63,7 +63,7 @@ const CardContainer = ({
           <h2>{title}</h2>
         </CardHeader>
         <CardBody className={cn((content) && "h-fit", pt_0 && "pt-0") } >{content ? content : ""}</CardBody>
-        {footer && <CardFooter className="flex justify-end h-fit">{footer}</CardFooter>}
+        {footer && <CardFooter className="h-fit flex justify-end">{footer}</CardFooter>}
       </Card>
     </div>
   );

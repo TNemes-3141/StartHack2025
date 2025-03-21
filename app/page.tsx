@@ -8,8 +8,8 @@ import styles from "./page.module.css"
 import logo from "@/public/SIX_Group_logo.svg"
 import Image from "next/image";
 import { Button } from "@heroui/button";
-import { Card, CardBody, CardHeader, Code, Spinner } from "@heroui/react";
-import { BotMessageSquare, History, X } from "lucide-react"
+import { Badge, Card, CardBody, CardHeader, Code, Spinner } from "@heroui/react";
+import { BotMessageSquare, History, SquareMousePointer, X } from "lucide-react"
 import CardContainer from "./components/CardContainer";
 import { useEffect, useState } from "react";
 import AudioRecorder from "./components/audio_recorder/audio_recorder";
@@ -49,6 +49,7 @@ export default function Home() {
   const [inputValue, setInputValue] = useState<string>("");
   const [history, setHistory] = useState<ChatHistory>([]); // {sender: 'assistant', message: "blabl"}
   const [dataList, setDataList] = useState<({id: string, data: AxisChartDataList | string})[]>([])
+  const [selectedTableCells, setSelectedTableCells] = useState<{id: string, x: number, y:number, data:string}[]>([])
   const [sixMsg, setSixMsg] = useState("Hi! I'm SIX. Interact with the dashboard to start.");
 
 
@@ -412,6 +413,17 @@ export default function Home() {
   }
 
 
+  const updateSelectedTableCells = (type: "select" | "deselect",id: string, x: number, y: number, data: string) => {
+    if (type === "select") {
+      setSelectedTableCells([...selectedTableCells.filter(ele => ele.id !== id), {id: id, x: x, y: y, data: data}])
+      console.log(selectedTableCells)
+    } else if (type === "deselect") {
+      setSelectedTableCells([...selectedTableCells.filter(ele => ele.id !== id)])
+      console.log(selectedTableCells)
+    }
+  }
+
+
   return <>
     <div className="h-screen w-screen flex">
       <aside className={
@@ -470,7 +482,7 @@ export default function Home() {
                     title={chart.title}
                     tableHeader={chart.data.header}
                     tableData={chart.data.content}
-                    toggleCellSelect={() => console.log("something")}
+                    toggleCellSelect={updateSelectedTableCells}
                     onSelect={addCard}
                     onDeselect={removeCard}
                     className={` opacity-0 ${randomClass}`}
@@ -487,6 +499,17 @@ export default function Home() {
                     // rowSpan = "1"
                     // colSpan = {chart.data.toString().length >= 6 ? "2" : "1"}
                   />
+                  : chart.type === "news" ? 
+                  <NewsCard 
+                    key={index}
+                    id={`chart-${index}`}
+                    title={chart.title}
+                    className={`chartelement opacity-0 ${randomClass}`}
+                    content={chart.data.content}
+                    source={chart.data.source}
+                    onSelect={addCard}
+                    onDeselect={removeCard}
+                  />
                   : <CardContainer  
                     key={index}
                     id={`chart-${index}`}
@@ -494,7 +517,6 @@ export default function Home() {
                     className={`chartelement opacity-0 ${randomClass}`}
                     pt_0={true}
                     content={
-                      chart.type === "news" ? <><p> {chart.data.content} </p> { chart.data.source && <a href={chart.data.source}>source</a> } </> :
                       chart.type === "candle" ? <CandleChart dataList={chart.data} id={"" + index} onDataChange={updateDataList}/> :
                       chart.type === "line" ? <LineChart dataList={chart.data} id={"" + index} onDataChange={updateDataList} /> :
                       chart.type === "pie" ? <PieChart dataList={chart.data} id={"" + index}/> : <div>No chart available</div>
@@ -573,7 +595,7 @@ export default function Home() {
               </div>
               }
               
-              <div className={cn("flex gap-3 w-full", (history.length < 1) && "w-fit")}>
+              <div className={cn("flex justify-center gap-3 w-full max-w-[90%] md:max-w-full", (history.length < 1) && "w-fit")}>
 
                 
 
@@ -584,12 +606,21 @@ export default function Home() {
                   }}>
                   <History className="cursor-pointer"/>
                 </Button>
-                <Input label="Prompt Your Assistant" type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} className={cn("w-full max-w-full", (history.length < 1) && "w-[450px] max-w-screen")}/>
+                <div className="flex bg-default-100 items-center rounded-medium w-full max-w-[90%]">
+                  <Input label="Prompt Your Assistant" type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} className={cn("w-full max-w-full bg-transparent", (history.length < 1) && "w-[450px] max-w-screen")}/>
+                  {(selectedCards.length > 0 || selectedTableCells.length > 0) && 
+                  <div className="h-[80%] flex justify-center items-center text-default-500 font-semibold mr-4 border-solid border-1 border-red-600 rounded-full px-6">
+                    <Badge className="absolute top-[-4px] right-[-8px] p-3" content={selectedCards.length + selectedTableCells.length} shape="circle">
+                      Items selected <SquareMousePointer className="ml-2" color="red" />
+                    </Badge>
+                  </div>}
+                </div>
+                
                 {
                   loading ? 
                   <div className="flex gap-5">
                     <Spinner/>
-                    {messages.length > 0 ? <p>{messages[messages.length-1]}</p> : <></>}
+                    {messages.length > 0 ? <p className="h-full flex items-center">{messages[messages.length-1]}</p> : <></>}
                   </div>
                   :
                   <Button color="primary" type="submit" className="h-14 z-[1000]">
