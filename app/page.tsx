@@ -8,8 +8,8 @@ import styles from "./page.module.css"
 import logo from "@/public/SIX_Group_logo.svg"
 import Image from "next/image";
 import { Button } from "@heroui/button";
-import { Card, CardBody, CardHeader, Code, Spinner } from "@heroui/react";
-import { BotMessageSquare, History, X } from "lucide-react"
+import { Badge, Card, CardBody, CardHeader, Code, Spinner } from "@heroui/react";
+import { BotMessageSquare, History, SquareMousePointer, X } from "lucide-react"
 import CardContainer from "./components/CardContainer";
 import { useEffect, useState } from "react";
 import AudioRecorder from "./components/audio_recorder/audio_recorder";
@@ -48,6 +48,7 @@ export default function Home() {
   const [inputValue, setInputValue] = useState<string>("");
   const [history, setHistory] = useState<ChatHistory>([]); // {sender: 'assistant', message: "blabl"}
   const [dataList, setDataList] = useState<({id: string, data: AxisChartDataList | string})[]>([])
+  const [selectedTableCells, setSelectedTableCells] = useState<{id: string, x: number, y:number, data:string}[]>([])
 
 
 
@@ -338,6 +339,17 @@ export default function Home() {
   }
 
 
+  const updateSelectedTableCells = (type: "select" | "deselect",id: string, x: number, y: number, data: string) => {
+    if (type === "select") {
+      setSelectedTableCells([...selectedTableCells.filter(ele => ele.id !== id), {id: id, x: x, y: y, data: data}])
+      console.log(selectedTableCells)
+    } else if (type === "deselect") {
+      setSelectedTableCells([...selectedTableCells.filter(ele => ele.id !== id)])
+      console.log(selectedTableCells)
+    }
+  }
+
+
   return <>
     <div className="h-screen w-screen flex">
       <aside className={
@@ -396,7 +408,7 @@ export default function Home() {
                     title={chart.title}
                     tableHeader={chart.data.header}
                     tableData={chart.data.content}
-                    toggleCellSelect={() => console.log("something")}
+                    toggleCellSelect={updateSelectedTableCells}
                     onSelect={addCard}
                     onDeselect={removeCard}
                     className={` opacity-0 ${randomClass}`}
@@ -491,7 +503,7 @@ export default function Home() {
               </div>
               }
               
-              <div className={cn("flex gap-3 w-full", (history.length < 1) && "w-fit")}>
+              <div className={cn("flex justify-center gap-3 w-full max-w-[90%] md:max-w-full", (history.length < 1) && "w-fit")}>
 
                 
 
@@ -502,7 +514,15 @@ export default function Home() {
                   }}>
                   <History className="cursor-pointer"/>
                 </Button>
-                <Input label="Prompt Your Assistant" type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} className={cn("w-full max-w-full", (history.length < 1) && "w-[450px] max-w-screen")}/>
+                <div className="flex bg-default-100 items-center rounded-medium w-fit max-w-[90%]">
+                  <Input label="Prompt Your Assistant" type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} className={cn("w-full max-w-full bg-transparent", (history.length < 1) && "w-[450px] max-w-screen")}/>
+                  {(selectedCards.length > 0) && <div className="h-[80%] flex justify-center items-center text-default-500 font-semibold mr-1 border-solid border-1 border-red-600 rounded-full p-3">
+                    <Badge className="absolute top-0 right-0" content={selectedCards.length} shape="circle">
+                      Selected Cards <SquareMousePointer className="ml-2" color="red" />
+                    </Badge>
+                  </div>}
+                </div>
+                
                 {
                   loading ? 
                   <div className="flex gap-5">
