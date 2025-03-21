@@ -1,15 +1,17 @@
 import { ApexOptions } from "apexcharts"
 import dynamic from "next/dynamic";
-import { apexNonAxisSeriesConverter, NonAxisChartDataList } from "./ApexSeriesConverter";
+import { apexNonAxisSeriesConverter, NonAxisChartDataList, NonAxisChartLabelList } from "./ApexSeriesConverter";
 import { pie_data_list } from "./PlaceholderData";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const PieChart = ({
   dataList,
+  labelList,
   id
 } : {
   dataList?: NonAxisChartDataList,
+  labelList?: NonAxisChartLabelList,
   id: string
 }) => {
   const options: ApexOptions = {
@@ -19,6 +21,7 @@ const PieChart = ({
       background: 'transparent',
       toolbar: { show: false }
     },
+    labels: labelList,
     colors: ["#450a0a", "#991b1b", "#dc2626", "#f87171", "#fca5a5", "#fee2e2"],
     stroke: {
       show: false, // Enables outline
