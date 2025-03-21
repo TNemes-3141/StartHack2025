@@ -29,6 +29,7 @@ import { candle_data_list, line_data_list, pie_data_list } from "./components/ch
 import { AxisChartDataList } from "./components/charts/ApexSeriesConverter";
 import { OrchestratorData } from "./components/charts/OrchestratorInterface";
 import KpiCard from "./components/KpiCard";
+import { extractFinalJsonAndMessage } from "./components/json_decoder";
 import { json } from "stream/consumers";
 
 
@@ -198,12 +199,13 @@ export default function Home() {
       const query = promptMessage;
       const portfolio = portfolioData;
       const conversationHistory = history.length > 0 ? history : null;
+      const insightData: any[] = [];
       
       console.log("History:")
-      console.log(JSON.stringify({ query, portfolio, conversationHistory }))
+      console.log(JSON.stringify({ query, portfolio, conversationHistory, insightData }))
 
       try {
-          const res = await fetch("/api/orchestrator", {
+          const res = await fetch("/api/orchestrator/canvas", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ query, portfolio, conversationHistory }),
@@ -231,11 +233,13 @@ export default function Home() {
                 setMessages([...newMessages]);
               } else {
                 // Extract JSON data from the final chunk
-                const newJsonData = JSON.parse(chunk.replace("FINAL_JSON:", "").trim());
+                try {
+                  const data = extractFinalJsonAndMessage(chunk);
 
-                setJsonData([...jsonData, ...newJsonData]);
-                // console.log("THIS IS IT:" + JSON.stringify(jsonData));
-                // classify(jsonData);
+                  setJsonData([jsonData, ...data.jsonData]);
+                  console.log(data.message);
+                } catch (error) {
+                }
               }
             }
 

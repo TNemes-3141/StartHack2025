@@ -5,8 +5,6 @@ export async function POST(request: Request) {
         // Parse request body
         const { query, portfolio, conversationHistory, focusPoint, parentChart } = await request.json();
 
-        console.log(query, portfolio, conversationHistory, focusPoint, parentChart)
-
         const apiKey = process.env.OPENAI_API_KEY!;
 
         if (!query || !focusPoint || !parentChart) {
@@ -23,9 +21,6 @@ export async function POST(request: Request) {
                     // Step 1: Send user query and portfolio to QUERY for data
                     await sendMessage(controller, encoder, "Focusing in...");
                     const answer = await getReasoning(portfolio, conversationHistory, focusPoint, parentChart, query) ?? "";
-
-                    console.log("ANSWER: " +answer);
-
 
                     await sendMessage(controller, encoder, answer.length > 0 ? `FINAL_RESPONSE:${answer}` : "FINAL_RESPONSE:I could not process your request, please try again later!", 500);
                     controller.close(); // Close the stream when finished
