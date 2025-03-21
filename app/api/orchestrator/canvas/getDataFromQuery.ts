@@ -56,7 +56,7 @@ function generateToolsLlmPrompt(portfolio: any | undefined, history: any | undef
 
         Here is the user's question: ${userQuery}
 
-        What information would you retrieve from your tools to help the user solve his case? Think of companies whose data could be relevant. Make exactly three function calls! Think first before you respond.
+        What information would you retrieve from your tools to help the user solve his case? Think of companies whose data could be relevant. Make exactly three function calls! Do NOT use any Markdown formatting in your answer. Think first before you respond.
     `.trim();
 }
 
@@ -76,6 +76,6 @@ function generateToolsLlmPromptWithInsights(portfolio: any | undefined, history:
 
         Here is the user's question: ${userQuery}
 
-        What information would you retrieve from your tools to help the user solve his case or explain the correlations he is interested in? Make function calls where necessary. Think first before you respond.
+        What information would you retrieve from your tools to help the user solve his case or explain the correlations he is interested in? Make function calls where necessary. Do NOT use any Markdown formatting in your answer. Think first before you respond.
     `.trim();
 }
