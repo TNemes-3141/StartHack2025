@@ -51,7 +51,7 @@ const CardContainer = ({
 
   return (
     <div
-      className={cn("cardContainer w-full h-full min-h-72", className)}
+      className={cn("cardContainer w-full h-[325px] overflow-y-hidden", className)}
       onClick={onCardClick}
       style={spanningStyles || {}}
     >
@@ -62,7 +62,7 @@ const CardContainer = ({
         <CardHeader>
           <h2>{title}</h2>
         </CardHeader>
-        <CardBody className={cn((content) && "h-fit", pt_0 && "pt-0") } >{content ? content : ""}</CardBody>
+        <CardBody className={cn("overflow-y-hidden", (content) && "h-fit", pt_0 && "pt-0") } >{content ? content : ""}</CardBody>
         {footer && <CardFooter className="h-fit flex justify-end">{footer}</CardFooter>}
       </Card>
     </div>
