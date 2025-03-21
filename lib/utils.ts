@@ -1,5 +1,8 @@
+import { ChatHistory } from "@/app/page";
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import jsPDF from "jspdf";
+
 
 /* Function that can be used to merge Tailwind classnames from variables with static classnames, even conditionally if needed
 Example: <body className={cn("flex flex-col min-h-screen bg-background antialiased", primary_font.className)}>
@@ -38,4 +41,30 @@ export const formatNumber = (n: number) => {
   newNumber = number.toFixed(2);
      
   return newNumber + String.fromCharCode(suffix[0]) + String.fromCharCode(suffix[1]);
+}
+
+export function generatePDF(history: ChatHistory) {
+
+  const doc = new jsPDF();
+  let yOffset = 10;
+
+  doc.setFont("helvetica");
+
+  history.forEach(({ sender, message }) => {
+    doc.setFont("helvetica", "bold");
+    doc.text(`${sender.toUpperCase()}:`, 10, yOffset);
+    yOffset += 6;
+    
+    const splitMessage = doc.splitTextToSize(message, 180);
+    doc.text(splitMessage, 10, yOffset);
+    yOffset += splitMessage.length * 6 + 4;
+    
+    if (yOffset > 280) {
+      doc.addPage();
+      yOffset = 10;
+    }
+  });
+
+  doc.save("interaction_log.pdf");
+
 }
