@@ -8,7 +8,7 @@ import { getComponents } from "./getComponents";
 export async function POST(request: Request) {
     try {
         // Parse request body
-        const { query, portfolio, conversationHistory } = await request.json();
+        const { query, portfolio, conversationHistory, insightData } = await request.json();
 
         const apiKey = process.env.OPENAI_API_KEY!;
 
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
                     // Step 1: Send user query and portfolio to QUERY for data
                     await sendMessage(controller, encoder, "Gathering data for problem solving...");
 
-                    const queryResults = await getDataFromQuery(portfolio, conversationHistory, query) ?? {items: [], message: ""};
+                    const queryResults = await getDataFromQuery(portfolio, conversationHistory, insightData, query) ?? {items: [], message: ""};
                     const dataResults = queryResults.items;
                     console.log("We are receiving " + dataResults.length + " results");
                     console.log(dataResults);
@@ -67,9 +67,10 @@ export async function POST(request: Request) {
                         }
                     }
 
-                    let portfolioDistribution: string | undefined = undefined 
+                    let portfolioDistribution: string | undefined = undefined
+                    const insightDataPresent: boolean = (insightData && insightData.length > 0);
                     // Step 2: Get portfolio distribution if applicable
-                    if (portfolio) {
+                    if (portfolio && !insightDataPresent ) {
                         await sendMessage(controller, encoder, "Analyzing client portfolio...");
 
                         const dist = await getPortfolioDistribution(portfolio) ?? undefined;
@@ -89,7 +90,7 @@ export async function POST(request: Request) {
                         news: [news],
                     };
                     await sendMessage(controller, encoder, "Building insights...");
-                    const insights = await getInsights(finalData, portfolio, query);
+                    const insights = await getInsights(finalData, portfolio, query, insightData);
                     console.log(insights);
 
                     // Step 5: Generate JSON

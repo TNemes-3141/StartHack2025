@@ -185,9 +185,10 @@ export default function Home() {
       const query = promptMessage;
       const portfolio = portfolioData;
       const conversationHistory = history.length > 0 ? history : null;
+      const insightData: any[] = [];
       
       console.log("History:")
-      console.log(JSON.stringify({ query, portfolio, conversationHistory }))
+      console.log(JSON.stringify({ query, portfolio, conversationHistory, insightData }))
 
       try {
           const res = await fetch("/api/orchestrator/canvas", {
