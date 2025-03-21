@@ -1,8 +1,6 @@
-# Next.js & HeroUI Template
-
-This is a template for creating applications using Next.js 14 (app directory) and HeroUI (v2).
-
-[Try it on CodeSandbox](https://githubbox.com/heroui-inc/heroui/next-app-template)
+# !!! Deployment !!!
+The public deployment (at least a better, more stable version than the vercel deployment) can be found under [http://142.93.169.186:3000/](http://142.93.169.186:3000/)
+Note however, that the microphone (speach to text) feature does not work since we do not have HTTPS. If you look at the code, this feature is actually implemented.
 
 ## Technologies Used
 
