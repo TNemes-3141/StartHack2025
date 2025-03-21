@@ -299,9 +299,9 @@ export default function Home() {
                     return null;
                   }
 
-                  const animationnames = ['animate-fade-in-scale-0s', 'animate-fade-in-scale-1s', 'animate-fade-in-scale-2s', 'animate-fade-in-scale-3s', 'animate-fade-in-scale-4s', 'animate-fade-in-scale-5s']
-                  const randomNumber = Math.floor(Math.random() * 6);
-                  const randomClass = animationnames[randomNumber];
+                  // const animationnames = ['animate-fade-in-scale-0s', 'animate-fade-in-scale-1s', 'animate-fade-in-scale-2s', 'animate-fade-in-scale-3s', 'animate-fade-in-scale-4s', 'animate-fade-in-scale-5s']
+                  // const randomNumber = Math.floor(Math.random() * 6);
+                  // const randomClass = animationnames[randomNumber];
 
                   return chart.type === "table" ?
                     <TableCard
@@ -313,11 +313,11 @@ export default function Home() {
                       toggleCellSelect={updateSelectedTableCells}
                       onSelect={addCard}
                       onDeselect={removeCard}
-                      className={` opacity-0 ${randomClass}`}
+                      className={``}
                     /> :
                     chart.type === "kpi" ?
                       <KpiCard
-                        className={` opacity-0 ${randomClass}`}
+                        className={``}
                         key={index}
                         id={`chart-${index}`}
                         title={chart.title}
@@ -332,7 +332,7 @@ export default function Home() {
                           key={index}
                           id={`chart-${index}`}
                           title={chart.title}
-                          className={`chartelement opacity-0 ${randomClass}`}
+                          className={`chartelement`}
                           content={chart.data.content}
                           source={chart.data.source}
                           onSelect={addCard}
@@ -342,7 +342,7 @@ export default function Home() {
                           key={index}
                           id={`chart-${index}`}
                           title={chart.title}
-                          className={`chartelement opacity-0 ${randomClass}`}
+                          className={`chartelement`}
                           pt_0={true}
                           content={
                             chart.type === "candle" ? <CandleChart dataList={chart.data} id={"" + index} onDataChange={updateDataList} /> :
