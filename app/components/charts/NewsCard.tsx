@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import CardContainer from "../CardContainer";
 
 // this name makes no sense
@@ -26,21 +27,22 @@ const NewsCard = ({
   return <CardContainer 
     id={id}
     title={title}
+    footer={
+      source && <a href={source} className="text-red-600 underline text-xs absolute bottom-4 right-6">source</a>
+    }
     content={
-      <div className="h-full">
+      <div className="h-fit">
         <p>
           {content}
         </p>
-        {
-          source && <a href={source} className="text-blue-500 underline text-xs flex justify-end">source</a>
-        }
+        
       </div>
     }
     onSelect={onSelect}
     onDeselect={onDeselect}
     rowSpan={rowSpan}
     colSpan={colSpan}
-    className={className}
+    className={cn(className, "max-h-96")}
   />
 }
 

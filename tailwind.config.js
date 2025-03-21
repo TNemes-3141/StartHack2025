@@ -12,6 +12,24 @@ const config = {
   darkMode: "class",
   theme: {
     extend: {
+      animation: {
+        'fade-in-scale-0s': 'fade-in-scale 0.5s ease-in-out forwards',
+        'fade-in-scale-1s': 'fade-in-scale 0.5s ease-in-out 0.1s forwards',
+        'fade-in-scale-2s': 'fade-in-scale 0.5s ease-in-out 0.2s forwards',
+        'fade-in-scale-3s': 'fade-in-scale 0.5s ease-in-out 0.3s forwards',
+        'fade-in-scale-4s': 'fade-in-scale 0.5s ease-in-out 0.4s forwards',
+        'fade-in-scale-5s': 'fade-in-scale 0.5s ease-in-out 0.5s forwards'
+      },
+      keyframes: {
+        'fade-in-scale': {
+          '0%': {
+            opacity: '0',
+          },
+          '100%': {
+            opacity: '1',
+          },
+        },
+      },
       fontFamily: {
         sans: ["var(--font-sans)"],
         mono: ["var(--font-mono)"],

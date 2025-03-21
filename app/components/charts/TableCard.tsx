@@ -8,7 +8,7 @@ import {
   TableRow,
   TableCell
 } from "@heroui/table";
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 
 
 const TableCard = ({
@@ -31,7 +31,7 @@ const TableCard = ({
   }[],
   onSelect?: (cardID: string) => void;
   onDeselect?: (cardID: string) => void;
-  toggleCellSelect?: (cellContent: string) => void;
+  toggleCellSelect?: (type: "select" | "deselect", cardID: string, x: number, y: number, cellContent: string) => void;
   rowSpan?: string,
   colSpan?: string,
   className?: string;
@@ -52,6 +52,8 @@ const TableCard = ({
   const toggleSelection = () => {
     if (!isSelected && onSelect) {
       onSelect(id);
+      
+      toggleCellSelect && toggleCellSelect("deselect", id, -1, -1, "")
     } else if (isSelected && onDeselect) {
       onDeselect(id);
     }
@@ -71,8 +73,25 @@ const TableCard = ({
 
   const onCellClick = (e: MouseEvent<HTMLDivElement>, content: string, idx: number, idy: number) => {
     e.stopPropagation();
-    console.log("stuff");
-    console.log("stuff");
+    // console.log("stuff");
+    if (e.ctrlKey || e.metaKey) {
+      // console.log("selected")
+      if (selectedCell.x == idx && selectedCell.y == idy) {
+        setSelectedCell({
+          x: -1,
+          y: -1
+        })
+        console.log("toggleCellSelect")
+        toggleCellSelect && toggleCellSelect("deselect", id, -1, -1, "")
+      } else {
+        setSelectedCell({
+          x: idx,
+          y: idy
+        })
+        toggleCellSelect && toggleCellSelect("select", id, idx, idy, content)
+      }
+    }
+    /*
     if (onDeselect && toggleCellSelect) {
       if (e.ctrlKey || e.metaKey) {
         console.log("selected a specific cell");
@@ -91,7 +110,8 @@ const TableCard = ({
           onDeselect(id)
         }
       } 
-    }
+    }*/
+    
   };
 
   let formatedData: string[][] = [];
@@ -114,7 +134,7 @@ const TableCard = ({
 
   return (
     <div
-      className={cn("cardContainer h-full max-h-full", className)}
+      className={cn("cardContainer h-full max-h-96", className)}
       onClick={onCardClick}
       style={{
         gridColumn: `span ${colSpan} / span ${colSpan}`,
@@ -131,7 +151,7 @@ const TableCard = ({
         {
           tableHeader && tableData && <CardBody className="h-fit pt-0">
             <ScrollShadow hideScrollBar orientation="horizontal">
-              <Table className="w-fit">
+              <Table className="w-fit [&>div]:shadow-none [&>div]:pt-0">
                 <TableHeader>
                   {
                     tableHeader.map((heading, idx) => {
