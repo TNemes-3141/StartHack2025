@@ -119,14 +119,11 @@ export default function Home() {
     const portfolio = portfolioData;
     const conversationHistory = history.length > 0 ? history : null;
 
-    console.log("History:")
-    console.log(JSON.stringify({ query, portfolio, conversationHistory, insightData }))
-
     try {
       const res = await fetch("/api/orchestrator/canvas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query, portfolio, conversationHistory }),
+        body: JSON.stringify({ query, portfolio, conversationHistory, insightData }),
       });
 
       // Read the response as a stream
