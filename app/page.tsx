@@ -29,6 +29,7 @@ import { candle_data_list, line_data_list, pie_data_list } from "./components/ch
 import { AxisChartDataList } from "./components/charts/ApexSeriesConverter";
 import { OrchestratorData } from "./components/charts/OrchestratorInterface";
 import KpiCard from "./components/KpiCard";
+import { json } from "stream/consumers";
 
 
 // chat can we get a pog chat?
@@ -48,6 +49,7 @@ export default function Home() {
   const [inputValue, setInputValue] = useState<string>("");
   const [history, setHistory] = useState<ChatHistory>([]); // {sender: 'assistant', message: "blabl"}
   const [dataList, setDataList] = useState<({id: string, data: AxisChartDataList | string})[]>([])
+  const [sixMsg, setSixMsg] = useState("Hi! I'm SIX. Interact with the dashboard to start.");
 
 
 
@@ -67,9 +69,18 @@ export default function Home() {
   // todo: add functionality to add selected cards and so on.
   const sendPrompt = (promptMessage: string) => {
 
-    console.log(promptMessage)
+    console.log(promptMessage);
 
-    callOrchestrator(promptMessage);
+    if (selectedCards.length > 0) {
+      let filtered_list: any[] = [];
+      selectedCards.forEach((sc, i) => {
+        filtered_list.push(jsonData[i])
+      })
+      callFocus(promptMessage, {data:"nothing specific"}, filtered_list);
+    } else {
+      callOrchestrator(promptMessage);
+    }
+
     const currentHistory = history;
     currentHistory.push({
       message: promptMessage,
@@ -326,6 +337,69 @@ export default function Home() {
       }
   }
 
+  const callFocus = async (promptMessage: string, focusPoint: any, parentChart: any[]) => {
+    setMessages([]);
+    setLoading(true);
+    const query = promptMessage;
+    const portfolio = portfolioData;
+    const conversationHistory = history.length > 0 ? history : null;
+    console.log("History:")
+    console.log(JSON.stringify({ query, portfolio, conversationHistory }))
+
+    try {
+      const res = await fetch("/api/orchestrator/focus", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query, portfolio, conversationHistory, focusPoint, parentChart }),
+      });
+
+      // Read the response as a stream
+      const reader = res.body?.getReader();
+      if (!reader) throw new Error("Failed to read response stream");
+
+      const decoder = new TextDecoder();
+      let newMessages: string[] = [];
+      let fullText = "";
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+
+          // Decode the streamed text
+          const chunk = decoder.decode(value, { stream: true });
+          fullText += chunk; // Append to full response
+
+          // Update UI with new message (excluding the final JSON)
+          if (!chunk.startsWith("FINAL_RESPONSE:")) {
+            newMessages = [...newMessages, chunk.trim()];
+            setMessages([...newMessages]);
+          } else {
+            // Extract JSON data from the final chunk
+            const response = chunk.replace("FINAL_RESPONSE:", "");
+            // speakResponse(response);
+            setSixMsg(response);
+
+            // setJsonData([...jsonData, ...newJsonData]);
+            // console.log("THIS IS IT:" + JSON.stringify(jsonData));
+            // classify(jsonData);
+          }
+        }
+
+        // Extract JSON data from the last message
+        const jsonMatch = fullText.match(/FINAL_RESPONSE:(\{.*\})/);
+        if (jsonMatch) {
+            const jsonData = JSON.parse(jsonMatch[1]);
+            setJsonData(jsonData);
+        }
+
+    } catch (error) {
+        console.error("Error calling orchestrator:", error);
+        setMessages(["Error communicating with the server."]);
+    } finally {
+        setLoading(false);
+    }
+  }
+
   async function speakResponse(text: string) {
           const blob: Blob = await textToSpeech(text);
           const url = URL.createObjectURL(blob);
@@ -444,10 +518,12 @@ export default function Home() {
             { (history.length > 0) &&
             <div className="absolute bottom-0 right-0 w-fit max-w-[500px] px-5 z-[1]">
               <Card className="w-full h-fit max-h-[150px] self-center bg-secondary-light dark:bg-secondary-dark p-3 flex gap-2 flex-row items-start">
-                <div className="flex w-fit h-fit"><BotMessageSquare />:</div>
-                <CardBody className="w-fit p-0">
-                  Hi! I'm SIX. Interact with the dashboard to start.
-                </CardBody>
+                <div onClick={() => {setSixMsg("")}} className="flex w-fit h-fit"><BotMessageSquare />:</div>
+                <ScrollShadow className="w-fit max-h-[100px] p-0">
+                  <CardBody className="w-fit p-0">
+                  {sixMsg}
+                  </CardBody>
+                </ScrollShadow>
               </Card>
             </div>
             }
@@ -483,9 +559,15 @@ export default function Home() {
               <div className="w-fit max-w-[500px] px-5 z-[1] flex flex-col items-center gap-5 mb-12">
                 <div className="flex w-fit h-fit text-9xl"><BotMessageSquare size={128}/></div>
                 <Card className="w-full h-fit max-h-[150px] self-center bg-secondary-light dark:bg-secondary-dark p-3 flex gap-2 flex-row items-start">
-                  
+                    {
+                      sixMsg != "Hi! I'm SIX. Interact with the dashboard to start." ? <Button isIconOnly onPress={() => {
+                        setSixMsg("");
+                        }}><X />
+                      </Button> : ""
+                    }
+                    
                   <CardBody className="w-fit p-0">
-                    Hi! I'm SIX. Interact with the dashboard to start.
+                    {sixMsg}
                   </CardBody>
                 </Card>
               </div>
