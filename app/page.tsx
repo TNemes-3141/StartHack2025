@@ -389,7 +389,9 @@ export default function Home() {
             <div className={cn("w-full h-full absolute inset-0")}>
               <ScrollShadow className="w-full h-full grid grid-flow-dense p-5 pb-[170px] gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" hideScrollBar size={20}>
                 {jsonData && jsonData.map((chart: any, index) => {
-                  
+                  if (index == 0) {
+                    return null;
+                  }
 
                   const animationnames = ['animate-fade-in-scale-0s', 'animate-fade-in-scale-1s', 'animate-fade-in-scale-2s', 'animate-fade-in-scale-3s', 'animate-fade-in-scale-4s', 'animate-fade-in-scale-5s']
                   const randomNumber = Math.floor(Math.random() * 6);
