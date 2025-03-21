@@ -1,5 +1,5 @@
-import { getComponents } from "../../orchestrator/getComponents";
-import { ContextData } from "../../orchestrator/getInsights";
+import { getComponents } from "../../orchestrator/canvas/getComponents";
+import { ContextData } from "../../orchestrator/canvas/getInsights";
 
 export async function GET(request: Request) {
     const apiKey = process.env.OPENAI_API_KEY!;

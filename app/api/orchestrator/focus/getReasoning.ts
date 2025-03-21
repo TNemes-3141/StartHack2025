@@ -7,9 +7,7 @@ export async function getReasoning(portfolio: any | undefined, history: any, foc
         });
         const rawData = await response.json();
         
-        const content: string = rawData.content ?? "[]";
-
-        // console.log(rawData, content)
+        const content: string = rawData.content ?? "";
 
         return content;
     } catch (error) {
