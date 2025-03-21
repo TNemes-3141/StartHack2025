@@ -176,6 +176,93 @@ export default function Home() {
 
   const [loading, setLoading] = useState(false);
 
+  const callOrchestrator2 = () => {
+    setJsonData(  [{
+    "type": "line",
+    "title": "Apple Historical Performance",
+    "data": [
+      {"x": "2025-02-05T00:00:00.000", "y": 213.53},
+      {"x": "2025-02-06T00:00:00.000", "y": 233.22},
+      {"x": "2025-02-07T00:00:00.000", "y": 227.63},
+      {"x": "2025-02-10T00:00:00.000", "y": 227.65},
+      {"x": "2025-02-11T00:00:00.000", "y": 232.62},
+      {"x": "2025-02-12T00:00:00.000", "y": 236.87},
+      {"x": "2025-02-13T00:00:00.000", "y": 241.53},
+      {"x": "2025-02-14T00:00:00.000", "y": 244.6},
+      {"x": "2025-02-18T00:00:00.000", "y": 244.47},
+      {"x": "2025-02-19T00:00:00.000", "y": 244.87},
+      {"x": "2025-02-20T00:00:00.000", "y": 245.83},
+      {"x": "2025-02-21T00:00:00.000", "y": 245.55},
+      {"x": "2025-02-24T00:00:00.000", "y": 247.1},
+      {"x": "2025-02-25T00:00:00.000", "y": 247.04},
+      {"x": "2025-02-26T00:00:00.000", "y": 240.36},
+      {"x": "2025-02-27T00:00:00.000", "y": 237.3},
+      {"x": "2025-02-28T00:00:00.000", "y": 241.84},
+      {"x": "2025-03-03T00:00:00.000", "y": 238.03},
+      {"x": "2025-03-04T00:00:00.000", "y": 235.93},
+      {"x": "2025-03-05T00:00:00.000", "y": 235.74},
+      {"x": "2025-03-06T00:00:00.000", "y": 235.33},
+      {"x": "2025-03-07T00:00:00.000", "y": 239.07},
+      {"x": "2025-03-10T00:00:00.000", "y": 227.48},
+      {"x": "2025-03-11T00:00:00.000", "y": 220.84},
+      {"x": "2025-03-12T00:00:00.000", "y": 216.98},
+      {"x": "2025-03-13T00:00:00.000", "y": 209.68},
+      {"x": "2025-03-14T00:00:00.000", "y": 213.49},
+      {"x": "2025-03-17T00:00:00.000", "y": 214},
+      {"x": "2025-03-18T00:00:00.000", "y": 212.69},
+      {"x": "2025-03-19T00:00:00.000", "y": 215.24}
+    ]
+    },
+    {
+        "type": "pie",
+        "title": "Portfolio Asset Distribution",
+        "data": [60, 40]
+    },
+    {
+        "type": "news",
+        "title": "Investment Insights on Apple",
+        "data": {
+            "content": "Why Intel Stock Is Sinking Today",
+            "source": "https://www.fool.com/investing/2025/03/19/why-intel-stock-is-sinking-today/"
+        }
+    },
+    {
+        "type": "kpi",
+        "title": "Apple's Annualized Return",
+        "data": {
+            "number": 30.33,
+            "footer": "Annualized return as of February 5, 2025"
+        }
+    },
+    {
+        "type": "table",
+        "title": "Banco Santander",
+        "data": {
+            "header": ["", "Valor Number", "Ticker symbol", "ISIN", "Instrument type", "Outstanding Securities", "Outstanding Capital"],
+            "content": [
+              {
+                "": "Banco Santander",
+                "Valor Number": "Valor Number Data",
+                "Ticker symbol": "Ticker Symbol Data",
+                "ISIN": "ISINIJKFLDJFKLDA:",
+                "Instrument type": "Instrument type",
+                "Outstanding Securities": "OS",
+                "Outstanding Capital": "OC",
+              },
+              {
+                "": "Rui Zhang Bank",
+                "Valor Number": "Sehr glaubwürdig",
+                "Ticker symbol": "überhaupt kein Rugpull",
+                "ISIN": "IAIAIAIAIAIAI",
+                "Instrument type": "Mein Minecraft Baum ist riesig",
+                "Outstanding Securities": "Fortnite",
+                "Outstanding Capital": "OC",
+              }
+            ]
+        }
+    }
+    ]);
+  }
   const callOrchestrator = async (promptMessage: string) => {
       setMessages([]);
       setLoading(true);
@@ -219,7 +306,6 @@ export default function Home() {
                 const newJsonData = JSON.parse(chunk.replace("FINAL_JSON:", "").trim());
 
                 setJsonData([...jsonData, ...newJsonData]);
-                console.log(newJsonData);
                 // console.log("THIS IS IT:" + JSON.stringify(jsonData));
                 // classify(jsonData);
               }
@@ -229,7 +315,6 @@ export default function Home() {
           const jsonMatch = fullText.match(/FINAL_JSON:(\{.*\})/);
           if (jsonMatch) {
               const jsonData = JSON.parse(jsonMatch[1]);
-              console.log(jsonData);
               setJsonData(jsonData);
           }
 
@@ -297,8 +382,14 @@ export default function Home() {
           <div className={cn("relative grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-full p-5 overflow-hidden", (history.length < 1) && "hidden h-0")}>
             <div className={cn("w-full h-full absolute inset-0")}>
               <ScrollShadow className="w-full h-full grid grid-flow-dense p-5 pb-[170px] gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" hideScrollBar size={20}>
-                {jsonData && jsonData.map((chart: any, index) => (
-                  chart.type === "table" ? 
+                {jsonData && jsonData.map((chart: any, index) => {
+                  
+
+                  const animationnames = ['animate-fade-in-scale-0s', 'animate-fade-in-scale-1s', 'animate-fade-in-scale-2s', 'animate-fade-in-scale-3s', 'animate-fade-in-scale-4s', 'animate-fade-in-scale-5s']
+                  const randomNumber = Math.floor(Math.random() * 6);
+                  const randomClass = animationnames[randomNumber];
+
+                  return chart.type === "table" ? 
                   <TableCard 
                     key={index}
                     id={`chart-${index}`}
@@ -308,9 +399,11 @@ export default function Home() {
                     toggleCellSelect={() => console.log("something")}
                     onSelect={addCard}
                     onDeselect={removeCard}
+                    className={` opacity-0 ${randomClass}`}
                   /> :
                   chart.type === "kpi" ? 
                   <KpiCard 
+                    className={` opacity-0 ${randomClass}`}
                     key={index}
                     id={`chart-${index}`}
                     title={chart.title}
@@ -320,11 +413,11 @@ export default function Home() {
                     // rowSpan = "1"
                     // colSpan = {chart.data.toString().length >= 6 ? "2" : "1"}
                   />
-                  : <CardContainer
+                  : <CardContainer  
                     key={index}
                     id={`chart-${index}`}
                     title={chart.title}
-                    className="chartelement"
+                    className={`chartelement opacity-0 ${randomClass}`}
                     pt_0={true}
                     content={
                       chart.type === "news" ? <><p> {chart.data.content} </p> { chart.data.source && <a href={chart.data.source}>source</a> } </> :
@@ -338,7 +431,7 @@ export default function Home() {
                       (chart.type === "candle" || chart.type === "line") ? "2" : undefined
                     }
                   />
-                ))}
+                })}
                 {/*
                 <CardContainer id="1" title="card 1" content={<CandleChart dataList={candle_data_list} id="1" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
                 <CardContainer id="4" title="card 4" content={<LineChart dataList={line_data_list} id="4" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
