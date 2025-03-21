@@ -42,7 +42,7 @@ const NewsCard = ({
     onDeselect={onDeselect}
     rowSpan={rowSpan}
     colSpan={colSpan}
-    className={cn(className, "max-h-96")}
+    className={cn(className, "[&>div>div]:max-h-48")}
   />
 }
 

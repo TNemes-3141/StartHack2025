@@ -291,58 +291,58 @@ export default function Home() {
                   const randomNumber = Math.floor(Math.random() * 6);
                   const randomClass = animationnames[randomNumber];
 
-                  return chart.type === "table" ?
-                    <TableCard
-                      key={index}
-                      id={`chart-${index}`}
-                      title={chart.title}
-                      tableHeader={chart.data.header}
-                      tableData={chart.data.content}
-                      toggleCellSelect={updateSelectedTableCells}
-                      onSelect={addCard}
-                      onDeselect={removeCard}
-                      className={` opacity-0 ${randomClass}`}
-                    /> :
-                    chart.type === "kpi" ?
-                      <KpiCard
-                        className={` opacity-0 ${randomClass}`}
-                        key={index}
-                        id={`chart-${index}`}
-                        title={chart.title}
-                        content={chart.data.number}
-                        onSelect={addCard}
-                        onDeselect={removeCard}
-                      // rowSpan = "1"
-                      // colSpan = {chart.data.toString().length >= 6 ? "2" : "1"}
-                      />
-                      : chart.type === "news" ?
-                        <NewsCard
-                          key={index}
-                          id={`chart-${index}`}
-                          title={chart.title}
-                          className={`chartelement opacity-0 ${randomClass}`}
-                          content={chart.data.content}
-                          source={chart.data.source}
-                          onSelect={addCard}
-                          onDeselect={removeCard}
-                        />
-                        : <CardContainer
-                          key={index}
-                          id={`chart-${index}`}
-                          title={chart.title}
-                          className={`chartelement opacity-0 ${randomClass}`}
-                          pt_0={true}
-                          content={
-                            chart.type === "candle" ? <CandleChart dataList={chart.data} id={"" + index} onDataChange={updateDataList} /> :
-                              chart.type === "line" ? <LineChart dataList={chart.data} id={"" + index} onDataChange={updateDataList} /> :
-                                chart.type === "pie" ? <PieChart dataList={chart.data} id={"" + index} /> : <div>No chart available</div>
-                          }
-                          onSelect={addCard}
-                          onDeselect={removeCard}
-                          colSpan={
-                            (chart.type === "candle" || chart.type === "line") ? "2" : undefined
-                          }
-                        />
+                  return chart.type === "table" ? 
+                  <TableCard 
+                    key={index}
+                    id={`chart-${index}`}
+                    title={chart.title}
+                    tableHeader={chart.data.header}
+                    tableData={chart.data.content}
+                    toggleCellSelect={updateSelectedTableCells}
+                    onSelect={addCard}
+                    onDeselect={removeCard}
+                    className={` opacity-0 ${randomClass}`}
+                  /> :
+                  chart.type === "kpi" ? 
+                  <KpiCard 
+                    className={` opacity-0 ${randomClass}`}
+                    key={index}
+                    id={`chart-${index}`}
+                    title={chart.title}
+                    content={chart.data.number}
+                    onSelect={addCard}
+                    onDeselect={removeCard}
+                    // rowSpan = "1"
+                    // colSpan = {chart.data.toString().length >= 6 ? "2" : "1"}
+                  />
+                  : chart.type === "news" ? 
+                  <NewsCard 
+                    key={index}
+                    id={`chart-${index}`}
+                    title={chart.title}
+                    className={`chartelement opacity-0 ${randomClass}`}
+                    content={chart.data.content}
+                    source={chart.data.source}
+                    onSelect={addCard}
+                    onDeselect={removeCard}
+                  />
+                  : <CardContainer  
+                    key={index}
+                    id={`chart-${index}`}
+                    title={chart.title}
+                    className={`chartelement opacity-0 ${randomClass}`}
+                    pt_0={true}
+                    content={
+                      chart.type === "candle" ? <CandleChart dataList={chart.data} id={"" + index} onDataChange={updateDataList}/> :
+                      chart.type === "line" ? <LineChart dataList={chart.data} id={"" + index} onDataChange={updateDataList} /> :
+                      chart.type === "pie" ? <PieChart dataList={chart.data.data} labelList={chart.data.label} id={"" + index}/> : <div>No chart available</div>
+                    }
+                    onSelect={addCard}
+                    onDeselect={removeCard}
+                    colSpan={
+                      (chart.type === "candle" || chart.type === "line") ? "2" : undefined
+                    }
+                  />
                 })}
                 {/*
                 <CardContainer id="1" title="card 1" content={<CandleChart dataList={candle_data_list} id="1" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
