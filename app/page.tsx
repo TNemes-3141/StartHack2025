@@ -3,7 +3,7 @@
 import { cn, generatePDF } from "@/lib/utils";
 
 import { ThemeSwitcher } from "./components/ThemeSwitcher";
-import {Input} from "@heroui/input";
+import { Input } from "@heroui/input";
 import styles from "./page.module.css"
 import logo from "@/public/SIX_Group_logo.svg"
 import Image from "next/image";
@@ -13,7 +13,7 @@ import { BotMessageSquare, History, SquareMousePointer, X } from "lucide-react"
 import CardContainer from "./components/CardContainer";
 import { useEffect, useState } from "react";
 import AudioRecorder from "./components/audio_recorder/audio_recorder";
-import {ScrollShadow} from "@heroui/react";
+import { ScrollShadow } from "@heroui/react";
 import CandleChart from "./components/charts/CandleChart";
 import LineChart from "./components/charts/LineChart";
 import PieChart from "./components/charts/PieChart"
@@ -49,15 +49,15 @@ export default function Home() {
   const [showHistory, setShowHistory] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
   const [history, setHistory] = useState<ChatHistory>([]); // {sender: 'assistant', message: "blabl"}
-  const [dataList, setDataList] = useState<({id: string, data: AxisChartDataList | string})[]>([])
-  const [selectedTableCells, setSelectedTableCells] = useState<{id: string, x: number, y:number, data:string}[]>([])
+  const [dataList, setDataList] = useState<({ id: string, data: AxisChartDataList | string })[]>([])
+  const [selectedTableCells, setSelectedTableCells] = useState<{ id: string, x: number, y: number, data: string }[]>([])
   const [sixMsg, setSixMsg] = useState("Hi! I'm SIX. Interact with the dashboard to start.");
 
 
 
   const addCard = (cardId: string) => {
     if (!selectedCards.includes(cardId)) {
-      setSelectedCards([... selectedCards, cardId])
+      setSelectedCards([...selectedCards, cardId])
       // console.log("added " + cardId)
     }
   }
@@ -73,14 +73,22 @@ export default function Home() {
 
     console.log(promptMessage);
 
-    if (selectedCards.length > 0) {
-      let filtered_list: any[] = [];
-      selectedCards.forEach((sc, i) => {
-        filtered_list.push(jsonData[i])
-      })
-      callFocus(promptMessage, {data:"nothing specific"}, filtered_list);
+    if (selectedTableCells.length > 0) {
+      const selectedTableCell = selectedTableCells[0];
+      const selectedTableCellId = parseInt(selectedTableCell.id.slice(6), 10);
+
+      callFocus(promptMessage, selectedTableCell.data, jsonData[selectedTableCellId]);
     } else {
-      callOrchestrator(promptMessage);
+      if (selectedCards.length > 0) {
+        let filtered_list: any[] = [];
+        selectedCards.forEach((sc, i) => {
+          const sc_id = parseInt(sc.slice(6), 10);
+          filtered_list.push(jsonData[sc_id]);
+        });
+        callOrchestrator(promptMessage, filtered_list);
+      } else {
+        callOrchestrator(promptMessage, undefined);
+      }
     }
 
     const currentHistory = history;
@@ -95,267 +103,30 @@ export default function Home() {
 
   const userContext = usePortfolioDataContext();
   if (!userContext) {
-      return null;
+    return null;
   }
-  const {portfolioData, setPortfolioData} = userContext;
+  const { portfolioData, setPortfolioData } = userContext;
 
   const [messages, setMessages] = useState<string[]>([]);
   const [jsonData, setJsonData] = useState<OrchestratorData>([])
-  // const [jsonData, setJsonData] = useState<OrchestratorData | null>(  [{
-  //   "type": "line",
-  //   "title": "Apple Historical Performance",
-  //   "data": [
-  //     {"x": "2025-02-05T00:00:00.000", "y": 213.53},
-  //     {"x": "2025-02-06T00:00:00.000", "y": 233.22},
-  //     {"x": "2025-02-07T00:00:00.000", "y": 227.63},
-  //     {"x": "2025-02-10T00:00:00.000", "y": 227.65},
-  //     {"x": "2025-02-11T00:00:00.000", "y": 232.62},
-  //     {"x": "2025-02-12T00:00:00.000", "y": 236.87},
-  //     {"x": "2025-02-13T00:00:00.000", "y": 241.53},
-  //     {"x": "2025-02-14T00:00:00.000", "y": 244.6},
-  //     {"x": "2025-02-18T00:00:00.000", "y": 244.47},
-  //     {"x": "2025-02-19T00:00:00.000", "y": 244.87},
-  //     {"x": "2025-02-20T00:00:00.000", "y": 245.83},
-  //     {"x": "2025-02-21T00:00:00.000", "y": 245.55},
-  //     {"x": "2025-02-24T00:00:00.000", "y": 247.1},
-  //     {"x": "2025-02-25T00:00:00.000", "y": 247.04},
-  //     {"x": "2025-02-26T00:00:00.000", "y": 240.36},
-  //     {"x": "2025-02-27T00:00:00.000", "y": 237.3},
-  //     {"x": "2025-02-28T00:00:00.000", "y": 241.84},
-  //     {"x": "2025-03-03T00:00:00.000", "y": 238.03},
-  //     {"x": "2025-03-04T00:00:00.000", "y": 235.93},
-  //     {"x": "2025-03-05T00:00:00.000", "y": 235.74},
-  //     {"x": "2025-03-06T00:00:00.000", "y": 235.33},
-  //     {"x": "2025-03-07T00:00:00.000", "y": 239.07},
-  //     {"x": "2025-03-10T00:00:00.000", "y": 227.48},
-  //     {"x": "2025-03-11T00:00:00.000", "y": 220.84},
-  //     {"x": "2025-03-12T00:00:00.000", "y": 216.98},
-  //     {"x": "2025-03-13T00:00:00.000", "y": 209.68},
-  //     {"x": "2025-03-14T00:00:00.000", "y": 213.49},
-  //     {"x": "2025-03-17T00:00:00.000", "y": 214},
-  //     {"x": "2025-03-18T00:00:00.000", "y": 212.69},
-  //     {"x": "2025-03-19T00:00:00.000", "y": 215.24}
-  //   ]
-  //   },
-  //   {
-  //       "type": "pie",
-  //       "title": "Portfolio Asset Distribution",
-  //       "data": [60, 40]
-  //   },
-  //   {
-  //       "type": "news",
-  //       "title": "Investment Insights on Apple",
-  //       "data": {
-  //           "content": "Why Intel Stock Is Sinking Today",
-  //           "source": "https://www.fool.com/investing/2025/03/19/why-intel-stock-is-sinking-today/"
-  //       }
-  //   },
-  //   {
-  //       "type": "kpi",
-  //       "title": "Apple's Annualized Return",
-  //       "data": {
-  //           "number": 30.33,
-  //           "footer": "Annualized return as of February 5, 2025"
-  //       }
-  //   },
-  //   {
-  //       "type": "table",
-  //       "title": "Banco Santander",
-  //       "data": {
-  //           "header": ["", "Valor Number", "Ticker symbol", "ISIN", "Instrument type", "Outstanding Securities", "Outstanding Capital"],
-  //           "content": [
-  //             {
-  //               "": "Banco Santander",
-  //               "Valor Number": "Valor Number Data",
-  //               "Ticker symbol": "Ticker Symbol Data",
-  //               "ISIN": "ISINIJKFLDJFKLDA:",
-  //               "Instrument type": "Instrument type",
-  //               "Outstanding Securities": "OS",
-  //               "Outstanding Capital": "OC",
-  //             },
-  //             {
-  //               "": "Rui Zhang Bank",
-  //               "Valor Number": "Sehr glaubwürdig",
-  //               "Ticker symbol": "überhaupt kein Rugpull",
-  //               "ISIN": "IAIAIAIAIAIAI",
-  //               "Instrument type": "Mein Minecraft Baum ist riesig",
-  //               "Outstanding Securities": "Fortnite",
-  //               "Outstanding Capital": "OC",
-  //             }
-  //           ]
-  //       }
-  //   }
-  //   ]);
-
   const [loading, setLoading] = useState(false);
 
-  const callOrchestrator2 = () => {
-    setJsonData(  [{
-    "type": "line",
-    "title": "Apple Historical Performance",
-    "data": [
-      {"x": "2025-02-05T00:00:00.000", "y": 213.53},
-      {"x": "2025-02-06T00:00:00.000", "y": 233.22},
-      {"x": "2025-02-07T00:00:00.000", "y": 227.63},
-      {"x": "2025-02-10T00:00:00.000", "y": 227.65},
-      {"x": "2025-02-11T00:00:00.000", "y": 232.62},
-      {"x": "2025-02-12T00:00:00.000", "y": 236.87},
-      {"x": "2025-02-13T00:00:00.000", "y": 241.53},
-      {"x": "2025-02-14T00:00:00.000", "y": 244.6},
-      {"x": "2025-02-18T00:00:00.000", "y": 244.47},
-      {"x": "2025-02-19T00:00:00.000", "y": 244.87},
-      {"x": "2025-02-20T00:00:00.000", "y": 245.83},
-      {"x": "2025-02-21T00:00:00.000", "y": 245.55},
-      {"x": "2025-02-24T00:00:00.000", "y": 247.1},
-      {"x": "2025-02-25T00:00:00.000", "y": 247.04},
-      {"x": "2025-02-26T00:00:00.000", "y": 240.36},
-      {"x": "2025-02-27T00:00:00.000", "y": 237.3},
-      {"x": "2025-02-28T00:00:00.000", "y": 241.84},
-      {"x": "2025-03-03T00:00:00.000", "y": 238.03},
-      {"x": "2025-03-04T00:00:00.000", "y": 235.93},
-      {"x": "2025-03-05T00:00:00.000", "y": 235.74},
-      {"x": "2025-03-06T00:00:00.000", "y": 235.33},
-      {"x": "2025-03-07T00:00:00.000", "y": 239.07},
-      {"x": "2025-03-10T00:00:00.000", "y": 227.48},
-      {"x": "2025-03-11T00:00:00.000", "y": 220.84},
-      {"x": "2025-03-12T00:00:00.000", "y": 216.98},
-      {"x": "2025-03-13T00:00:00.000", "y": 209.68},
-      {"x": "2025-03-14T00:00:00.000", "y": 213.49},
-      {"x": "2025-03-17T00:00:00.000", "y": 214},
-      {"x": "2025-03-18T00:00:00.000", "y": 212.69},
-      {"x": "2025-03-19T00:00:00.000", "y": 215.24}
-    ]
-    },
-    {
-        "type": "pie",
-        "title": "Portfolio Asset Distribution",
-        "data": [60, 40]
-    },
-    {
-        "type": "news",
-        "title": "Investment Insights on Apple",
-        "data": {
-            "content": "Why Intel Stock Is Sinking Today",
-            "source": "https://www.fool.com/investing/2025/03/19/why-intel-stock-is-sinking-today/"
-        }
-    },
-    {
-        "type": "kpi",
-        "title": "Apple's Annualized Return",
-        "data": {
-            "number": 30.33,
-            "footer": "Annualized return as of February 5, 2025"
-        }
-    },
-    {
-        "type": "table",
-        "title": "Banco Santander",
-        "data": {
-            "header": ["", "Valor Number", "Ticker symbol", "ISIN", "Instrument type", "Outstanding Securities", "Outstanding Capital"],
-            "content": [
-              {
-                "": "Banco Santander",
-                "Valor Number": "Valor Number Data",
-                "Ticker symbol": "Ticker Symbol Data",
-                "ISIN": "ISINIJKFLDJFKLDA:",
-                "Instrument type": "Instrument type",
-                "Outstanding Securities": "OS",
-                "Outstanding Capital": "OC",
-              },
-              {
-                "": "Rui Zhang Bank",
-                "Valor Number": "Sehr glaubwürdig",
-                "Ticker symbol": "überhaupt kein Rugpull",
-                "ISIN": "IAIAIAIAIAIAI",
-                "Instrument type": "Mein Minecraft Baum ist riesig",
-                "Outstanding Securities": "Fortnite",
-                "Outstanding Capital": "OC",
-              }
-            ]
-        }
-    }
-    ]);
-  }
-  const callOrchestrator = async (promptMessage: string) => {
-      setMessages([]);
-      setLoading(true);
-
-      const query = promptMessage;
-      const portfolio = portfolioData;
-      const conversationHistory = history.length > 0 ? history : null;
-      const insightData: any[] = [];
-      
-      console.log("History:")
-      console.log(JSON.stringify({ query, portfolio, conversationHistory, insightData }))
-
-      try {
-          const res = await fetch("/api/orchestrator/canvas", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ query, portfolio, conversationHistory }),
-          });
-
-          // Read the response as a stream
-          const reader = res.body?.getReader();
-          if (!reader) throw new Error("Failed to read response stream");
-
-          const decoder = new TextDecoder();
-          let newMessages: string[] = [];
-          let fullText = "";
-
-            while (true) {
-              const { value, done } = await reader.read();
-              if (done) break;
-
-              // Decode the streamed text
-              const chunk = decoder.decode(value, { stream: true });
-              fullText += chunk; // Append to full response
-
-              // Update UI with new message (excluding the final JSON)
-              if (!chunk.startsWith("FINAL_JSON:")) {
-                newMessages = [...newMessages, chunk.trim()];
-                setMessages([...newMessages]);
-              } else {
-                // Extract JSON data from the final chunk
-                try {
-                  const data = extractFinalJsonAndMessage(chunk);
-
-                  setJsonData([jsonData, ...data.jsonData]);
-                  console.log(data.message);
-                } catch (error) {
-                }
-              }
-            }
-
-          // Extract JSON data from the last message
-          const jsonMatch = fullText.match(/FINAL_JSON:(\{.*\})/);
-          if (jsonMatch) {
-              const jsonData = JSON.parse(jsonMatch[1]);
-              setJsonData(jsonData);
-          }
-
-      } catch (error) {
-          console.error("Error calling orchestrator:", error);
-          setMessages(["Error communicating with the server."]);
-      } finally {
-          setLoading(false);
-      }
-  }
-
-  const callFocus = async (promptMessage: string, focusPoint: any, parentChart: any[]) => {
+  const callOrchestrator = async (promptMessage: string, insightData: any[] | undefined) => {
     setMessages([]);
     setLoading(true);
+
     const query = promptMessage;
     const portfolio = portfolioData;
     const conversationHistory = history.length > 0 ? history : null;
+
     console.log("History:")
-    console.log(JSON.stringify({ query, portfolio, conversationHistory }))
+    console.log(JSON.stringify({ query, portfolio, conversationHistory, insightData }))
 
     try {
-      const res = await fetch("/api/orchestrator/focus", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query, portfolio, conversationHistory, focusPoint, parentChart }),
+      const res = await fetch("/api/orchestrator/canvas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query, portfolio, conversationHistory }),
       });
 
       // Read the response as a stream
@@ -366,60 +137,101 @@ export default function Home() {
       let newMessages: string[] = [];
       let fullText = "";
 
-        while (true) {
-          const { value, done } = await reader.read();
-          if (done) break;
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
 
-          // Decode the streamed text
-          const chunk = decoder.decode(value, { stream: true });
-          fullText += chunk; // Append to full response
+        // Decode the streamed text
+        const chunk = decoder.decode(value, { stream: true });
+        fullText += chunk; // Append to full response
 
-          // Update UI with new message (excluding the final JSON)
-          if (!chunk.startsWith("FINAL_RESPONSE:")) {
-            newMessages = [...newMessages, chunk.trim()];
-            setMessages([...newMessages]);
-          } else {
-            // Extract JSON data from the final chunk
-            const response = chunk.replace("FINAL_RESPONSE:", "");
-            // speakResponse(response);
-            setSixMsg(response);
+        // Update UI with new message (excluding the final JSON)
+        if (!chunk.startsWith("FINAL_JSON:")) {
+          newMessages = [...newMessages, chunk.trim()];
+          setMessages([...newMessages]);
+        } else {
+          // Extract JSON data from the final chunk
+          try {
+            const data = extractFinalJsonAndMessage(chunk);
 
-            // setJsonData([...jsonData, ...newJsonData]);
-            // console.log("THIS IS IT:" + JSON.stringify(jsonData));
-            // classify(jsonData);
+            setJsonData([jsonData, ...data.jsonData]);
+            console.log(data.message);
+          } catch (error) {
           }
         }
-
-        // Extract JSON data from the last message
-        const jsonMatch = fullText.match(/FINAL_RESPONSE:(\{.*\})/);
-        if (jsonMatch) {
-            const jsonData = JSON.parse(jsonMatch[1]);
-            setJsonData(jsonData);
-        }
-
+      }
     } catch (error) {
-        console.error("Error calling orchestrator:", error);
-        setMessages(["Error communicating with the server."]);
+      console.error("Error calling orchestrator:", error);
+      setMessages(["Error communicating with the server."]);
     } finally {
-        setLoading(false);
+      setLoading(false);
+    }
+  }
+
+  const callFocus = async (promptMessage: string, focusPoint: string, parentChart: any) => {
+    setMessages([]);
+    setLoading(true);
+    const query = promptMessage;
+    const portfolio = portfolioData;
+    const conversationHistory = history.length > 0 ? history : null;
+
+    try {
+      const res = await fetch("/api/orchestrator/focus", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query, portfolio, conversationHistory, focusPoint, parentChart }),
+      });
+
+      // Read the response as a stream
+      const reader = res.body?.getReader();
+      if (!reader) throw new Error("Failed to read response stream");
+
+      const decoder = new TextDecoder();
+      let newMessages: string[] = [];
+      let fullText = "";
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        // Decode the streamed text
+        const chunk = decoder.decode(value, { stream: true });
+        fullText += chunk; // Append to full response
+
+        // Update UI with new message (excluding the final JSON)
+        if (!chunk.startsWith("FINAL_RESPONSE:")) {
+          newMessages = [...newMessages, chunk.trim()];
+          setMessages([...newMessages]);
+        } else {
+          // Extract JSON data from the final chunk
+          const response = chunk.replace("FINAL_RESPONSE:", "");
+          // speakResponse(response);
+          setSixMsg(response);
+        }
+      }
+    } catch (error) {
+      console.error("Error calling orchestrator:", error);
+      setMessages(["Error communicating with the server."]);
+    } finally {
+      setLoading(false);
     }
   }
 
   async function speakResponse(text: string) {
-          const blob: Blob = await textToSpeech(text);
-          const url = URL.createObjectURL(blob);
-          const audio = new Audio(url);
-          audio.play();
-      }
+    const blob: Blob = await textToSpeech(text);
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    audio.play();
+  }
 
-  const updateDataList = (id: string, data: AxisChartDataList | string ) => {
-    setDataList([...dataList.filter(ele => ele.id != id), {id, data}])
+  const updateDataList = (id: string, data: AxisChartDataList | string) => {
+    setDataList([...dataList.filter(ele => ele.id != id), { id, data }])
   }
 
 
-  const updateSelectedTableCells = (type: "select" | "deselect",id: string, x: number, y: number, data: string) => {
+  const updateSelectedTableCells = (type: "select" | "deselect", id: string, x: number, y: number, data: string) => {
     if (type === "select") {
-      setSelectedTableCells([...selectedTableCells.filter(ele => ele.id !== id), {id: id, x: x, y: y, data: data}])
+      setSelectedTableCells([...selectedTableCells.filter(ele => ele.id !== id), { id: id, x: x, y: y, data: data }])
       console.log(selectedTableCells)
     } else if (type === "deselect") {
       setSelectedTableCells([...selectedTableCells.filter(ele => ele.id !== id)])
@@ -431,7 +243,7 @@ export default function Home() {
   return <>
     <div className="h-screen w-screen flex">
       <aside className={
-        cn(styles.history, "h-full flex flex-col justify-stretch bg-secondary-light dark:bg-secondary-dark", 
+        cn(styles.history, "h-full flex flex-col justify-stretch bg-secondary-light dark:bg-secondary-dark",
           "duration-500 ease-in-out transition-[transform,width]",
           "z-[999] absolute top-0 left-0 shadow-2xl lg:static",
           code_font.className,
@@ -449,7 +261,7 @@ export default function Home() {
               {
                 history.length != 0 ? history.map((message, idx) => {
                   return <div className={cn("p-1 w-fit w-max-[200px]")} key={idx}>
-                    {message.sender + " wrote: " +message.message}
+                    {message.sender + " wrote: " + message.message}
                   </div>
                 }) : <p className="opacity-50">Begin your journey by interacting with the dashboard right.</p>
               }
@@ -473,64 +285,64 @@ export default function Home() {
             <div className={cn("w-full h-full absolute inset-0")}>
               <ScrollShadow className="w-full h-full grid grid-flow-dense p-5 pb-[170px] gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" hideScrollBar size={20}>
                 {jsonData && jsonData.map((chart: any, index) => {
-                  
+
 
                   const animationnames = ['animate-fade-in-scale-0s', 'animate-fade-in-scale-1s', 'animate-fade-in-scale-2s', 'animate-fade-in-scale-3s', 'animate-fade-in-scale-4s', 'animate-fade-in-scale-5s']
                   const randomNumber = Math.floor(Math.random() * 6);
                   const randomClass = animationnames[randomNumber];
 
-                  return chart.type === "table" ? 
-                  <TableCard 
-                    key={index}
-                    id={`chart-${index}`}
-                    title={chart.title}
-                    tableHeader={chart.data.header}
-                    tableData={chart.data.content}
-                    toggleCellSelect={updateSelectedTableCells}
-                    onSelect={addCard}
-                    onDeselect={removeCard}
-                    className={` opacity-0 ${randomClass}`}
-                  /> :
-                  chart.type === "kpi" ? 
-                  <KpiCard 
-                    className={` opacity-0 ${randomClass}`}
-                    key={index}
-                    id={`chart-${index}`}
-                    title={chart.title}
-                    content={chart.data.number}
-                    onSelect={addCard}
-                    onDeselect={removeCard}
-                    // rowSpan = "1"
-                    // colSpan = {chart.data.toString().length >= 6 ? "2" : "1"}
-                  />
-                  : chart.type === "news" ? 
-                  <NewsCard 
-                    key={index}
-                    id={`chart-${index}`}
-                    title={chart.title}
-                    className={`chartelement opacity-0 ${randomClass}`}
-                    content={chart.data.content}
-                    source={chart.data.source}
-                    onSelect={addCard}
-                    onDeselect={removeCard}
-                  />
-                  : <CardContainer  
-                    key={index}
-                    id={`chart-${index}`}
-                    title={chart.title}
-                    className={`chartelement opacity-0 ${randomClass}`}
-                    pt_0={true}
-                    content={
-                      chart.type === "candle" ? <CandleChart dataList={chart.data} id={"" + index} onDataChange={updateDataList}/> :
-                      chart.type === "line" ? <LineChart dataList={chart.data} id={"" + index} onDataChange={updateDataList} /> :
-                      chart.type === "pie" ? <PieChart dataList={chart.data} id={"" + index}/> : <div>No chart available</div>
-                    }
-                    onSelect={addCard}
-                    onDeselect={removeCard}
-                    colSpan={
-                      (chart.type === "candle" || chart.type === "line") ? "2" : undefined
-                    }
-                  />
+                  return chart.type === "table" ?
+                    <TableCard
+                      key={index}
+                      id={`chart-${index}`}
+                      title={chart.title}
+                      tableHeader={chart.data.header}
+                      tableData={chart.data.content}
+                      toggleCellSelect={updateSelectedTableCells}
+                      onSelect={addCard}
+                      onDeselect={removeCard}
+                      className={` opacity-0 ${randomClass}`}
+                    /> :
+                    chart.type === "kpi" ?
+                      <KpiCard
+                        className={` opacity-0 ${randomClass}`}
+                        key={index}
+                        id={`chart-${index}`}
+                        title={chart.title}
+                        content={chart.data.number}
+                        onSelect={addCard}
+                        onDeselect={removeCard}
+                      // rowSpan = "1"
+                      // colSpan = {chart.data.toString().length >= 6 ? "2" : "1"}
+                      />
+                      : chart.type === "news" ?
+                        <NewsCard
+                          key={index}
+                          id={`chart-${index}`}
+                          title={chart.title}
+                          className={`chartelement opacity-0 ${randomClass}`}
+                          content={chart.data.content}
+                          source={chart.data.source}
+                          onSelect={addCard}
+                          onDeselect={removeCard}
+                        />
+                        : <CardContainer
+                          key={index}
+                          id={`chart-${index}`}
+                          title={chart.title}
+                          className={`chartelement opacity-0 ${randomClass}`}
+                          pt_0={true}
+                          content={
+                            chart.type === "candle" ? <CandleChart dataList={chart.data} id={"" + index} onDataChange={updateDataList} /> :
+                              chart.type === "line" ? <LineChart dataList={chart.data} id={"" + index} onDataChange={updateDataList} /> :
+                                chart.type === "pie" ? <PieChart dataList={chart.data} id={"" + index} /> : <div>No chart available</div>
+                          }
+                          onSelect={addCard}
+                          onDeselect={removeCard}
+                          colSpan={
+                            (chart.type === "candle" || chart.type === "line") ? "2" : undefined
+                          }
+                        />
                 })}
                 {/*
                 <CardContainer id="1" title="card 1" content={<CandleChart dataList={candle_data_list} id="1" onDataChange={updateDataList}/>} onSelect={addCard} onDeselect={removeCard} colSpan="2"/>
@@ -541,26 +353,26 @@ export default function Home() {
               </ScrollShadow>
             </div>
 
-            { (history.length > 0) &&
-            <div className="absolute bottom-0 right-0 w-fit max-w-[500px] px-5 z-[1]">
-              <Card className="w-full h-fit max-h-[150px] self-center bg-secondary-light dark:bg-secondary-dark p-3 flex gap-2 flex-row items-start">
-                <div onClick={() => {setSixMsg("")}} className="flex w-fit h-fit"><BotMessageSquare />:</div>
-                <ScrollShadow className="w-fit max-h-[100px] p-0">
-                  <CardBody className="w-fit p-0">
-                  {sixMsg}
-                  </CardBody>
-                </ScrollShadow>
-              </Card>
-            </div>
+            {(history.length > 0) &&
+              <div className="absolute bottom-0 right-0 w-fit max-w-[500px] px-5 z-[1]">
+                <Card className="w-full h-fit max-h-[150px] self-center bg-secondary-light dark:bg-secondary-dark p-3 flex gap-2 flex-row items-start">
+                  <div onClick={() => { setSixMsg("") }} className="flex w-fit h-fit"><BotMessageSquare />:</div>
+                  <ScrollShadow className="w-fit max-h-[100px] p-0">
+                    <CardBody className="w-fit p-0">
+                      {sixMsg}
+                    </CardBody>
+                  </ScrollShadow>
+                </Card>
+              </div>
             }
 
-            
+
           </div>
           <div className={cn("w-full self-center p-5 flex gap-3", (history.length < 1) && "h-full")}>
             <form className={cn("w-full self-center p-5 flex gap-3 h-fit justify-center", (history.length < 1 && "flex-col items-center"))} onSubmit={(e) => {
 
               e.preventDefault();
-              
+
               if (!inputValue) return;
               sendPrompt(inputValue);
 
@@ -581,62 +393,62 @@ export default function Home() {
 
 
             }}>
-              { (history.length < 1) &&
-              <div className="w-fit max-w-[500px] px-5 z-[1] flex flex-col items-center gap-5 mb-12">
-                <div className="flex w-fit h-fit text-9xl"><BotMessageSquare size={128}/></div>
-                <Card className="w-full h-fit max-h-[150px] self-center bg-secondary-light dark:bg-secondary-dark p-3 flex gap-2 flex-row items-start">
+              {(history.length < 1) &&
+                <div className="w-fit max-w-[500px] px-5 z-[1] flex flex-col items-center gap-5 mb-12">
+                  <div className="flex w-fit h-fit text-9xl"><BotMessageSquare size={128} /></div>
+                  <Card className="w-full h-fit max-h-[150px] self-center bg-secondary-light dark:bg-secondary-dark p-3 flex gap-2 flex-row items-start">
                     {
                       sixMsg != "Hi! I'm SIX. Interact with the dashboard to start." ? <Button isIconOnly onPress={() => {
                         setSixMsg("");
-                        }}><X />
+                      }}><X />
                       </Button> : ""
                     }
-                    
-                  <CardBody className="w-fit p-0">
-                    {sixMsg}
-                  </CardBody>
-                </Card>
-              </div>
+
+                    <CardBody className="w-fit p-0">
+                      {sixMsg}
+                    </CardBody>
+                  </Card>
+                </div>
               }
-              
+
               <div className={cn("flex justify-center gap-3 w-full max-w-[90%] md:max-w-full", (history.length < 1) && "w-fit")}>
 
-                
+
 
                 <Button isIconOnly className={cn("h-14 w-14 z-[1000]", (history.length < 1) && "hidden")} onPress={() => {
-                    console.log("toggling history: ");
-                    console.log(showHistory);
-                    setShowHistory(!showHistory);
-                  }}>
-                  <History className="cursor-pointer"/>
+                  console.log("toggling history: ");
+                  console.log(showHistory);
+                  setShowHistory(!showHistory);
+                }}>
+                  <History className="cursor-pointer" />
                 </Button>
                 <div className="flex bg-default-100 items-center rounded-medium w-full max-w-[90%]">
-                  <Input label="Prompt Your Assistant" type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} className={cn("w-full max-w-full bg-transparent", (history.length < 1) && "w-[450px] max-w-screen")}/>
-                  {(selectedCards.length > 0 || selectedTableCells.length > 0) && 
-                  <div className="h-[80%] flex justify-center items-center text-default-500 font-semibold mr-4 border-solid border-1 border-red-600 rounded-full px-6">
-                    <Badge className="absolute top-[-4px] right-[-8px] p-3" content={selectedCards.length + selectedTableCells.length} shape="circle">
-                      Items selected <SquareMousePointer className="ml-2" color="red" />
-                    </Badge>
-                  </div>}
+                  <Input label="Prompt Your Assistant" type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} className={cn("w-full max-w-full bg-transparent", (history.length < 1) && "w-[450px] max-w-screen")} />
+                  {(selectedCards.length > 0 || selectedTableCells.length > 0) &&
+                    <div className="h-[80%] flex justify-center items-center text-default-500 font-semibold mr-4 border-solid border-1 border-red-600 rounded-full px-6">
+                      <Badge className="absolute top-[-4px] right-[-8px] p-3" content={selectedCards.length + selectedTableCells.length} shape="circle">
+                        Items selected <SquareMousePointer className="ml-2" color="red" />
+                      </Badge>
+                    </div>}
                 </div>
-                
+
                 {
-                  loading ? 
-                  <div className="flex gap-5">
-                    <Spinner/>
-                    {messages.length > 0 ? <p className="h-full flex items-center">{messages[messages.length-1]}</p> : <></>}
-                  </div>
-                  :
-                  <Button color="primary" type="submit" className="h-14 z-[1000]">
-                    Submit
-                  </Button>
+                  loading ?
+                    <div className="flex gap-5">
+                      <Spinner />
+                      {messages.length > 0 ? <p className="h-full flex items-center">{messages[messages.length - 1]}</p> : <></>}
+                    </div>
+                    :
+                    <Button color="primary" type="submit" className="h-14 z-[1000]">
+                      Submit
+                    </Button>
                 }
               </div>
-              
-              <AudioRecorder onWhisperResponse={(res) => sendPrompt(res)} className={cn((history.length < 1) && "h-20 w-20 rounded-full overflow-hidden mt-12")}/>
+
+              <AudioRecorder onWhisperResponse={(res) => sendPrompt(res)} className={cn((history.length < 1) && "h-20 w-20 rounded-full overflow-hidden mt-12")} />
             </form>
           </div>
-        </main> 
+        </main>
       </div>
     </div>
   </>
