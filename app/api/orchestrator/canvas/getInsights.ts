@@ -4,7 +4,7 @@ export interface ContextData {
     news: string[],
 }
 
-export async function getInsights(context: ContextData, portfolio: any | undefined, insights: any | undefined, userQuery: string): Promise<string[] | undefined> {
+export async function getInsights(context: ContextData, portfolio: any | undefined, insights: any[] | undefined, userQuery: string): Promise<string[] | undefined> {
     try {
         const query = insights ?
             generateInsightsLlmPromptWithInsights(context, portfolio, insights, userQuery) : 
@@ -62,7 +62,7 @@ function generateInsightsLlmPrompt(context: ContextData, portfolio: any | undefi
     `.trim();
 }
 
-function generateInsightsLlmPromptWithInsights(context: ContextData, portfolio: any | undefined, insights: any, userQuery: string) {
+function generateInsightsLlmPromptWithInsights(context: ContextData, portfolio: any[] | undefined, insights: any, userQuery: string) {
     return `
         You will be acting as a part of a pipeline meant to provide wealth managers, portfolio managers and financial analysts with valuable insights in their decision making regarding their queries. It enables a completely novel human-AI interaction where users can work with information with minimal text input. At the end of the pipeline, components like charts, text paragraphs and KPIs will be generated that are relevant to the user's query.
 

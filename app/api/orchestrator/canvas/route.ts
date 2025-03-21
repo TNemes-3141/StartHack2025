@@ -90,7 +90,7 @@ export async function POST(request: Request) {
                         news: [news],
                     };
                     await sendMessage(controller, encoder, "Building insights...");
-                    const insights = await getInsights(finalData, portfolio, query, insightData);
+                    const insights = await getInsights(finalData, portfolio, insightData, query);
                     console.log(insights);
 
                     // Step 5: Generate JSON

@@ -3,7 +3,7 @@ type QueryReturns = {
     message: string
 }
 
-export async function getDataFromQuery(portfolio: any | undefined, history: any | undefined, insights: any | undefined, userQuery: string): Promise<QueryReturns | undefined> {
+export async function getDataFromQuery(portfolio: any | undefined, history: any | undefined, insights: any[] | undefined, userQuery: string): Promise<QueryReturns | undefined> {
     try {
         const query = insights ? generateToolsLlmPromptWithInsights(portfolio, history, insights, userQuery) : generateToolsLlmPrompt(portfolio, history, userQuery);
         console.log("System prompt: " + query);
