@@ -1,4 +1,9 @@
-export async function getDataFromQuery(portfolio: any | undefined, history: any | undefined, userQuery: string): Promise<string[] | undefined> {
+type QueryReturns = {
+    items: string[],
+    message: string
+}
+
+export async function getDataFromQuery(portfolio: any | undefined, history: any | undefined, userQuery: string): Promise<QueryReturns | undefined> {
     try {
         const query = generateToolsLlmPrompt(portfolio, history, userQuery);
         console.log("System prompt: " + query);
@@ -20,8 +25,17 @@ export async function getDataFromQuery(portfolio: any | undefined, history: any 
             msg.item !== "{}" &&
             msg.item !== "[]")
             .map(msg => msg.item);
+        
+        const aiMessages: string[] = messages
+            .filter(msg => msg.type === "ai" &&
+                typeof msg.content === "string" &&
+                msg.content.trim() !== "")
+            .map(msg => msg.content);
 
-        return extractedItems;
+        return {
+            items: extractedItems,
+            message: aiMessages.length > 0 ? aiMessages[0] : "",
+        };
     } catch (error) {
         console.error(`Error calling:`, error);
         return undefined
@@ -34,7 +48,7 @@ function generateToolsLlmPrompt(portfolio: any | undefined, history: any | undef
 
         You should adhere to the provided specifications completely.
 
-        In this stage, you will write three queries to your tools (Summary, Search with criteria, Company data search, Historical price data). Do NOT use Winners_Losers, as its API is unavailable. Output the queries that should be made to these tools in their respectively correct formats. The results of the queries should be directly relevant to solve the user's question.
+        In this stage, you will write three queries to your tools (Summary, Search with criteria, Company data search, Historical price data). Do NOT use Winners_Losers, as its API is unavailable. Output the queries that should be made to these tools in their respectively correct formats. The results of the queries should be directly relevant to solve the user's question. Finally, write a short message (not longer than 500 characters) where you summerize what you did and answer the user in natural language if it was a question.
 
         ${portfolio ? `If the user refers to a portfolio, it means the portfolio of a client he manages. This is the portfolio you should base your understanding of the user's question on: ${JSON.stringify(portfolio)}` : ""}
 
@@ -42,6 +56,6 @@ function generateToolsLlmPrompt(portfolio: any | undefined, history: any | undef
 
         Here is the user's question: ${userQuery}
 
-        What information would you retrieve from your tools to help the user solve his case? Think of companies whose data could be relevant. Make exactly three function calls! Think first before you respond. 
+        What information would you retrieve from your tools to help the user solve his case? Think of companies whose data could be relevant. Make exactly three function calls! Think first before you respond.
     `.trim();
 }

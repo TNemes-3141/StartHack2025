@@ -29,6 +29,7 @@ import { candle_data_list, line_data_list, pie_data_list } from "./components/ch
 import { AxisChartDataList } from "./components/charts/ApexSeriesConverter";
 import { OrchestratorData } from "./components/charts/OrchestratorInterface";
 import KpiCard from "./components/KpiCard";
+import { extractFinalJsonAndMessage } from "./components/json_decoder";
 
 
 // chat can we get a pog chat?
@@ -217,12 +218,14 @@ export default function Home() {
                 setMessages([...newMessages]);
               } else {
                 // Extract JSON data from the final chunk
-                const jsonData = JSON.parse(chunk.replace("FINAL_JSON:", "").trim());
+                try {
+                  const data = extractFinalJsonAndMessage(chunk);
 
-                setJsonData(jsonData);
-                console.log(jsonData);
-                // console.log("THIS IS IT:" + JSON.stringify(jsonData));
-                // classify(jsonData);
+                  setJsonData(data.jsonData);
+                  console.log(data.message);
+                } catch (error) {
+                  setJsonData([]);
+                }
               }
             }
 

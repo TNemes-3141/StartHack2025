@@ -27,7 +27,8 @@ export async function POST(request: Request) {
                     // Step 1: Send user query and portfolio to QUERY for data
                     await sendMessage(controller, encoder, "Gathering data for problem solving...");
 
-                    const dataResults = await getDataFromQuery(portfolio, conversationHistory, query) ?? [];
+                    const queryResults = await getDataFromQuery(portfolio, conversationHistory, query) ?? {items: [], message: ""};
+                    const dataResults = queryResults.items;
                     console.log("We are receiving " + dataResults.length + " results");
                     console.log(dataResults);
 
@@ -101,7 +102,9 @@ export async function POST(request: Request) {
                         console.log("Components: " + componentJson);
 
                         // Send final JSON payload as the last message
-                        await sendMessage(controller, encoder, componentJson ? `FINAL_JSON:${componentJson}` : "FINAL_JSON:[]", 500);
+                        await sendMessage(controller, encoder, componentJson ?
+                            `FINAL_JSON:${componentJson}:END_JSON:${queryResults.message}` :
+                            `FINAL_JSON:[]:END_JSON:${queryResults.message}`, 500);
                         controller.close(); // Close the stream when finished
                     }
                 } catch (error) {
