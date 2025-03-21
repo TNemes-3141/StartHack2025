@@ -155,6 +155,7 @@ export default function Home() {
             const data = extractFinalJsonAndMessage(chunk);
 
             setJsonData([jsonData, ...data.jsonData]);
+            setSixMsg(data.message);
             console.log(data.message);
           } catch (error) {
           }
