@@ -271,7 +271,7 @@ export default function Home() {
               {
                 history.length != 0 ? history.map((message, idx) => {
                   return <div className={cn("p-1 w-fit w-max-[200px]")} key={idx}>
-                    {message.sender + " wrote: " + message.message}
+                    <span className="font-bold">{message.sender} wrote: </span><span>{message.message}</span>
                   </div>
                 }) : <p className="opacity-50">Begin your journey by interacting with the dashboard right.</p>
               }
