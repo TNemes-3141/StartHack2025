@@ -47,7 +47,7 @@ function UserSelector( {className}: {className?: string}) {
     return (
         <div className={cn(className)}>
             <div className="flex flex-wrap gap-4 max-h-12 w-64">
-            <Select onChange={handleSelectionChange} className="w-full [&>div>button]:min-h-10 [&>div>button]:h-10" label="Select a user">
+            <Select onChange={handleSelectionChange} className="w-full [&>div>button]:min-h-10 [&>div>button]:h-10" label="Select a portfolio">
                 {userList.map((user: UserData) => (
                 <SelectItem key={user.id}>{user.username}</SelectItem>
                 ))}

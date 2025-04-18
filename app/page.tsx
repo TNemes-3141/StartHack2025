@@ -5,7 +5,7 @@ import { cn, generatePDF } from "@/lib/utils";
 import { ThemeSwitcher } from "./components/ThemeSwitcher";
 import { Input } from "@heroui/input";
 import styles from "./page.module.css"
-import logo from "@/public/SIX_Group_logo.svg"
+import logo from "@/public/Sixth_Sense_Logo.svg"
 import Image from "next/image";
 import { Button } from "@heroui/button";
 import { Badge, Card, CardBody, CardHeader, Code, Spinner } from "@heroui/react";
@@ -45,13 +45,15 @@ type ChartData = {
 }
 
 export default function Home() {
+  const defaultMessage = "Hi! I'm the AMA with your personal finances. What are you looking for today?"
+
   const [selectedCards, setSelectedCards] = useState<string[]>([]) // id's of the selected cards
   const [showHistory, setShowHistory] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
   const [history, setHistory] = useState<ChatHistory>([]); // {sender: 'assistant', message: "blabl"}
   const [dataList, setDataList] = useState<({ id: string, data: AxisChartDataList | string })[]>([])
   const [selectedTableCells, setSelectedTableCells] = useState<{ id: string, x: number, y: number, data: string }[]>([])
-  const [sixMsg, setSixMsg] = useState("Hi! I'm SIX. Interact with the dashboard to start.");
+  const [sixMsg, setSixMsg] = useState(defaultMessage);
 
 
 
@@ -285,7 +287,7 @@ export default function Home() {
       <div className="h-screen w-full flex flex-col">
         <header className="px-5 h-14 w-full flex items-center gap-5 justify-between">
           <div className="flex gap-5 items-center">
-            <Image src={logo} alt="sixlogo" width={100} />
+            <Image src={logo} alt="sixlogo" width={180} />
             <UserSelector className="w-64 h-10 min-h-10"></UserSelector>
           </div>
           <ThemeSwitcher />
@@ -410,13 +412,13 @@ export default function Home() {
                   <div className="flex w-fit h-fit text-9xl"><BotMessageSquare size={128} /></div>
                   <Card className="w-full h-fit max-h-[150px] self-center bg-secondary-light dark:bg-secondary-dark p-3 flex gap-2 flex-row items-start">
                     {
-                      sixMsg != "Hi! I'm SIX. Interact with the dashboard to start." ? <Button isIconOnly onPress={() => {
+                      sixMsg != defaultMessage ? <Button isIconOnly onPress={() => {
                         setSixMsg("");
                       }}><X />
                       </Button> : ""
                     }
 
-                    <CardBody className="w-fit p-0">
+                    <CardBody className="w-fit p-0 text-center">
                       {sixMsg}
                     </CardBody>
                   </Card>
@@ -435,7 +437,7 @@ export default function Home() {
                   <History className="cursor-pointer" />
                 </Button>
                 <div className="flex bg-default-100 items-center rounded-medium w-full max-w-[90%]">
-                  <Input label="Prompt Your Assistant" type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} className={cn("w-full max-w-full bg-transparent", (history.length < 1) && "w-[450px] max-w-screen")} />
+                  <Input label="Ask your AI portfolio manager" type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} className={cn("w-full max-w-full bg-transparent", (history.length < 1) && "w-[450px] max-w-screen")} />
                   {(selectedCards.length > 0 || selectedTableCells.length > 0) &&
                     <div className="h-[80%] flex justify-center items-center text-default-500 font-semibold mr-4 border-solid border-1 border-red-600 rounded-full px-6">
                       <Badge className="absolute top-[-4px] right-[-8px] p-3" content={selectedCards.length + selectedTableCells.length} shape="circle">
