@@ -1,0 +1,36 @@
+{
+    "type": "function",
+    "function": {
+        "name": "historical_market_cap",
+        "description": "Offers comprehensive historical market capitalization data for companies, enabling users to analyze the company's growth trajectory and identify performance trends over time. Each query is limited to a maximum of five years of data.",
+        "strict": true,
+        "parameters": {
+            "type": "object",
+            "required": [
+                "symbol",
+                "from",
+                "to",
+                "limit"
+            ],
+            "properties": {
+                "symbol": {
+                    "type": "string",
+                    "description": "The stock symbol of the company"
+                },
+                "from": {
+                    "type": "string",
+                    "description": "Start date for retrieving historical market cap data in YYYY-MM-DD format"
+                },
+                "to": {
+                    "type": "string",
+                    "description": "End date for retrieving historical market cap data in YYYY-MM-DD format"
+                },
+                "limit": {
+                    "type": "number",
+                    "description": "Maximum number of records to return"
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}

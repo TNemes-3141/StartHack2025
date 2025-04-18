@@ -1,0 +1,21 @@
+{
+    "type": "function",
+    "function": {
+        "name": "full_quote",
+        "description": "This endpoint gives you the latest bid and ask prices for a stock, as well as the volume, last trade price, earnings announcements and outstanding shares in real time.",
+        "strict": true,
+        "parameters": {
+            "type": "object",
+            "required": [
+                "symbol"
+            ],
+            "properties": {
+                "symbol": {
+                    "type": "string",
+                    "description": "The stock symbol for which to retrieve the quote"
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}

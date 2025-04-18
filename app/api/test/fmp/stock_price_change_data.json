@@ -1,0 +1,21 @@
+{
+    "type": "function",
+    "function": {
+        "name": "stock_price_change",
+        "description": "This endpoint gives you the change in a stock's price over a given period of time, from 1 day up to 10 years.",
+        "strict": true,
+        "parameters": {
+            "type": "object",
+            "required": [
+                "symbol"
+            ],
+            "properties": {
+                "symbol": {
+                    "type": "string",
+                    "description": "Stock ticker symbol"
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "type": "function",
+    "function": {
+        "name": "company_profile",
+        "description": "Get a comprehensive overview of a company with this Company Profile endpoint. This provides key information such as price, beta, market capitalization, industry, description in natural language, headquarters, senior management, employee count, and more.",
+        "strict": true,
+        "parameters": {
+            "type": "object",
+            "required": [
+                "symbol"
+            ],
+            "properties": {
+                "symbol": {
+                    "type": "string",
+                    "description": "The stock ticker symbol for the company"
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}

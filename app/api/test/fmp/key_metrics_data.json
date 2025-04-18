@@ -1,0 +1,31 @@
+{
+    "type": "function",
+    "function": {
+        "name": "get_key_metrics",
+        "description": "Get key financial metrics for a company, including revenue, net income, and price-to-earnings ratio (P/E ratio). Assess a company's financial performance and compare it to its competitors.",
+        "strict": true,
+        "parameters": {
+            "type": "object",
+            "required": [
+                "symbol",
+                "period",
+                "limit"
+            ],
+            "properties": {
+                "symbol": {
+                    "type": "string",
+                    "description": "Ticker symbol of the company"
+                },
+                "period": {
+                    "type": "string",
+                    "description": "Period for the metrics (e.g., 'annual' or 'quarter')"
+                },
+                "limit": {
+                    "type": "number",
+                    "description": "Maximum number of records to retrieve"
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}

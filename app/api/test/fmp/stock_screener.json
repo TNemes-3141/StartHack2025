@@ -1,0 +1,89 @@
+{
+    "type": "function",
+    "function": {
+        "name": "stock_screener",
+        "description": "Find stocks that meet specific investment criteria. This endpoint allows you to search for stocks based on various criteria, such as market cap, price, volume, beta, sector, and country.",
+        "strict": true,
+        "parameters": {
+            "type": "object",
+            "required": [
+                "limit"
+            ],
+            "properties": {
+                "limit": {
+                    "type": "number",
+                    "description": "The maximum number of stock results to return"
+                },
+                "marketCapMoreThan": {
+                    "type": "number",
+                    "description": "Filter for stocks with a market cap greater than this value"
+                },
+                "marketCapLowerThan": {
+                    "type": "number",
+                    "description": "Filter for stocks with a market cap less than this value"
+                },
+                "priceMoreThan": {
+                    "type": "number",
+                    "description": "Filter for stocks with a price greater than this value"
+                },
+                "priceLowerThan": {
+                    "type": "number",
+                    "description": "Filter for stocks with a price less than this value"
+                },
+                "betaMoreThan": {
+                    "type": "number",
+                    "description": "Filter for stocks with a beta greater than this value"
+                },
+                "betaLowerThan": {
+                    "type": "number",
+                    "description": "Filter for stocks with a beta less than this value"
+                },
+                "volumeMoreThan": {
+                    "type": "number",
+                    "description": "Filter for stocks with a volume greater than this value"
+                },
+                "volumeLowerThan": {
+                    "type": "number",
+                    "description": "Filter for stocks with a volume less than this value"
+                },
+                "dividendMoreThan": {
+                    "type": "number",
+                    "description": "Filter for stocks with a dividend greater than this value"
+                },
+                "dividendLowerThan": {
+                    "type": "number",
+                    "description": "Filter for stocks with a dividend less than this value"
+                },
+                "isEtf": {
+                    "type": "boolean",
+                    "description": "Filter to return only ETFs if true"
+                },
+                "isFund": {
+                    "type": "boolean",
+                    "description": "Filter to return only funds if true"
+                },
+                "isActivelyTrading": {
+                    "type": "boolean",
+                    "description": "Filter for stocks that are actively trading if true"
+                },
+                "sector": {
+                    "type": "string",
+                    "description": "Filter for stocks in a specific sector"
+                },
+                "industry": {
+                    "type": "string",
+                    "description": "Filter for stocks in a specific industry"
+                },
+                "country": {
+                    "type": "string",
+                    "description": "Filter for stocks based in a specific country"
+                },
+                "exchange": {
+                    "type": "string",
+                    "description": "Filter for stocks listed on a specific exchange"
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}
