@@ -1,9 +1,38 @@
 import { getDataFromQuery } from "./getDataFromQuery";
-import { getSummary, getCompanyDataSearch, getOhlcv, getSearchWithCriteria } from "./tools";
+import { balance_sheet, company_profile, daily_chart_eod, full_quote, historical_market_cap, historical_sector_performance, intraday_chart, key_metrics, stock_price_change, stock_screener } from "./functions";
+
+import { getSummary, getCompanyDataSearch, getOhlcv, getSearchWithCriteria } from "./utils";
 import { getPortfolioDistribution } from "./getPortfolioDistribution";
 import { getNewsArticle } from "./getNewsArticle";
 import { ContextData, getInsights } from "./getInsights";
 import { getComponents } from "./getComponents";
+
+import OpenAI from "openai";
+
+
+type FunctionCallResult = {
+    id: number;
+    data: string;
+};
+
+export type FunctionCall = {
+    id: number,
+    name: string,
+    arguments: Record<string, any>
+}
+
+const functionMap: Record<string, Function> = {
+    balance_sheet,
+    company_profile,
+    daily_chart_eod,
+    full_quote,
+    intraday_chart,
+    key_metrics,
+    historical_market_cap,
+    historical_sector_performance,
+    stock_price_change,
+    stock_screener
+  };
 
 export async function POST(request: Request) {
     try {
@@ -11,6 +40,10 @@ export async function POST(request: Request) {
         const { query, portfolio, conversationHistory, insightData } = await request.json();
 
         const apiKey = process.env.OPENAI_API_KEY!;
+        const openai = new OpenAI({
+            apiKey: apiKey,
+        });
+        const fmpApiKey = process.env.FMP_API_KEY!;
 
         if (!query && !portfolio && !conversationHistory) {
             return new Response(JSON.stringify({ error: "Missing data" }), {
@@ -19,20 +52,29 @@ export async function POST(request: Request) {
             });
         }
 
+        console.log("Begin orchestrator!");
+
         // Placeholder response (we will add logic later)
         const encoder = new TextEncoder();
         const stream = new ReadableStream({
             async start(controller) {
                 try {
                     // Step 1: Send user query and portfolio to QUERY for data
-                    await sendMessage(controller, encoder, "Gathering data for problem solving...");
+                    await sendMessage(controller, encoder, "Devising strategy for problem solving...");
 
-                    const queryResults = await getDataFromQuery(portfolio, conversationHistory, insightData, query) ?? {items: [], message: ""};
-                    const dataResults = queryResults.items;
-                    console.log("We are receiving " + dataResults.length + " results");
-                    console.log(dataResults);
+                    const functionCalls = await getDataFromQuery(openai, portfolio, conversationHistory, insightData, query) ?? [];
 
-                    const toolList = dataResults.map((objStr) => JSON.parse(objStr));
+                    console.log("We are doing " + functionCalls.length + " function calls");
+                    console.log(functionCalls);
+
+                    // Step 2: Gather data from API endpoints
+                    await sendMessage(controller, encoder, "Gathering data...");
+                    const functionCallResults = await executeFunctionCalls(functionCalls, fmpApiKey, functionMap);
+
+                    console.log("Results:");
+                    console.log(functionCallResults);
+
+                    /*const toolList = dataResults.map((objStr) => JSON.parse(objStr));
                     console.log(toolList.length)
 
                     let restructuredData: string[] = [];
@@ -107,7 +149,9 @@ export async function POST(request: Request) {
                             `FINAL_JSON:${componentJson}:END_JSON:${queryResults.message}` :
                             `FINAL_JSON:[]:END_JSON:${queryResults.message}`, 500);
                         controller.close(); // Close the stream when finished
-                    }
+                    }*/
+                    await sendMessage(controller, encoder, "Done!", 500);
+                    controller.close();
                 } catch (error) {
                     controller.enqueue(encoder.encode(`Error: ${error}\n`));
                     controller.close();
@@ -127,4 +171,30 @@ export async function POST(request: Request) {
 async function sendMessage(controller: ReadableStreamDefaultController<any>, encoder: TextEncoder, message: string, delay = 1000) {
     controller.enqueue(encoder.encode(`${message}\n`));
     await new Promise((resolve) => setTimeout(resolve, delay));
+}
+
+async function executeFunctionCalls(
+    calls: FunctionCall[],
+    apiKey: string,
+    functionMap: Record<string, Function>
+): Promise<FunctionCallResult[]> {
+    const results: FunctionCallResult[] = [];
+
+    for (const call of calls) {
+        const fn = functionMap[call.name];
+        if (typeof fn !== "function") {
+            results.push({ id: call.id, data: "" });
+            continue;
+        }
+
+        try {
+            const argsWithKey = { ...call.arguments, apiKey };
+            const result = await fn(...Object.values(argsWithKey));
+            results.push({ id: call.id, data: result });
+        } catch {
+            results.push({ id: call.id, data: "" });
+        }
+    }
+
+    return results;
 }

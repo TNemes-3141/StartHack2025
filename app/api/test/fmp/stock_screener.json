@@ -3,7 +3,6 @@
     "function": {
         "name": "stock_screener",
         "description": "Find stocks that meet specific investment criteria. This endpoint allows you to search for stocks based on various criteria, such as market cap, price, volume, beta, sector, and country.",
-        "strict": true,
         "parameters": {
             "type": "object",
             "required": [
@@ -82,8 +81,7 @@
                     "type": "string",
                     "description": "Filter for stocks listed on a specific exchange"
                 }
-            },
-            "additionalProperties": false
+            }
         }
     }
 }

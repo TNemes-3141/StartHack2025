@@ -1,7 +1,7 @@
 {
     "type": "function",
     "function": {
-        "name": "get_balance_sheet",
+        "name": "balance_sheet",
         "description": "Get the balance sheet for a company as reported by the company, without any adjustments. This endpoint can be used to assess a company's financial health and to identify potential risks.",
         "strict": true,
         "parameters": {

@@ -9,7 +9,8 @@
             "required": [
                 "symbol",
                 "from",
-                "to"
+                "to",
+                "serietype"
             ],
             "properties": {
                 "symbol": {

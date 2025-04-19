@@ -10,7 +10,8 @@
                 "timeframe",
                 "symbol",
                 "from",
-                "to"
+                "to",
+                "extended"
             ],
             "properties": {
                 "timeframe": {
