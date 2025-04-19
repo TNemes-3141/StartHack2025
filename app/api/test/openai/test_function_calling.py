@@ -1,7 +1,7 @@
 from openai import OpenAI
 import json
 
-client = OpenAI(api_key="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")
+client = OpenAI(api_key="")
 
 def load_function_schemas(json_files):
     tools = []
