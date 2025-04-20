@@ -6,8 +6,8 @@ export async function balance_sheet(
 ): Promise<string> {
     try {
         limit = Math.min(limit, 5);
-        const baseUrl = `https://financialmodelingprep.com/api/v3/balance-sheet-statement-as-reported/${symbol}`;
-        const url = `${baseUrl}?period=${encodeURIComponent(period)}&limit=${limit}&apikey=${encodeURIComponent(apiKey)}`;
+        const baseUrl = `https://financialmodelingprep.com/stable/balance-sheet-statement`;
+        const url = `${baseUrl}?symbol=${encodeURIComponent(symbol)}&period=${encodeURIComponent(period)}&limit=${limit}&apikey=${encodeURIComponent(apiKey)}`;
 
         const response = await fetch(url);
 
@@ -27,7 +27,7 @@ export async function company_profile(
     apiKey: string
 ): Promise<string> {
     try {
-        const url = `https://financialmodelingprep.com/api/v3/profile/${encodeURIComponent(symbol)}?apikey=${encodeURIComponent(apiKey)}`;
+        const url = `https://financialmodelingprep.com/stable/profile?symbol=${encodeURIComponent(symbol)}&apikey=${encodeURIComponent(apiKey)}`;
 
         const response = await fetch(url);
 
@@ -46,12 +46,11 @@ export async function daily_chart_eod(
     symbol: string,
     from: string,
     to: string,
-    serietype: string,
     apiKey: string
 ): Promise<string> {
     try {
-        const baseUrl = `https://financialmodelingprep.com/api/v3/historical-price-full/${encodeURIComponent(symbol)}`;
-        const url = `${baseUrl}?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&serietype=${encodeURIComponent(serietype)}&apikey=${encodeURIComponent(apiKey)}`;
+        const baseUrl = `https://financialmodelingprep.com/stable/historical-price-eod/full`;
+        const url = `${baseUrl}?symbol=${encodeURIComponent(symbol)}&from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&apikey=${encodeURIComponent(apiKey)}`;
         const response = await fetch(url);
         if (!response.ok) {
             return "";
@@ -68,7 +67,7 @@ export async function full_quote(
     apiKey: string
 ): Promise<string> {
     try {
-        const url = `https://financialmodelingprep.com/api/v3/quote/${encodeURIComponent(symbol)}?apikey=${encodeURIComponent(apiKey)}`;
+        const url = `https://financialmodelingprep.com/stable/quote?symbol=${encodeURIComponent(symbol)}&apikey=${encodeURIComponent(apiKey)}`;
         const response = await fetch(url);
         if (!response.ok) {
             return "";
@@ -104,13 +103,12 @@ export async function intraday_chart(
 
 export async function key_metrics(
     symbol: string,
-    period: string,
     limit: number,
     apiKey: string
 ): Promise<string> {
     try {
         limit = Math.min(limit, 5);
-        const url = `https://financialmodelingprep.com/api/v3/key-metrics/${encodeURIComponent(symbol)}?period=${encodeURIComponent(period)}&limit=${limit}&apikey=${encodeURIComponent(apiKey)}`;
+        const url = `https://financialmodelingprep.com/stable/key-metrics?symbol=${encodeURIComponent(symbol)}&limit=${limit}&apikey=${encodeURIComponent(apiKey)}`;
         const response = await fetch(url);
         if (!response.ok) {
             return "";
@@ -131,7 +129,18 @@ export async function historical_market_cap(
 ): Promise<string> {
     try {
         limit = Math.min(limit, 20);
-        const url = `https://financialmodelingprep.com/api/v3/historical-market-capitalization/${encodeURIComponent(symbol)}?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&limit=${limit}&apikey=${encodeURIComponent(apiKey)}`;
+
+        const inputDate = new Date(from);
+        const today = new Date();
+        const oneMonthBack = new Date();
+        oneMonthBack.setMonth(today.getMonth() - 1);
+        if (isNaN(inputDate.getTime())) {
+            return "";
+        }
+        const cappedDate = inputDate < oneMonthBack ? oneMonthBack : inputDate;
+        from = cappedDate.toISOString().split("T")[0];
+
+        const url = `https://financialmodelingprep.com/stable/historical-market-capitalization?symbol=${encodeURIComponent(symbol)}?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&limit=${limit}&apikey=${encodeURIComponent(apiKey)}`;
         const response = await fetch(url);
         if (!response.ok) {
             return "";
@@ -168,7 +177,7 @@ export async function stock_price_change(
     apiKey: string
 ): Promise<string> {
     try {
-        const url = `https://financialmodelingprep.com/api/v3/stock-price-change/${encodeURIComponent(symbol)}?apikey=${encodeURIComponent(apiKey)}`;
+        const url = `https://financialmodelingprep.com/stable/stock-price-change?symbol=${encodeURIComponent(symbol)}&apikey=${encodeURIComponent(apiKey)}`;
         const response = await fetch(url);
         if (!response.ok) {
             return "";

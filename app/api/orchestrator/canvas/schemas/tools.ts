@@ -21,7 +21,8 @@ export const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
                     },
                     "period": {
                         "type": "string",
-                        "description": "The period of the balance sheet data, can be 'annual' or 'quarter'"
+                        "enum": ["Q1","Q2","Q3","Q4","FY"],
+                        "description": "The period of the balance sheet data"
                     },
                     "limit": {
                         "type": "number",
@@ -64,8 +65,7 @@ export const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
                 "required": [
                     "symbol",
                     "from",
-                    "to",
-                    "serietype"
+                    "to"
                 ],
                 "properties": {
                     "symbol": {
@@ -79,10 +79,6 @@ export const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
                     "to": {
                         "type": "string",
                         "description": "End date for historical data in YYYY-MM-DD format"
-                    },
-                    "serietype": {
-                        "type": "string",
-                        "description": "The type of series to return, e.g., 'line'"
                     }
                 },
                 "additionalProperties": false
@@ -128,11 +124,12 @@ export const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
                 "properties": {
                     "timeframe": {
                         "type": "string",
-                        "description": "Time interval for the intraday chart (e.g., 1min, 5min, 15min, 30min, 1hour, 4hour)"
+                        "enum": ["1min", "5min", "15min", "30min", "1hour", "4hour"],
+                        "description": "Time interval for the intraday chart"
                     },
                     "symbol": {
                         "type": "string",
-                        "description": "Stock ticker symbol of the company (e.g., AAPL)"
+                        "description": "Stock ticker symbol of the company"
                     },
                     "from": {
                         "type": "string",
@@ -161,17 +158,12 @@ export const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
                 "type": "object",
                 "required": [
                     "symbol",
-                    "period",
                     "limit"
                 ],
                 "properties": {
                     "symbol": {
                         "type": "string",
                         "description": "Ticker symbol of the company"
-                    },
-                    "period": {
-                        "type": "string",
-                        "description": "Period for the metrics (e.g., 'annual' or 'quarter')"
                     },
                     "limit": {
                         "type": "number",
