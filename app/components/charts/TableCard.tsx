@@ -92,50 +92,22 @@ const TableCard = ({
         toggleCellSelect && toggleCellSelect("select", id, idx, idy, content)
       }
     }
-    /*
-    if (onDeselect && toggleCellSelect) {
-      if (e.ctrlKey || e.metaKey) {
-        console.log("selected a specific cell");
-        if (selectedCell.x == idx && selectedCell.y == idy) {
-          setSelectedCell({
-            x: -1,
-            y: -1
-          })
-        } else {
-          setSelectedCell({
-            x: idx,
-            y: idy
-          })
-          toggleCellSelect(content)
-          setIsSelected(false);
-          onDeselect(id)
-        }
-      } 
-    }*/
-
   };
 
-  let formatedData: string[][] = [];
+  const normalizeTableData = (
+    tableData: { key: string; value: string }[][],
+    tableHeader: string[]
+  ): string[][] => {
+    return tableData.map(row => {
+      const rowMap = new Map(row.map(cell => [cell.key, cell.value]));
+      return tableHeader.map(header => rowMap.get(header) ?? "-");
+    });
+  };
+
+  let formattedData: string[][] = [];
   if (tableData && tableHeader) {
-    const formattedData: string[][] = [];
-
-    for (let i = 0; i < tableData.length; i++) {
-      const row = tableData[i];
-      const formattedRow: string[] = new Array(tableHeader.length).fill("");
-
-      for (const cell of row) {
-        const idx = tableHeader.indexOf(cell.key);
-        if (idx !== -1) {
-          formattedRow[idx] = cell.value;
-        }
-      }
-
-      formattedData.push(formattedRow);
-    }
+    formattedData = normalizeTableData(tableData, tableHeader);
   }
-
-
-
 
   return (
     <div
@@ -166,7 +138,7 @@ const TableCard = ({
                 </TableHeader>
                 <TableBody>
                   {
-                    formatedData.map((row, idx) => {
+                    formattedData.map((row, idx) => {
                       return <TableRow key={idx}>
                         {
                           row.map((cell, idy) => {
