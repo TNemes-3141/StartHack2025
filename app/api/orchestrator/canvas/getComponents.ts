@@ -8,7 +8,7 @@ export async function getComponents(ai: OpenAI, context: ContextData, insights: 
         const query = generateComponentsLlmPrompt(context, insights);
 
         const completion = await ai.beta.chat.completions.parse({
-            model: "gpt-4.1",
+            model: "gpt-4.1-mini",
             messages: [
                 { role: "user", content: query },
             ],
