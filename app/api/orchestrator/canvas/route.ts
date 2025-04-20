@@ -1,10 +1,9 @@
 import { getDataFromQuery } from "./getDataFromQuery";
 import { balance_sheet, company_profile, daily_chart_eod, full_quote, historical_market_cap, historical_sector_performance, intraday_chart, key_metrics, stock_price_change, stock_screener } from "./functions";
 
-import { getSummary, getCompanyDataSearch, getOhlcv, getSearchWithCriteria } from "./utils";
 import { getPortfolioDistribution } from "./getPortfolioDistribution";
 import { getNewsArticle } from "./getNewsArticle";
-import { ContextData, getInsights } from "./getInsights";
+import { getInsights } from "./getInsights";
 import { getComponents } from "./getComponents";
 
 import OpenAI from "openai";
@@ -19,6 +18,12 @@ export type FunctionCall = {
     id: number,
     name: string,
     arguments: Record<string, any>
+}
+
+export interface ContextData {
+    marketData: FunctionCallResult[],
+    portfolioDistribution: string,
+    news: string[],
 }
 
 const functionMap: Record<string, Function> = {
@@ -54,7 +59,6 @@ export async function POST(request: Request) {
 
         console.log("Begin orchestrator!");
 
-        // Placeholder response (we will add logic later)
         const encoder = new TextEncoder();
         const stream = new ReadableStream({
             async start(controller) {
@@ -74,67 +78,33 @@ export async function POST(request: Request) {
                     console.log("Results:");
                     console.log(functionCallResults);
 
-                    /*const toolList = dataResults.map((objStr) => JSON.parse(objStr));
-                    console.log(toolList.length)
-
-                    let restructuredData: string[] = [];
-
-                    if (toolList.length > 0) {
-                        for (const tool of toolList) {
-                            console.log(`Processing ${tool.tool}...`);
-
-                            let result: string | undefined = undefined;
-
-                            switch (tool.tool) {
-                                case "Summary":
-                                    result = getSummary(tool.data);
-                                    break;
-                                case "PkData":
-                                    result = getCompanyDataSearch(tool.data);
-                                    break;
-                                case "SearchWithCriteria":
-                                    result = getSearchWithCriteria(tool.data);
-                                    console.log("Fresh data: " + result)
-                                    break;
-                                case "OHLC":
-                                    result = getOhlcv(tool.data);
-                                    break;
-                                default:
-                                    console.warn(`Unknown tool: ${tool.tool}`);
-                            }
-
-                            if (result) {
-                                restructuredData.push(result);
-                            }
-                        }
-                    }
-
                     let portfolioDistribution: string | undefined = undefined
                     const insightDataPresent: boolean = (insightData && insightData.length > 0);
-                    // Step 2: Get portfolio distribution if applicable
+
+                    // Step 3: Get portfolio distribution if applicable
                     if (portfolio && !insightDataPresent ) {
                         await sendMessage(controller, encoder, "Analyzing client portfolio...");
 
-                        const dist = await getPortfolioDistribution(portfolio) ?? undefined;
-                        if (dist && dist.length > 0) {
-                            portfolioDistribution = dist[0];
-                        }
+                        portfolioDistribution = await getPortfolioDistribution(openai, portfolio) ?? undefined;
                     }
-
-                    // Step 3: Get news coverage from Milvus
+                    
+                    // Step 4: Get news coverage from Milvus
                     await sendMessage(controller, encoder, "Collecting relevant news articles...");
-                    const news = await getNewsArticle(query, apiKey) ?? "";
+                    const news = await getNewsArticle(openai, query) ?? "";
 
-                    // Step 4: Generate insights
+                    console.log(news);
+
+                    // Step 5: Generate insights
                     const finalData: ContextData = {
-                        sixData: restructuredData,
+                        marketData: functionCallResults,
                         portfolioDistribution: portfolioDistribution ?? "",
                         news: [news],
                     };
                     await sendMessage(controller, encoder, "Building insights...");
-                    const insights = await getInsights(finalData, portfolio, insightData, query);
+                    const insights = await getInsights(openai, finalData, portfolio, insightData, query);
                     console.log(insights);
 
+                    /*
                     // Step 5: Generate JSON
                     if (!insights || insights.length == 0) {
                         await sendMessage(controller, encoder, `FINAL_JSON:[]`, 500);

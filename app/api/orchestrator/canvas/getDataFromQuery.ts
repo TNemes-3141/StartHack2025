@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { tools } from "./tools";
+import { tools } from "./schemas/tools";
 import { FunctionCall } from "./route";
 
 
@@ -15,7 +15,7 @@ export async function getDataFromQuery(ai: OpenAI, portfolio: any | undefined, h
             tool_choice: "required",
             tools
         });
-        
+
         const toolCalls = completion.choices[0].message.tool_calls;
 
         if (!toolCalls) {
@@ -41,7 +41,7 @@ function generateToolsLlmPrompt(portfolio: any | undefined, history: any | undef
 
         You should adhere to the provided specifications completely.
 
-        In this stage, you will make queries to your tools to gather relevant information. Output the queries that should be made to these tools in their respectively correct formats. The results of the queries should be directly relevant to solve the user's question.
+        In this stage, you will make at most 7 queries to your tools to gather relevant information. Output the queries that should be made to these tools in their respectively correct formats. The results of the queries should be directly relevant to solve the user's question.
 
         ${portfolio ? `If the user refers to a portfolio, then this is the portfolio you should base your understanding of the user's question on: ${JSON.stringify(portfolio)}` : ""}
 
@@ -49,7 +49,7 @@ function generateToolsLlmPrompt(portfolio: any | undefined, history: any | undef
 
         Here is the user's question: ${userQuery}
 
-        Today's date is ${today()}. What information would you retrieve from your tools to help the user solve his case? Think of companies whose data could be relevant. Think first before you respond.
+        Today's date is ${today()}. What information would you retrieve from your tools to help the user solve his case? Think of companies whose data could be relevant. Restrict yourself to AT MOST 7 function calls or less. Think first before you respond.
     `.trim();
 }
 
@@ -59,7 +59,7 @@ function generateToolsLlmPromptWithInsights(portfolio: any | undefined, history:
 
         You should adhere to the provided specifications completely.
 
-        In this stage, you will make queries to your tools to gather relevant information. Output the queries that should be made to these tools in their respectively correct formats. The results of the queries should be directly relevant to solve the user's question.
+        In this stage, you will make at most 7 queries to your tools to gather relevant information. Output the queries that should be made to these tools in their respectively correct formats. The results of the queries should be directly relevant to solve the user's question.
 
         ${portfolio ? `If the user refers to a portfolio, then this is the portfolio you should base your understanding of the user's question on: ${JSON.stringify(portfolio)}` : ""}
 
@@ -69,7 +69,7 @@ function generateToolsLlmPromptWithInsights(portfolio: any | undefined, history:
 
         Here is the user's question: ${userQuery}
 
-        Today's date is ${today()}. What information would you retrieve from your tools to help the user solve his case or explain the correlations he is interested in? Make function calls where necessary. Think first before you respond.
+        Today's date is ${today()}. What information would you retrieve from your tools to help the user solve his case or explain the correlations he is interested in? Make function calls where necessary, but restrict yourself to AT MOST 7 calls or less. Think first before you respond.
     `.trim();
 }
 

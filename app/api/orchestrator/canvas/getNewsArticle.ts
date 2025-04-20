@@ -8,17 +8,14 @@ interface NewsArticle {
     source: string,
 }
 
-export async function getNewsArticle(userQuery: string, apiKey: string): Promise<string | undefined> {
+export async function getNewsArticle(ai: OpenAI, userQuery: string): Promise<string | undefined> {
     try {
         const client = new MilvusClient({
             address: '44.202.33.225:19530', // Replace with your EC2 Public IP
             token: 'root:Milvus'
         });
-        const openai = new OpenAI({
-            apiKey: apiKey
-        });
 
-        const embedding = await openai.embeddings.create({
+        const embedding = await ai.embeddings.create({
             dimensions: 512,
             model: "text-embedding-3-large",
             input: userQuery,
