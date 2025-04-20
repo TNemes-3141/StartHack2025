@@ -101,27 +101,26 @@ export async function POST(request: Request) {
                         news: [news],
                     };
                     await sendMessage(controller, encoder, "Building insights...");
-                    const insights = await getInsights(openai, finalData, portfolio, insightData, query);
-                    console.log(insights);
-
-                    /*
-                    // Step 5: Generate JSON
-                    if (!insights || insights.length == 0) {
+                    const insightsData = await getInsights(openai, finalData, portfolio, insightData, query);
+                    console.log("Insights: " + JSON.stringify(insightsData, null, 2));
+                    
+                    
+                    // Step 6: Generate components JSON
+                    if (!insightsData) {
+                        console.log("No insights to show");
                         await sendMessage(controller, encoder, `FINAL_JSON:[]`, 500);
                         controller.close(); // Close the stream when finished
                     }
                     else {
-                        const componentJson = await getComponents(finalData, insights[0], apiKey);
-                        console.log("Components: " + componentJson);
+                        const componentData = await getComponents(openai, finalData, insightsData.insights);
+                        console.log("Components: " + componentData);
 
                         // Send final JSON payload as the last message
-                        await sendMessage(controller, encoder, componentJson ?
-                            `FINAL_JSON:${componentJson}:END_JSON:${queryResults.message}` :
-                            `FINAL_JSON:[]:END_JSON:${queryResults.message}`, 500);
+                        await sendMessage(controller, encoder, componentData ?
+                            `FINAL_JSON:${componentData}:END_JSON:${insightsData.message}` :
+                            `FINAL_JSON:[]:END_JSON:${insightsData.message}`, 500);
                         controller.close(); // Close the stream when finished
-                    }*/
-                    await sendMessage(controller, encoder, "Done!", 500);
-                    controller.close();
+                    }
                 } catch (error) {
                     controller.enqueue(encoder.encode(`Error: ${error}\n`));
                     controller.close();

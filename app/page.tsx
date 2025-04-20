@@ -144,6 +144,8 @@ export default function Home() {
         const chunk = decoder.decode(value, { stream: true });
         fullText += chunk; // Append to full response
 
+        console.log(chunk);
+
         // Update UI with new message (excluding the final JSON)
         if (!chunk.startsWith("FINAL_JSON:")) {
           newMessages = [...newMessages, chunk.trim()];
@@ -152,6 +154,7 @@ export default function Home() {
           // Extract JSON data from the final chunk
           try {
             const data = extractFinalJsonAndMessage(chunk);
+            console.log(data.jsonData);
 
             setJsonData([jsonData, ...data.jsonData]);
             setSixMsg(data.message);

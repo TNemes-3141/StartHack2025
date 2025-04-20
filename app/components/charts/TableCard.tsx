@@ -27,8 +27,9 @@ const TableCard = ({
   title?: string;
   tableHeader?: string[],
   tableData?: {
-    [key: string]: string
-  }[],
+    key: string;
+    value: string;
+  }[][],
   onSelect?: (cardID: string) => void;
   onDeselect?: (cardID: string) => void;
   toggleCellSelect?: (type: "select" | "deselect", cardID: string, x: number, y: number, cellContent: string) => void;
@@ -52,7 +53,7 @@ const TableCard = ({
   const toggleSelection = () => {
     if (!isSelected && onSelect) {
       onSelect(id);
-      
+
       toggleCellSelect && toggleCellSelect("deselect", id, -1, -1, "")
     } else if (isSelected && onDeselect) {
       onDeselect(id);
@@ -111,24 +112,28 @@ const TableCard = ({
         }
       } 
     }*/
-    
+
   };
 
   let formatedData: string[][] = [];
   if (tableData && tableHeader) {
-    for (let i=0; i<tableData.length; i++) {
-      const row = tableData[i];
-      formatedData.push(Object.values(row))
+    const formattedData: string[][] = [];
 
-      for (const key of Object.keys(row)) {
-        const idx = tableHeader.indexOf(key);
-        if (idx != -1) {
-          formatedData[i][idx] = row[key];
+    for (let i = 0; i < tableData.length; i++) {
+      const row = tableData[i];
+      const formattedRow: string[] = new Array(tableHeader.length).fill("");
+
+      for (const cell of row) {
+        const idx = tableHeader.indexOf(cell.key);
+        if (idx !== -1) {
+          formattedRow[idx] = cell.value;
         }
       }
 
+      formattedData.push(formattedRow);
     }
   }
+
 
 
 
@@ -165,7 +170,7 @@ const TableCard = ({
                       return <TableRow key={idx}>
                         {
                           row.map((cell, idy) => {
-                            return <TableCell 
+                            return <TableCell
                               className={
                                 cn(
                                   "cursor-pointer",

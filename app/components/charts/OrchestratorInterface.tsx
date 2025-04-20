@@ -1,4 +1,4 @@
-import {AxisChartDataList, NonAxisChartDataList, NonAxisChartLabelList} from './ApexSeriesConverter';
+import { AxisChartDataList, NonAxisChartDataList, NonAxisChartLabelList } from './ApexSeriesConverter';
 
 
 export type OrchestratorData = {
@@ -20,10 +20,11 @@ type NewsData = {
 type TableData = {
     header: string[],
     content: {
-        [key: string]: string
-    }[]
+        key: string;
+        value: string;
+    }[][];
 }
 
 type LineData = AxisChartDataList;
 type CandleData = AxisChartDataList;
-type PieData = {label: NonAxisChartLabelList, data: NonAxisChartDataList};
+type PieData = { label: NonAxisChartLabelList, data: NonAxisChartDataList };
