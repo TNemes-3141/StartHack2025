@@ -1,15 +1,15 @@
-export async function getReasoning(portfolio: any | undefined, history: any, focusPoint: any, parentChart: any, userQuery: string): Promise<string | undefined> {
+import OpenAI from "openai";
+
+export async function getReasoning(ai: OpenAI, portfolio: any | undefined, history: any, focusPoint: any, parentChart: any, userQuery: string): Promise<string | undefined> {
     try {
         const query = generateLlmPrompt(portfolio, history, focusPoint, parentChart, userQuery);
 
-        const response = await fetch(`https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/llm?query=${query}`, {
-            method: "POST",
+        const response = await ai.responses.create({
+            model: "gpt-4.1",
+            input: query
         });
-        const rawData = await response.json();
-        
-        const content: string = rawData.content ?? "";
 
-        return content;
+        return response.output_text;
     } catch (error) {
         console.error(`Error calling:`, error);
         return undefined

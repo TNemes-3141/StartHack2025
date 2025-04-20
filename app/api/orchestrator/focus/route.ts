@@ -1,3 +1,4 @@
+import OpenAI from "openai";
 import { getReasoning } from "./getReasoning";
 
 export async function POST(request: Request) {
@@ -6,6 +7,7 @@ export async function POST(request: Request) {
         const { query, portfolio, conversationHistory, focusPoint, parentChart } = await request.json();
 
         const apiKey = process.env.OPENAI_API_KEY!;
+        const openai = new OpenAI({ apiKey: apiKey });
 
         if (!query || !focusPoint || !parentChart) {
             return new Response(JSON.stringify({ error: "Missing data" }), {
@@ -20,7 +22,7 @@ export async function POST(request: Request) {
                 try {
                     // Step 1: Send user query and portfolio to QUERY for data
                     await sendMessage(controller, encoder, "Focusing in...");
-                    const answer = await getReasoning(portfolio, conversationHistory, focusPoint, parentChart, query) ?? "";
+                    const answer = await getReasoning(openai, portfolio, conversationHistory, focusPoint, parentChart, query) ?? "";
 
                     await sendMessage(controller, encoder, answer.length > 0 ? `FINAL_RESPONSE:${answer}` : "FINAL_RESPONSE:I could not process your request, please try again later!", 500);
                     controller.close(); // Close the stream when finished
