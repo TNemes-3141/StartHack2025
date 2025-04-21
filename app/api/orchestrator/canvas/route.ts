@@ -7,6 +7,7 @@ import { getInsights } from "./getInsights";
 import { getComponents } from "./getComponents";
 
 import OpenAI from "openai";
+import { getHello } from "./hello";
 
 
 type FunctionCallResult = {
@@ -63,6 +64,10 @@ export async function POST(request: Request) {
         const stream = new ReadableStream({
             async start(controller) {
                 try {
+                    // Step 0: Hello world!
+                    const message = await getHello(openai);
+                    await sendMessage(controller, encoder, message?.message ?? "No hello message received.");
+
                     // Step 1: Send user query and portfolio to QUERY for data
                     await sendMessage(controller, encoder, "Devising strategy for problem solving...");
 
