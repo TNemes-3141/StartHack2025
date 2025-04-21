@@ -70,6 +70,7 @@ export async function POST(request: Request) {
 
                     console.log("We are doing " + functionCalls.length + " function calls");
                     console.log(functionCalls);
+                    await sendMessage(controller, encoder, JSON.stringify(functionCalls, null, 2));
 
                     // Step 2: Gather data from API endpoints
                     await sendMessage(controller, encoder, "Gathering data...");
@@ -77,6 +78,7 @@ export async function POST(request: Request) {
 
                     console.log("Results:");
                     console.log(functionCallResults);
+                    await sendMessage(controller, encoder, JSON.stringify(functionCallResults, null, 2));
 
                     let portfolioDistribution: string | undefined = undefined
                     const insightDataPresent: boolean = (insightData && insightData.length > 0);
@@ -93,6 +95,7 @@ export async function POST(request: Request) {
                     const news = await getNewsArticle(openai, query) ?? "";
 
                     console.log(news);
+                    await sendMessage(controller, encoder, news);
 
                     // Step 5: Generate insights
                     const finalData: ContextData = {
@@ -103,7 +106,7 @@ export async function POST(request: Request) {
                     await sendMessage(controller, encoder, "Building insights...");
                     const insightsData = await getInsights(openai, finalData, portfolio, insightData, query);
                     console.log("Insights: " + JSON.stringify(insightsData, null, 2));
-                    
+                    await sendMessage(controller, encoder, JSON.stringify(insightsData, null, 2));
                     
                     // Step 6: Generate components JSON
                     if (!insightsData) {
