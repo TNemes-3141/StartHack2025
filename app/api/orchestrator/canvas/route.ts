@@ -89,19 +89,19 @@ export async function POST(request: Request) {
 
                         portfolioDistribution = await getPortfolioDistribution(openai, portfolio) ?? undefined;
                     }
-                    
+                    /*
                     // Step 4: Get news coverage from Milvus
                     await sendMessage(controller, encoder, "Collecting relevant news articles...");
                     const news = await getNewsArticle(openai, query) ?? "";
 
                     console.log(news);
                     await sendMessage(controller, encoder, news);
-
+                    */
                     // Step 5: Generate insights
                     const finalData: ContextData = {
                         marketData: functionCallResults,
                         portfolioDistribution: portfolioDistribution ?? "",
-                        news: [news],
+                        news: [],
                     };
                     await sendMessage(controller, encoder, "Building insights...");
                     const insightsData = await getInsights(openai, finalData, portfolio, insightData, query);
