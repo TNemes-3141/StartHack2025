@@ -92,7 +92,6 @@ export async function POST(request: Request) {
                     const news = await getNewsArticle(openai, query) ?? "";
 
                     console.log(news);
-                    await sendMessage(controller, encoder, news);
                     
                     // Step 5: Generate insights
                     const finalData: ContextData = {
